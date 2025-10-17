@@ -10,6 +10,8 @@ async function generateNews() {
   const currentDate = new Date();
   const today = currentDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   const timestamp = currentDate.toLocaleString('en-GB'); // UK format for local feel
+  const fromDate = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+  const toDate = currentDate.toISOString().split('T')[0];
   const folderName = currentDate.toISOString().replace(/[:.]/g, '-').slice(0, 16); // e.g., 2025-10-17T14-30-00
   const runTimestamp = currentDate.toISOString().slice(0, 19).replace(/[:]/g, '-'); // For file names: 2025-10-17T14-30-00
   // Create new folder for this run
@@ -18,9 +20,9 @@ async function generateNews() {
   }
   console.log(`Created folder: ${folderName}`);
   // Phase 1: Generate 20 diverse flat stories strictly from real current events
-  const storiesPrompt = `You are a gaming, tech, and world news curator for a sharp UK gamer. Use live search to generate exactly 20 unique stories from today's news based strictly on well-researched, factually accurate current events from the web as of ${today} or the most recent (past 7 days if no exact today). Do not invent, fabricate, or speculate—only use verified facts from real news. Balance topics: ~5 on new game updates/releases (patches, betas, launches), ~6 on PC hardware (GPUs, controllers, keyboards, builds), ~5 on major world events (wars, global crises—focus on factual updates/impacts), ~4 on UK government actions (policies on tech/gaming/education that could shift things, like app regs or taxes).
+  const storiesPrompt = `You are a gaming, tech, and world news curator for a sharp UK gamer. Use live search to generate exactly 20 unique stories from news in the last 24 hours based strictly on well-researched, factually accurate current events from the web as of ${today}. Do not invent, fabricate, or speculate—only use verified facts from real news. Balance topics: ~5 on new game updates/releases (patches, betas, launches), ~6 on PC hardware (GPUs, controllers, keyboards, builds), ~5 on major world events (wars, global crises—focus on factual updates/impacts), ~4 on UK government actions (policies on tech/gaming/education that could shift things, like app regs or taxes).
 Mix for relevance: Link world/UK stuff to gaming/tech where it fits based on real connections (e.g., a conflict delaying game ports if that's factual). Make it straight fire: Direct language, "This could flip your meta...", real quotes from sources, end with a sharp insight. Variety—no repeats, all fresh. For heavy topics, deliver the facts and ripple effects clean.
-CRITICAL: Before generating, perform live search to verify 5-10 current events per topic from today or past week (e.g., query: "gaming news October 10-17 2025 site:ign.com OR site:gamespot.com"). Only include stories with confirmed sources. Require exact quotes and links in "source". If no recent events match a topic, use the closest verified recent one.
+CRITICAL: Before generating, perform live search to verify 10-20 current events per topic from the last 24 hours (e.g., query: "gaming news ${fromDate} to ${toDate} site:ign.com OR site:gamespot.com"). Only include stories with confirmed sources. Require exact quotes and links in "source". If no recent events match a topic, skip that topic and adjust balance with available verified stories from the last 24 hours.
 For each story, provide:
 - "title": Punchy, no-BS headline.
 - "summary": 1 sentence teaser (under 30 words).
@@ -36,18 +38,17 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source
       search_parameters: {
         mode: 'on',
         return_citations: true,
-        max_search_results: 20,
+        max_search_results: 50,
         sources: [
           { type: 'web' },
           { type: 'news' },
           { type: 'x' }
         ],
-        from_date: '2025-10-10',
-        to_date: '2025-10-17'
+        from_date: fromDate,
+        to_date: toDate
       }
     });
     const storiesData = JSON.parse(storiesResponse.choices[0].message.content);
-
     // Validate and filter complete stories
     const rawStories = storiesData.stories || [];
     flatStories = rawStories.filter(s => {
@@ -57,7 +58,6 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source
       }
       return true;
     });
-
     console.log(`Generated ${rawStories.length} raw stories; ${flatStories.length} valid after filtering.`);
     if (flatStories.length < 20) {
       console.warn(`Only ${flatStories.length} valid stories. Proceeding with available stories.`);
@@ -96,7 +96,6 @@ Output strict JSON only—no additional text, explanations, or markdown: {"group
     rawGroupingResponse = groupingResponse.choices[0].message.content;
     console.log('Raw grouping response preview:', rawGroupingResponse.substring(0, 200));
     const parsedGroups = JSON.parse(rawGroupingResponse);
-
     if (!parsedGroups.groups || parsedGroups.groups.length < 3 || parsedGroups.groups.length > 8) {
       throw new Error(`Invalid group count: ${parsedGroups.groups?.length || 0}`);
     }
@@ -248,16 +247,14 @@ Output strict JSON only—no additional text, explanations, or markdown: {"group
     const sanitizedTitle = (story.title || 'untitled').toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-').substring(0, 50);
     const fileName = `${sanitizedTitle}_${runTimestamp}.html`;
     const filePath = path.join(folderName, fileName);
-
     const expandPrompt = `Write a sharp ~500-word article for a UK gamer tracking global moves: "${story.title}". Teaser: ${story.summary}.
-Grounded strictly in verified facts from real current events as of ${today} or recent (past week)—use live search. No inventions, speculation, or additions—only real quotes, deets, and impacts. Keep it raw and real: Tight paras, no hand-holding, drop insights that stick. For world/UK topics, hit key updates and how they land on daily grinds; facts only.
-MANDATORY: Perform live search on "${story.source}" for recent facts (query: "${story.title} October 10-17 2025"). Base EVERY detail on results—include inline citations. If unverifiable, use closest recent match.
+Grounded strictly in verified facts from real current events in the last 24 hours as of ${today}—use live search. No inventions, speculation, or additions—only real quotes, deets, and impacts. Keep it raw and real: Tight paras, no hand-holding, drop insights that stick. For world/UK topics, hit key updates and how they land on daily grinds; facts only.
+MANDATORY: Perform live search on "${story.source}" for recent facts (query: "${story.title} ${fromDate} to ${toDate}"). Base EVERY detail on results. But no inline citations though.
 Structure:
 - Hook: 1 para.
-- Body: 3-4 sections with <h3> (e.g., "The Drop", "Ripple Effects"), facts/quotes.
+- Body: 3-4 sections with <h3>, facts/quotes.
 - Wrap: Solid take or next-watch.
 Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words. No <h1> or title repeat.`;
-
     try {
       const storyResponse = await openai.chat.completions.create({
         model: 'grok-4-fast-reasoning',
@@ -266,14 +263,14 @@ Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words
         search_parameters: {
           mode: 'on',
           return_citations: true,
-          max_search_results: 20,
+          max_search_results: 50,
           sources: [
             { type: 'web' },
             { type: 'news' },
             { type: 'x' }
           ],
-          from_date: '2025-10-10',
-          to_date: '2025-10-17'
+          from_date: fromDate,
+          to_date: toDate
         }
       });
       const fullStory = storyResponse.choices[0].message.content;
@@ -284,12 +281,11 @@ Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words
         .replace(/\{source\}/g, story.source)
         .replace(/\{timestamp\}/g, timestamp);
       fs.writeFileSync(filePath, storyHtml);
-
       console.log(`Generated story ${story.globalId}/${globalStories.length}: ${story.title.substring(0, 50)}... in ${folderName}`);
     } catch (error) {
       console.error(`Story ${story.globalId} error:`, error);
       // Enhanced fallback: Quick fact-check
-      const factCheckPrompt = `Fact-check this story title and summary against real news recent (${today}): "${story.title}". ${story.summary}. Output ONLY a short HTML para: If verified, "<p>Verified facts incoming—check back.</p>"; else "<p>Unverified: Skipping for accuracy. Real update: [brief real alternative from live search].</p>". Perform live search first with query "${story.title} October 10-17 2025".`;
+      const factCheckPrompt = `Fact-check this story title and summary against real news from the last 24 hours as of ${today}: "${story.title}". ${story.summary}. Output ONLY a short HTML para: If verified, "<p>Verified facts incoming—check back.</p>"; else "<p>Unverified: Skipping for accuracy. Real update: [brief real alternative from live search].</p>". Perform live search first with query "${story.title} ${fromDate} to ${toDate}".`;
       try {
         const fallbackResponse = await openai.chat.completions.create({
           model: 'grok-4-fast-reasoning',
@@ -298,13 +294,13 @@ Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words
           search_parameters: {
             mode: 'on',
             return_citations: true,
-            max_search_results: 5,
+            max_search_results: 10,
             sources: [
               { type: 'web' },
               { type: 'news' }
             ],
-            from_date: '2025-10-10',
-            to_date: '2025-10-17'
+            from_date: fromDate,
+            to_date: toDate
           }
         });
         const fallbackStory = fallbackResponse.choices[0].message.content;
