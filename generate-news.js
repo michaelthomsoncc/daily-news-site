@@ -5,7 +5,6 @@ const openai = new OpenAI({
   apiKey: process.env.GROK_API_KEY,
   baseURL: 'https://api.x.ai/v1', // xAI Grok endpoint
 });
-
 async function generateNews() {
   const currentDate = new Date();
   const today = currentDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -19,58 +18,124 @@ async function generateNews() {
     fs.mkdirSync(folderName);
   }
   console.log(`Created folder: ${folderName}`);
-  // Phase 1: Generate 20 diverse flat stories strictly from real current events
-  const storiesPrompt = `You are a gaming, tech, and world news curator for a sharp UK gamer. Use live search to generate exactly 20 unique stories from news in the last 24 hours based strictly on well-researched, factually accurate current events from the web as of ${today}. Do not invent, fabricate, or speculate—only use verified facts from real news. Balance topics: ~5 on new game updates/releases (patches, betas, launches), ~6 on PC hardware (GPUs, controllers, keyboards, builds), ~5 on major world events (wars, global crises—focus on factual updates/impacts), ~4 on UK government actions (policies on tech/gaming/education that could shift things, like app regs or taxes).
-Mix for relevance: Link world/UK stuff to gaming/tech where it fits based on real connections (e.g., a conflict delaying game ports if that's factual). Make it straight fire: Direct language, "This could flip your meta...", real quotes from sources, end with a sharp insight. Variety—no repeats, all fresh. For heavy topics, deliver the facts and ripple effects clean.
-CRITICAL: Before generating, perform live search to verify 10-20 current events per topic from the last 24 hours (e.g., query: "gaming news ${fromDate} to ${toDate} site:ign.com OR site:gamespot.com"). Only include stories with confirmed sources. Require exact quotes and links in "source". If no recent events match a topic, skip that topic and adjust balance with available verified stories from the last 24 hours.
+  // Phase 1: Generate stories per topic, overgenerate, then select balanced 20
+  const topics = [
+    { name: 'gaming', target: 5, description: 'new game updates/releases or similar (patches, betas, launches)' },
+    { name: 'hardware', target: 6, description: 'PC hardware or similar (GPUs, controllers, keyboards, builds)' },
+    { name: 'world', target: 5, description: 'major world events (wars, global crises—focus on factual updates/impacts)' },
+    { name: 'ukgov', target: 4, description: 'UK government actions' }
+  ];
+  const storiesPerTopic = 10; // Overgenerate per topic
+  let topicStories = {};
+  for (let topic of topics) {
+    const topicPrompt = `You are a gaming, tech, and world news curator for a sharp UK gamer. Use live search to generate exactly ${storiesPerTopic} unique stories from news in the last 24 hours based strictly on well-researched, factually accurate current events from the web as of ${today} on ${topic.description}. Do not invent, fabricate, or speculate—only use verified facts from real news. 
+Mix for relevance: Link world/UK stuff to gaming/tech where it fits based on real connections. Make it straight fire: Direct language, real quotes from sources, end with a sharp insight. Variety—no repeats, all fresh. For heavy topics, deliver the facts and ripple effects clean.
+CRITICAL: Before generating, perform live search to verify 10-20 current events for this topic from the last 24 hours. Only include stories with confirmed sources. Require exact quotes and links in "source". If fewer than ${storiesPerTopic} recent events match, generate as many as possible.
 For each story, provide:
 - "title": Punchy, no-BS headline.
 - "summary": 1 sentence teaser (under 30 words).
 - "source": Real news source (e.g., BBC, IGN, Reuters) and brief fact basis (e.g., "BBC: Official announcement").
-Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source": "..."} ] }. Exactly 20 stories.`;
-  let flatStories = [];
-  try {
-    const storiesResponse = await openai.chat.completions.create({
-      model: 'grok-4-fast-reasoning',
-      messages: [{ role: 'user', content: storiesPrompt }],
-      response_format: { type: 'json_object' },
-      max_tokens: 3500,
-      search_parameters: {
-        mode: 'on',
-        return_citations: true,
-        max_search_results: 25,
-        sources: [
-          { type: 'web' },
-          { type: 'news' },
-          { type: 'x' }
-        ],
-        from_date: fromDate,
-        to_date: toDate
-      }
-    });
-    const storiesData = JSON.parse(storiesResponse.choices[0].message.content);
-    // Validate and filter complete stories
-    const rawStories = storiesData.stories || [];
-    flatStories = rawStories.filter(s => {
-      if (!s || typeof s !== 'object' || !s.title || !s.summary || !s.source) {
-        console.warn('Incomplete story skipped:', s);
-        return false;
-      }
-      return true;
-    });
-    console.log(`Generated ${rawStories.length} raw stories; ${flatStories.length} valid after filtering.`);
-    if (flatStories.length < 20) {
-      console.warn(`Only ${flatStories.length} valid stories. Proceeding with available stories.`);
-    } else if (flatStories.length > 20) {
-      flatStories = flatStories.slice(0, 20); // Cap at 20
+Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source": "..."} ] }.`;
+    let topicStoriesList = [];
+    try {
+      const response = await openai.chat.completions.create({
+        model: 'grok-4-fast-reasoning',
+        messages: [{ role: 'user', content: topicPrompt }],
+        response_format: { type: 'json_object' },
+        max_tokens: 2000,
+        search_parameters: {
+          mode: 'on',
+          return_citations: true,
+          max_search_results: 25,
+          sources: [
+            { type: 'web' },
+            { type: 'news' },
+            { type: 'x' }
+          ],
+          from_date: fromDate,
+          to_date: toDate
+        }
+      });
+      const data = JSON.parse(response.choices[0].message.content);
+      const raw = data.stories || [];
+      topicStoriesList = raw.filter(s => {
+        if (!s || typeof s !== 'object' || !s.title || !s.summary || !s.source) {
+          console.warn(`Incomplete story skipped for ${topic.name}:`, s);
+          return false;
+        }
+        return true;
+      });
+      console.log(`Generated ${raw.length} raw stories; ${topicStoriesList.length} valid for ${topic.name}.`);
+    } catch (error) {
+      console.error(`Stories generation error for ${topic.name}:`, error);
     }
-  } catch (error) {
-    console.error('Stories generation error:', error);
+    topicStories[topic.name] = topicStoriesList;
+  }
+  // Prepare all stories for selection
+  let allStoriesForSelection = [];
+  let globalIndex = 0;
+  topics.forEach(topic => {
+    topicStories[topic.name].forEach(story => {
+      allStoriesForSelection.push({
+        globalIndex: globalIndex++,
+        topic: topic.name,
+        title: story.title,
+        summary: story.summary,
+        source: story.source
+      });
+    });
+  });
+  const totalAvailable = allStoriesForSelection.length;
+  console.log(`Total stories from all topics: ${totalAvailable}`);
+  let flatStories = [];
+  if (totalAvailable === 0) {
+    console.error('No valid stories generated across topics. Exiting.');
     return;
   }
+  // Selection prompt
+  const condensedForPrompt = allStoriesForSelection.map(s => ({
+    index: s.globalIndex,
+    topic: s.topic,
+    title: (s.title || '').substring(0, 60),
+    summary: (s.summary || '').substring(0, 40)
+  }));
+  const targetSummary = topics.map(t => `${t.name}: ${t.target}`).join(', ');
+  const selectionPrompt = `You are curating a balanced news feed for a UK gamer. Select stories to meet these targets (${targetSummary}; total 20). 
+From the provided stories, select up to the target number from each topic (prioritize diverse, high-impact, fresh ones across all). If fewer available for a topic, take all. Ensure no duplicates. Aim for exactly 20 total or as close as possible while maintaining proportions.
+Input stories: ${JSON.stringify(condensedForPrompt)}.
+Output strict JSON only: {"selectedIndices": [0, 5, 12, ...]} // List of global indices (numbers).`;
+  try {
+    const selResponse = await openai.chat.completions.create({
+      model: 'grok-4-fast-reasoning',
+      messages: [{ role: 'user', content: selectionPrompt }],
+      response_format: { type: 'json_object' },
+      max_tokens: 1500,
+    });
+    const selData = JSON.parse(selResponse.choices[0].message.content);
+    const selectedIndices = selData.selectedIndices || [];
+    flatStories = selectedIndices
+      .map(idx => allStoriesForSelection.find(s => s.globalIndex === parseInt(idx)))
+      .filter(Boolean)
+      .map(s => ({ title: s.title, summary: s.summary, source: s.source }));
+    flatStories = flatStories.slice(0, 20); // Cap at 20
+    console.log(`Selected ${flatStories.length} balanced stories.`);
+  } catch (error) {
+    console.error('Selection error:', error);
+    // Fallback: Take up to target from each topic
+    topics.forEach(topic => {
+      const avail = topicStories[topic.name];
+      const toTake = Math.min(avail.length, topic.target);
+      flatStories = flatStories.concat(avail.slice(0, toTake));
+    });
+    flatStories = flatStories.slice(0, 20);
+    console.log(`Fallback selection: ${flatStories.length} stories.`);
+  }
   if (flatStories.length === 0) {
-    console.error('No valid stories generated. Exiting.');
+    console.error('No valid stories after selection. Exiting.');
     return;
+  }
+  if (flatStories.length < 20) {
+    console.warn(`Only ${flatStories.length} valid stories after balancing. Proceeding with available stories.`);
   }
   // Phase 1.5: Dynamically categorize the stories for mixed-interest sections
   let groupsData = { groups: [] };
@@ -329,5 +394,4 @@ Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words
   }
   console.log(`All ${globalStories.length} stories complete – 100% factual and archived in ${folderName}!`);
 }
-
 generateNews();
