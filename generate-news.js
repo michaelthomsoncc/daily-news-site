@@ -9,17 +9,21 @@ const openai = new OpenAI({
 });
 
 async function generateNews() {
-  const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  const timestamp = new Date().toLocaleString('en-GB');  // UK format for local feel
+  const currentDate = new Date();
+  const today = currentDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  const timestamp = currentDate.toLocaleString('en-GB');  // UK format for local feel
+  const isoDate = currentDate.toISOString().split('T')[0];  // YYYY-MM-DD for prompts
   
-  // Phase 1: Generate 20 diverse flat stories tailored to George Stephenson High School students
-  const storiesPrompt = `You are a youth-focused news editor for George Stephenson High School in Killingworth, Newcastle upon Tyne, UK. Create exactly 20 unique, real-time news stories highly relevant and interesting to students in years 7-9 (ages 11-14), with some appeal to years 10-11 too. Base everything on well-researched, factually accurate current events from your up-to-date knowledge as of October 17, 2025—focus on today's happenings or very recent developments in the local area, school, or topics that resonate with teens like tech gadgets, school sports, local hangouts, environmental challenges, pop culture events nearby, study tips for exams, or engineering projects (nod to the school's STEM heritage). Avoid stereotypes; draw from real, diverse student experiences like balancing homework with hobbies, navigating friendships, or exploring career sparks in a post-industrial town.
+  // Profile of the target: A curious gaming enthusiast from Killingworth, UK. He's into the latest video game updates and upcoming releases, PC hardware drops, and real-world events—both exciting and gritty. He also tracks major global happenings like wars or crises  and UK government moves that could affect him (e.g., new tech taxes, gaming age limits, school policy changes). Wants quick, straight-up reads that hit hard, with real insights on builds or global ripples. Content must be real-time, factual, no fluff—grounded in today's news as of ${today}. Handle sensitive topics straight: Facts and impacts, no sugarcoating.
 
-Make stories engaging for this audience: Use relatable language, start with a hook (e.g., "Ever wondered if...?"), include short quotes from local teens or experts, and end with a question or tip. Ensure variety: Mix school-specific (e.g., club updates), local adventures, digital world, health & fun, future skills—no more than 2 similar.
+  // Phase 1: Generate 20 diverse flat stories tailored to the gaming/PC/world/UK gov profile
+  const storiesPrompt = `You are a gaming, tech, and world news curator for a sharp UK gamer. Generate exactly 20 unique, real-time stories based on well-researched, factually accurate current events from your up-to-date knowledge as of ${today}. Balance topics: ~7 on new game updates/releases or other gaming topics, ~5 on PC hardware, ~4 on major world events (wars, global crises, etc.—keep factual, focus on updates/impacts), ~4 on UK government actions that he might be interested in, particulary when they are affecting him.
+
+Mix for relevance:  Variety—no repeats, all fresh from today. For heavy topics, deliver the facts and ripple effects clean.
 
 For each story, provide:
-- "title": Catchy, question-style or bold headline that grabs a 12-year-old.
-- "summary": 1-2 sentence super-short teaser (under 50 words, punchy hook).
+- "title": Punchy, no-BS headline.
+- "summary": 1-2 sentence teaser (under 50 words, cuts to the chase).
 
 Output strict JSON only: {"stories": [{"title": "...", "summary": "..."} ] }. Exactly 20 stories, no extras.`;
 
@@ -29,7 +33,7 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "..."} ] }. Ex
       model: 'grok-4-fast-reasoning',
       messages: [{ role: 'user', content: storiesPrompt }],
       response_format: { type: 'json_object' },
-      max_tokens: 2000,  // Room for detailed JSON
+      max_tokens: 2500,  // Room for detailed JSON
     });
 
     const storiesData = JSON.parse(storiesResponse.choices[0].message.content);
@@ -39,20 +43,20 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "..."} ] }. Ex
     if (flatStories.length !== 20) {
       throw new Error('Invalid story count');
     }
-    console.log(`Generated 20 diverse stories tailored to George Stephenson students.`);
+    console.log(`Generated 20 diverse stories tailored to the gaming/world profile.`);
   } catch (error) {
     console.error('Stories generation error:', error);
     return;
   }
 
-  // Phase 1.5: Dynamically categorize the 20 stories for teen-friendly sections
+  // Phase 1.5: Dynamically categorize the 20 stories for mixed-interest sections
   let groupsData = { groups: [] };
   try {
-    const groupingPrompt = `You are a categorizer for teen news at George Stephenson High School. Take these 20 stories and group them into 4-6 dynamic, fun-named categories based on content that would excite years 7-9 students (e.g., "Tech Hacks & Gadget Buzz" for digital stories, "Pitchside Thrills" for sports). Each group 3-5 stories (total 20). Make categories emerge naturally from the stories—relatable, not generic.
+    const groupingPrompt = `You are a categorizer for a gamer's mixed feed. Take these 20 stories and group them into 4-6 dynamic, on-point categories based on content (e.g., "Epic Updates Incoming" for games, "Gear Grind" for hardware, "Global Alert" for wars/crises, "Gov Watch" for UK politics). Each group 3-5 stories (total 20). Make categories snap from the stories—direct, no fluff.
 
 Input stories: ${JSON.stringify(flatStories)}.
 
-Output strict JSON only: {"groups": [{"name": "Fun Group Name", "stories": [ {"title": "...", "summary": "..."} ] } ] }.`;
+Output strict JSON only: {"groups": [{"name": "On-Point Group Name", "stories": [ {"title": "...", "summary": "..."} ] } ] }.`;
 
     const groupingResponse = await openai.chat.completions.create({
       model: 'grok-4-fast-reasoning',
@@ -66,16 +70,16 @@ Output strict JSON only: {"groups": [{"name": "Fun Group Name", "stories": [ {"t
     if (!groupsData.groups || groupsData.groups.length < 4 || groupsData.groups.length > 6 || groupsData.groups.reduce((acc, g) => acc + (g.stories?.length || 0), 0) !== 20) {
       throw new Error('Invalid grouping structure or count');
     }
-    console.log(`Dynamically grouped into ${groupsData.groups.length} teen-friendly categories.`);
+    console.log(`Dynamically grouped into ${groupsData.groups.length} mixed categories.`);
   } catch (error) {
     console.error('Grouping error:', error);
-    // Fallback: Simple teen-themed groups
+    // Fallback: Mixed-themed groups
     groupsData = {
       groups: [
-        { name: "School Scoop", stories: flatStories.slice(0, 5) },
-        { name: "Local Vibes", stories: flatStories.slice(5, 10) },
-        { name: "Tech & Trends", stories: flatStories.slice(10, 15) },
-        { name: "Fun & Future", stories: flatStories.slice(15, 20) }
+        { name: "Game Drops", stories: flatStories.slice(0, 5) },
+        { name: "PC Power-Ups", stories: flatStories.slice(5, 10) },
+        { name: "World Buzz", stories: flatStories.slice(10, 15) },
+        { name: "UK Scoop", stories: flatStories.slice(15, 20) }
       ]
     };
     console.log('Used fallback grouping.');
@@ -107,59 +111,59 @@ Output strict JSON only: {"groups": [{"name": "Fun Group Name", "stories": [ {"t
   });
   newDiv += '</div>';
   indexHtml = indexHtml.replace(/<div id="news-content">.*?<\/div>/s, newDiv);
-  indexHtml = indexHtml.replace(/<p>Last updated: .*<script>.*<\/script>/s, `<p>Last updated: ${timestamp} | For George Stephenson High School students</p>`);
-  // Add simple CSS for better layout
+  indexHtml = indexHtml.replace(/<p>Last updated: .*<script>.*<\/script>/s, `<p>Last updated: ${timestamp} | Your Daily Gaming, Tech & World Fix</p>`);
+  // Add simple CSS for better layout, all text black
   const cssUpdate = indexHtml.replace(
-    /<style> body \{ font-family: Arial; max-width: 800px; margin: 0 auto; padding: 20px; \} <\/style>/s,
+    /<style>.*?<\/style>/s,
     `<style> 
-      body { font-family: Arial; max-width: 800px; margin: 0 auto; padding: 20px; background: #f9f9f9; } 
-      h1 { color: #333; } 
-      h2 { color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 5px; } 
+      body { font-family: Arial; max-width: 800px; margin: 0 auto; padding: 20px; background: #f9f9f9; color: #000; } 
+      h1 { color: #000; } 
+      h2 { color: #000; border-bottom: 2px solid #000; padding-bottom: 5px; } 
       ul.headlines-list { list-style: none; padding: 0; } 
       ul.headlines-list li { margin: 15px 0; padding: 10px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); } 
-      a { color: #007bff; text-decoration: none; } a:hover { text-decoration: underline; } 
+      a { color: #000; text-decoration: none; } a:hover { text-decoration: underline; } 
       small { color: #666; display: block; margin-top: 5px; } 
     </style>`
   );
   fs.writeFileSync('index.html', cssUpdate);
 
-  // Phase 2: Generate full ~500-word stories suited for young readers
+  // Phase 2: Generate full ~500-word stories suited for a savvy gamer with world interests
   const storyTemplate = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{title} | Stephenson Student News</title>
+    <title>{title} | Gamer's World Scoop</title>
     <style> 
-      body { font-family: Arial; max-width: 700px; margin: 0 auto; padding: 20px; background: #f9f9f9; line-height: 1.6; font-size: 16px; } 
-      h1 { color: #007bff; } 
-      h3 { color: #333; } 
+      body { font-family: Arial; max-width: 700px; margin: 0 auto; padding: 20px; background: #f9f9f9; line-height: 1.6; font-size: 16px; color: #000; } 
+      h1 { color: #000; } 
+      h3 { color: #000; } 
       .story p { margin-bottom: 15px; } 
-      .hook { font-style: italic; color: #007bff; font-size: 18px; } 
-      a.back { color: #007bff; font-weight: bold; } 
-      .tip { background: #e7f3ff; padding: 10px; border-left: 4px solid #007bff; margin: 20px 0; } 
+      .hook { font-style: italic; color: #000; font-size: 18px; } 
+      a.back { color: #000; font-weight: bold; } 
+      .tip { background: #f0f0f0; padding: 10px; border-left: 4px solid #000; margin: 20px 0; color: #000; } 
     </style>
 </head>
 <body>
     <h1>{title}</h1>
-    <p><em>From the {groupName} section – Hey Stephenson students!</em></p>
+    <p><em>From the {groupName} section – Straight facts, no filter.</em></p>
     <div class="story">{fullStory}</div>
-    <div class="tip"><strong>Quick Tip:</strong> What do you think? Share your take in class tomorrow!</div>
+    <div class="tip"><strong>Edge Insight:</strong> How's this shifting your play? Break it down with the crew.</div>
     <p><a href="index.html" class="back">← Back to headlines</a> | Updated: {timestamp}</p>
 </body>
 </html>`;
 
   for (let i = 0; i < globalStories.length; i++) {
     const story = globalStories[i];
-    const expandPrompt = `Write an engaging ~500-word news article tailored for George Stephenson High School students (years 7-9 focus): "${story.title}". Teaser: ${story.summary}.
+    const expandPrompt = `Write a sharp ~500-word article for a UK gamer tracking global moves: "${story.title}". Teaser: ${story.summary}.
 
-Research-based on real current events as of October 17, 2025—use verified facts, local context, and teen perspectives. Keep it correct, relevant, and fun: Simple sentences, active voice, relatable examples. No fluff or stereotypes.
+Based on real current events as of ${today}—verified facts, quotes from devs/leaders, leak deets. Keep it raw and real: Tight paras, no hand-holding, drop insights that stick. For world/UK topics, hit the key updates and how they land on daily grinds (e.g., "This could throttle your server speeds"); facts only, no drama spin.
 
-Structure for quick reads:
-- Hook: 1-2 paras starting with a question or scenario.
-- Body: 3-4 short sections with <h3> subheads, quotes, key facts.
-- Wrap: Implications for students + forward-looking note.
-Output clean HTML only: <p> for paras, <strong> emphasis, <em> quotes. Word count: 400-600.`;
+Structure:
+- Hook: 1 para that pulls you in, question or scenario.
+- Body: 3-4 sections with <h3> (e.g., "The Drop", "Ripple Effects"), facts/quotes.
+- Wrap: Solid take or next-watch.
+Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words. No <h1> or title repeat.`;
 
     try {
       const storyResponse = await openai.chat.completions.create({
@@ -181,7 +185,7 @@ Output clean HTML only: <p> for paras, <strong> emphasis, <em> quotes. Word coun
     } catch (error) {
       console.error(`Story ${story.globalId} error:`, error);
       // Fallback: Short engaging placeholder
-      const fallbackStory = `<p class="hook">Hey, Stephenson squad—big things brewing on this one!</p><p>Our team's digging into the latest facts right now. Stay tuned for the full scoop tomorrow. In the meantime, chat about it with your mates: What's your first thought?</p>`;
+      const fallbackStory = `<p class="hook">This drop's incoming—facts stacking up.</p><p>Core deets locked, full breakdown next round. Run it by the group: Shift your strategy?</p>`;
       let storyHtml = storyTemplate
         .replace(/\{title\}/g, story.title)
         .replace(/\{fullStory\}/g, fallbackStory)
@@ -193,7 +197,7 @@ Output clean HTML only: <p> for paras, <strong> emphasis, <em> quotes. Word coun
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
 
-  console.log(`All 20 stories complete – tailored for Stephenson students!`);
+  console.log(`All 20 stories complete – tailored for the savvy gamer with world vibes!`);
 }
 
 generateNews();
