@@ -1,4 +1,3 @@
-```javascript
 const fs = require('fs');
 const path = require('path');
 const OpenAI = require('openai');
@@ -336,4 +335,3 @@ Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words
 }
 
 generateNews();
-```
