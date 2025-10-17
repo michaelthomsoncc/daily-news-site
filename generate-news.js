@@ -32,7 +32,7 @@ async function generateNews() {
 Mix for relevance: Link world/UK stuff to gaming/tech where it fits based on real connections. Make it straight fire: Direct language, real quotes from sources, end with a sharp insight. Variety—no repeats, all fresh. For heavy topics, deliver the facts and ripple effects clean.
 CRITICAL: Before generating, perform live search to verify 10-20 current events for this topic from the last 24 hours. Only include stories with confirmed sources. Require exact quotes and links in "source". If fewer than ${storiesPerTopic} recent events match, generate as many as possible.
 For each story, provide:
-- "title": Punchy, no-BS headline.
+- "title": Punchy, no-BS headline. Headline must be descriptive of the actual story. Don't name sources in headline.
 - "summary": 1 sentence teaser (under 30 words).
 - "source": Real news source (e.g., BBC, IGN, Reuters) and brief fact basis (e.g., "BBC: Official announcement").
 Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source": "..."} ] }.`;
