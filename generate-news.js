@@ -12,7 +12,7 @@ async function generateNews() {
 
   try {
     const response = await openai.chat.completions.create({
-      model: 'grok-beta',  // Or latest Grok model
+      model: 'grok-4-fast-reasoning',  // Or latest Grok model
       messages: [{ role: 'user', content: prompt }],
     });
 
