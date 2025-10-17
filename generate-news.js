@@ -28,7 +28,7 @@ async function generateNews() {
   const storiesPerTopic = 10; // Overgenerate per topic
   let topicStories = {};
   for (let topic of topics) {
-    const topicPrompt = `You are a gaming, tech, and world news curator for a sharp UK gamer. Use live search to generate exactly ${storiesPerTopic} unique stories from news in the last 24 hours based strictly on well-researched, factually accurate current events from the web as of ${today} on ${topic.description}. Do not invent, fabricate, or speculate—only use verified facts from real news. 
+    const topicPrompt = `You are a gaming, tech, and world news curator for a sharp 12 year old UK gamer. Use live search to generate exactly ${storiesPerTopic} unique stories from news in the last 24 hours based strictly on well-researched, factually accurate current events from the web as of ${today} on ${topic.description}. Do not invent, fabricate, or speculate—only use verified facts from real news. 
 Mix for relevance: Link world/UK stuff to gaming/tech where it fits based on real connections. Make it straight fire: Direct language, real quotes from sources, end with a sharp insight. Variety—no repeats, all fresh. For heavy topics, deliver the facts and ripple effects clean.
 CRITICAL: Before generating, perform live search to verify 10-20 current events for this topic from the last 24 hours. Only include stories with confirmed sources. Require exact quotes and links in "source". If fewer than ${storiesPerTopic} recent events match, generate as many as possible.
 For each story, provide:
@@ -312,7 +312,7 @@ Output strict JSON only—no additional text, explanations, or markdown: {"group
     const sanitizedTitle = (story.title || 'untitled').toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-').substring(0, 50);
     const fileName = `${sanitizedTitle}_${runTimestamp}.html`;
     const filePath = path.join(folderName, fileName);
-    const expandPrompt = `Write a sharp ~500-word article for a UK gamer tracking global moves: "${story.title}". Teaser: ${story.summary}.
+    const expandPrompt = `Write a sharp ~500-word article for a 12 year old UK gamer tracking global moves: "${story.title}". Teaser: ${story.summary}.
 Grounded strictly in verified facts from real current events in the last 24 hours as of ${today}—use live search. No inventions, speculation, or additions—only real quotes, deets, and impacts. Keep it raw and real: Tight paras, no hand-holding, drop insights that stick. For world/UK topics, hit key updates and how they land on daily grinds; facts only.
 MANDATORY: Perform live search on "${story.source}" for recent facts (query: "${story.title} ${fromDate} to ${toDate}"). Base EVERY detail on results. But no inline citations though.
 Structure:
