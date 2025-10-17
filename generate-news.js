@@ -266,7 +266,7 @@ Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words
         search_parameters: {
           mode: 'on',
           return_citations: true,
-          max_search_results: 10,
+          max_search_results: 20,
           sources: [
             { type: 'web' },
             { type: 'news' },
