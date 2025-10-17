@@ -37,7 +37,7 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source
   let flatStories = [];
   try {
     const storiesResponse = await openai.chat.completions.create({
-      model: 'grok-4-fast-reasoning',
+      model: 'grok-4-fast-non-reasoning',
       messages: [{ role: 'user', content: storiesPrompt }],
       response_format: { type: 'json_object' },
       max_tokens: 3000,
@@ -220,7 +220,7 @@ Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words
 
     try {
       const storyResponse = await openai.chat.completions.create({
-        model: 'grok-4',
+        model: 'grok-4-non-reasoning',
         messages: [{ role: 'user', content: expandPrompt }],
         max_tokens: 2000,
       });
