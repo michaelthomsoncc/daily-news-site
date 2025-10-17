@@ -12,7 +12,15 @@ async function generateNews() {
   const currentDate = new Date();
   const today = currentDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   const timestamp = currentDate.toLocaleString('en-GB');  // UK format for local feel
+  const folderName = currentDate.toISOString().replace(/[:.]/g, '-').slice(0, 16);  // e.g., 2025-10-17T14-30-00
+  const runTimestamp = currentDate.toISOString().slice(0, 19).replace(/[:]/g, '-');  // For file names: 2025-10-17T14-30-00
   
+  // Create new folder for this run
+  if (!fs.existsSync(folderName)) {
+    fs.mkdirSync(folderName);
+  }
+  console.log(`Created folder: ${folderName}`);
+
   // Phase 1: Generate 20 diverse flat stories strictly from real current events
   const storiesPrompt = `You are a gaming, tech, and world news curator for a sharp UK gamer. Generate exactly 20 unique stories based strictly on well-researched, factually accurate current events from your up-to-date knowledge as of ${today}. Do not invent, fabricate, or speculate—only use verified facts from real news happening today. Balance topics: ~7 on new game updates/releases (patches, betas, launches), ~5 on PC hardware (GPUs, controllers, keyboards, builds), ~4 on major world events (wars, global crises—focus on factual updates/impacts), ~4 on UK government actions (policies on tech/gaming/education that could shift things, like app regs or taxes).
 
@@ -128,24 +136,25 @@ Output strict JSON only—no additional text, explanations, or markdown: {"group
     });
   });
 
-  // Clear old story files
-  const storyFiles = fs.readdirSync('.').filter(f => f.startsWith('story') && f.endsWith('.html'));
-  storyFiles.forEach(file => fs.unlinkSync(file));
+  // No clear old stories—history preserved in folders
 
-  // Generate index.html with grouped structure (full panels clickable)
+  // Generate index.html with grouped structure (full panels clickable, links to new folder)
   let indexHtml = fs.readFileSync('index.html', 'utf8');
   let newDiv = '<div id="news-content">';
   groupsData.groups.forEach(group => {
     newDiv += `<h2>${group.name}</h2><ul class="headlines-list">`;
     group.stories.forEach(story => {
       const globalStory = globalStories.find(s => s.title === story.title && s.summary === story.summary);
-      newDiv += `<li class="clickable-panel"><a href="story${globalStory.globalId}.html" class="full-link"><strong>${story.title}</strong><br><small>${story.summary}</small><br><span class="source">Via ${story.source}</span></a></li>`;
+      // Sanitize title for filename: lowercase, replace non-alphanum with -, trim
+      const sanitizedTitle = story.title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-').substring(0, 50);
+      const fileName = `${sanitizedTitle}_${runTimestamp}.html`;
+      newDiv += `<li class="clickable-panel"><a href="${folderName}/${fileName}" class="full-link"><strong>${story.title}</strong><br><small>${story.summary}</small><br><span class="source">Via ${story.source}</span></a></li>`;
     });
     newDiv += '</ul>';
   });
   newDiv += '</div>';
   indexHtml = indexHtml.replace(/<div id="news-content">.*?<\/div>/s, newDiv);
-  indexHtml = indexHtml.replace(/<p>Last updated: .*<script>.*<\/script>/s, `<p>Last updated: ${timestamp} | Your Daily Gaming, Tech & World Fix</p>`);
+  indexHtml = indexHtml.replace(/<p>Last updated: .*<script>.*<\/script>/s, `<p>Last updated: ${timestamp} | Your Daily Gaming, Tech & World Fix | Edition: ${folderName}</p>`);
   // Updated CSS for full clickable panels, all text black
   const cssUpdate = indexHtml.replace(
     /<style>.*?<\/style>/s,
@@ -163,7 +172,7 @@ Output strict JSON only—no additional text, explanations, or markdown: {"group
   );
   fs.writeFileSync('index.html', cssUpdate);
 
-  // Phase 2: Generate full ~500-word stories strictly from real events
+  // Phase 2: Generate full ~500-word stories strictly from real events in new folder
   const storyTemplate = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -187,12 +196,17 @@ Output strict JSON only—no additional text, explanations, or markdown: {"group
     <div class="story">{fullStory}</div>
     <p class="source">Sourced from: {source}</p>
     <div class="tip"><strong>Edge Insight:</strong> How's this shifting your play? Break it down with the crew.</div>
-    <p><a href="index.html" class="back">← Back to headlines</a> | Updated: {timestamp}</p>
+    <p><a href="../index.html" class="back">← Back to headlines</a> | Updated: {timestamp}</p>
 </body>
 </html>`;
 
   for (let i = 0; i < globalStories.length; i++) {
     const story = globalStories[i];
+    // Sanitize title for filename
+    const sanitizedTitle = story.title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-').substring(0, 50);
+    const fileName = `${sanitizedTitle}_${runTimestamp}.html`;
+    const filePath = path.join(folderName, fileName);
+    
     const expandPrompt = `Write a sharp ~500-word article for a UK gamer tracking global moves: "${story.title}". Teaser: ${story.summary}.
 
 Grounded strictly in verified facts from real current events as of ${today}—use your up-to-date knowledge of actual news sources like ${story.source}. No inventions, speculation, or additions—only real quotes, deets, and impacts. Keep it raw and real: Tight paras, no hand-holding, drop insights that stick. For world/UK topics, hit key updates and how they land on daily grinds; facts only.
@@ -218,9 +232,9 @@ Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words
         .replace(/\{groupName\}/g, story.groupName)
         .replace(/\{source\}/g, story.source)
         .replace(/\{timestamp\}/g, timestamp);
-      fs.writeFileSync(`story${story.globalId}.html`, storyHtml);
+      fs.writeFileSync(filePath, storyHtml);
       
-      console.log(`Generated story ${story.globalId}/20: ${story.title.substring(0, 50)}...`);
+      console.log(`Generated story ${story.globalId}/20: ${story.title.substring(0, 50)}... in ${folderName}`);
     } catch (error) {
       console.error(`Story ${story.globalId} error:`, error);
       // Fallback: Short engaging placeholder
@@ -231,13 +245,13 @@ Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words
         .replace(/\{groupName\}/g, story.groupName)
         .replace(/\{source\}/g, story.source)
         .replace(/\{timestamp\}/g, timestamp);
-      fs.writeFileSync(`story${story.globalId}.html`, storyHtml);
+      fs.writeFileSync(filePath, storyHtml);
     }
     // Small delay for rate limits
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
 
-  console.log(`All 20 stories complete – 100% factual and real!`);
+  console.log(`All 20 stories complete – 100% factual and archived in ${folderName}!`);
 }
 
 generateNews();
