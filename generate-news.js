@@ -257,7 +257,7 @@ Output strict JSON only—no additional text, explanations, or markdown: {"group
     group.stories.forEach(story => {
       const sanitizedTitle = (story.title || 'untitled').toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-').substring(0, 50);
       const fileName = `${sanitizedTitle}_${runTimestamp}.html`;
-      newDiv += `<li class="clickable-panel"><a href="${folderName}/${fileName}" class="full-link"><strong>${story.title || 'Untitled'}</strong><br><small>${story.summary || 'No summary'}</small></li>`;
+      newDiv += `<li class="clickable-panel"><a href="${folderName}/${fileName}" class="full-link"><strong>${story.title || 'Untitled'}</strong><br><small>${story.summary || 'No summary'}</small></a></li>`;
     });
     newDiv += '</ul>';
   });
