@@ -20,9 +20,9 @@ async function generateNews() {
   console.log(`Created folder: ${folderName}`);
   
   // Phase 1: Generate 20 diverse flat stories strictly from real current events
-  const storiesPrompt = `You are a gaming, tech, and world news curator for a sharp UK gamer. Generate exactly 20 unique stories based strictly on well-researched, factually accurate current events from the web as of ${today}. Do not invent, fabricate, or speculate—only use verified facts from real news happening today. Balance topics: ~5 on new game updates/releases (patches, betas, launches), ~6 on PC hardware (GPUs, controllers, keyboards, builds), ~5 on major world events (wars, global crises—focus on factual updates/impacts), ~4 on UK government actions (policies on tech/gaming/education that could shift things, like app regs or taxes).
-Mix for relevance: Link world/UK stuff to gaming/tech where it fits based on real connections (e.g., a conflict delaying game ports if that's factual today). Make it straight fire: Direct language, "This could flip your meta...", real quotes from sources, end with a sharp insight. Variety—no repeats, all fresh from today. For heavy topics, deliver the facts and ripple effects clean.
-CRITICAL: Before generating, use your real-time web_search tool to verify 5-10 current events per topic from today (${today}). Only include stories with confirmed sources (e.g., query: "RTX news October 17 2025 site:tomshardware.com"). Require exact quotes and links in "source". If no real events match a topic, skip and note "No verified update today" for that slot.
+  const storiesPrompt = `You are a gaming, tech, and world news curator for a sharp UK gamer. Generate exactly 20 unique stories based strictly on well-researched, factually accurate current events from the web as of ${today} or the most recent (past 7 days if no exact today). Do not invent, fabricate, or speculate—only use verified facts from real news. Balance topics: ~5 on new game updates/releases (patches, betas, launches), ~6 on PC hardware (GPUs, controllers, keyboards, builds), ~5 on major world events (wars, global crises—focus on factual updates/impacts), ~4 on UK government actions (policies on tech/gaming/education that could shift things, like app regs or taxes).
+Mix for relevance: Link world/UK stuff to gaming/tech where it fits based on real connections (e.g., a conflict delaying game ports if that's factual). Make it straight fire: Direct language, "This could flip your meta...", real quotes from sources, end with a sharp insight. Variety—no repeats, all fresh. For heavy topics, deliver the facts and ripple effects clean.
+CRITICAL: Before generating, use your real-time web_search tool to verify 5-10 current events per topic from today or past week (e.g., query: "gaming news October 10-17 2025 site:ign.com OR site:gamespot.com"). Only include stories with confirmed sources. Require exact quotes and links in "source". If no recent events match a topic, use the closest verified recent one.
 For each story, provide:
 - "title": Punchy, no-BS headline.
 - "summary": 1 sentence teaser (under 30 words).
@@ -35,7 +35,7 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source
       model: 'grok-4-fast-non-reasoning',
       messages: [{ role: 'user', content: storiesPrompt }],
       response_format: { type: 'json_object' },
-      max_tokens: 3500, // Slight bump for tool outputs
+      max_tokens: 3500,
     });
     const storiesData = JSON.parse(storiesResponse.choices[0].message.content);
    
@@ -248,8 +248,8 @@ Output strict JSON only—no additional text, explanations, or markdown: {"group
     const filePath = path.join(folderName, fileName);
    
     const expandPrompt = `Write a sharp ~500-word article for a UK gamer tracking global moves: "${story.title}". Teaser: ${story.summary}.
-Grounded strictly in verified facts from real current events as of ${today}—use the web. No inventions, speculation, or additions—only real quotes, deets, and impacts. Keep it raw and real: Tight paras, no hand-holding, drop insights that stick. For world/UK topics, hit key updates and how they land on daily grinds; facts only.
-MANDATORY: Start by calling web_search or browse_page on "${story.source}" for today's facts (query: "${story.title} ${today}"). Base EVERY detail on results—include inline citations. If unverifiable, output: "<p>Verification failed: No confirmed events today.</p>".
+Grounded strictly in verified facts from real current events as of ${today} or recent (past week)—use the web. No inventions, speculation, or additions—only real quotes, deets, and impacts. Keep it raw and real: Tight paras, no hand-holding, drop insights that stick. For world/UK topics, hit key updates and how they land on daily grinds; facts only.
+MANDATORY: Start by calling web_search or browse_page on "${story.source}" for recent facts (query: "${story.title} October 10-17 2025"). Base EVERY detail on results—include inline citations. If unverifiable, use closest recent match.
 Structure:
 - Hook: 1 para.
 - Body: 3-4 sections with <h3> (e.g., "The Drop", "Ripple Effects"), facts/quotes.
@@ -275,7 +275,7 @@ Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words
     } catch (error) {
       console.error(`Story ${story.globalId} error:`, error);
       // Enhanced fallback: Quick fact-check
-      const factCheckPrompt = `Fact-check this story title and summary against real news today (${today}): "${story.title}". ${story.summary}. Output ONLY a short HTML para: If verified, "<p>Verified facts incoming—check back.</p>"; else "<p>Unverified: Skipping for accuracy. Real update: [brief real alternative from web_search].</p>". Use web_search first.`;
+      const factCheckPrompt = `Fact-check this story title and summary against real news recent (${today}): "${story.title}". ${story.summary}. Output ONLY a short HTML para: If verified, "<p>Verified facts incoming—check back.</p>"; else "<p>Unverified: Skipping for accuracy. Real update: [brief real alternative from web_search].</p>". Use web_search first with query "${story.title} October 10-17 2025".`;
       try {
         const fallbackResponse = await openai.chat.completions.create({
           model: 'grok-4-fast-non-reasoning',
