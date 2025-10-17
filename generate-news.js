@@ -20,7 +20,7 @@ Mix for relevance: Link world/UK stuff to gaming/tech where it fits based on rea
 
 For each story, provide:
 - "title": Punchy, no-BS headline.
-- "summary": 1-2 sentence teaser (under 50 words).
+- "summary": 1 sentence teaser (under 30 words).
 - "source": Real news source (e.g., BBC, IGN, Reuters) and brief fact basis (e.g., "BBC: Official announcement").
 
 Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source": "..."} ] }. Exactly 20 stories.`;
@@ -51,17 +51,23 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source
   let groupsData = { groups: [] };
   let rawGroupingResponse = '';
   try {
+    // Condense input to reduce size
+    const condensedStories = flatStories.map(s => ({
+      title: s.title,
+      summary: s.summary.substring(0, 50) + '...',
+      source: s.source
+    }));
     const groupingPrompt = `You are a categorizer for a gamer's mixed feed. Take these 20 stories and group them into 4-6 dynamic, on-point categories based on content (e.g., "Epic Updates Incoming" for games, "Gear Grind" for hardware, "Global Alert" for wars/crises, "Gov Watch" for UK politics). Each group 3-5 stories (total 20). Make categories snap from the stories—direct, no fluff.
 
-Input stories: ${JSON.stringify(flatStories)}.
+Input stories: ${JSON.stringify(condensedStories)}.
 
-Output strict JSON only—no additional text, explanations, or markdown: {"groups": [{"name": "On-Point Group Name", "stories": [ {"title": "...", "summary": "...", "source": "..."} ] } ] }.`;
+Output strict JSON only—no additional text, explanations, or markdown: {"groups": [{"name": "On-Point Group Name", "stories": [ {"title": "...", "summary": "...", "source": "..."} ] } ] }. Use the full original story objects from input for stories array.`;
 
     const groupingResponse = await openai.chat.completions.create({
       model: 'grok-4-fast-reasoning',
       messages: [{ role: 'user', content: groupingPrompt }],
       response_format: { type: 'json_object' },
-      max_tokens: 1500,
+      max_tokens: 4000,  // Increased for safety
     });
 
     rawGroupingResponse = groupingResponse.choices[0].message.content;
@@ -76,24 +82,30 @@ Output strict JSON only—no additional text, explanations, or markdown: {"group
   } catch (error) {
     console.error('Grouping error:', error);
     console.error('Raw response for debug:', rawGroupingResponse);  // Full raw for troubleshooting
-    // Retry once with cleaned prompt
+    // Retry once with even simpler prompt and condensed input
     try {
-      const retryPrompt = `Parse this input and output ONLY valid JSON for grouping: Input: ${JSON.stringify(flatStories)}. Groups: 4-6 categories, 3-5 stories each, total 20. Format: {"groups": [{"name": "Name", "stories": [story objects]} ] }. No other text.`;
+      const condensedStories = flatStories.map(s => ({
+        title: s.title,
+        summary: s.summary.substring(0, 30) + '...',
+        source: s.source
+      }));
+      const retryPrompt = `Group these 20 stories into exactly 5 categories (4 stories each). Categories: Game Drops, PC Power-Ups, World Buzz, UK Scoop, Tech Mix. Output ONLY JSON: {"groups": [{"name": "Category Name", "stories": [story objects from input]} ] }. Input: ${JSON.stringify(condensedStories)}.`;
+
       const retryResponse = await openai.chat.completions.create({
         model: 'grok-4-fast-reasoning',
         messages: [{ role: 'user', content: retryPrompt }],
         response_format: { type: 'json_object' },
-        max_tokens: 1500,
+        max_tokens: 2000,
       });
       groupsData = JSON.parse(retryResponse.choices[0].message.content);
-      if (groupsData.groups && groupsData.groups.reduce((acc, g) => acc + (g.stories?.length || 0), 0) === 20) {
+      if (groupsData.groups && groupsData.groups.length === 5 && groupsData.groups.reduce((acc, g) => acc + (g.stories?.length || 0), 0) === 20) {
         console.log('Retry grouping succeeded.');
       } else {
         throw new Error('Retry failed');
       }
     } catch (retryError) {
       console.error('Retry failed:', retryError);
-      // Enhanced fallback: Simple even split into 5 groups
+      // Enhanced fallback: Simple even split into 5 groups with original stories
       const groupNames = ["Game Drops", "PC Power-Ups", "World Buzz", "UK Scoop", "Tech Mix"];
       groupsData = { groups: [] };
       for (let g = 0; g < 5; g++) {
