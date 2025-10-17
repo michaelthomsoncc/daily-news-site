@@ -29,7 +29,7 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source
   let flatStories = [];
   try {
     const storiesResponse = await openai.chat.completions.create({
-      model: 'grok-4',
+      model: 'grok-4-fast-reasoning',
       messages: [{ role: 'user', content: storiesPrompt }],
       response_format: { type: 'json_object' },
       max_tokens: 3500,
@@ -88,7 +88,7 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source
 Input stories: ${JSON.stringify(indexedStories)}.
 Output strict JSON only—no additional text, explanations, or markdown: {"groups": [{"name": "On-Point Group Name", "indices": [0, 2, 5] }] }. Use indices from input (numbers 0-${numStories-1}) for each group. Exactly 3-6 groups, total indices across all =${numStories}, no duplicates.`;
     const groupingResponse = await openai.chat.completions.create({
-      model: 'grok-4',
+      model: 'grok-4-fast-reasoning',
       messages: [{ role: 'user', content: groupingPrompt }],
       response_format: { type: 'json_object' },
       max_tokens: 5000,
@@ -133,7 +133,7 @@ Output strict JSON only—no additional text, explanations, or markdown: {"group
       const storiesPerGroup = Math.ceil(numStories / numGroups);
       const retryPrompt = `Group these ${numStories} stories into exactly ${numGroups} categories (~${storiesPerGroup} each). Suggested categories: Game Drops, PC Power-Ups, World Buzz, UK Scoop, Tech Mix (adapt as needed). Use indices 0-${numStories-1} from input—no more, no less. Output ONLY JSON: {"groups": [{"name": "Category Name", "indices": [0,1,2,3]} ] }. Input: ${JSON.stringify(indexedStories)}.`;
       const retryResponse = await openai.chat.completions.create({
-        model: 'grok-4',
+        model: 'grok-4-fast-reasoning',
         messages: [{ role: 'user', content: retryPrompt }],
         response_format: { type: 'json_object' },
         max_tokens: 3000,
@@ -260,7 +260,7 @@ Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words
 
     try {
       const storyResponse = await openai.chat.completions.create({
-        model: 'grok-4',
+        model: 'grok-4-fast-reasoning',
         messages: [{ role: 'user', content: expandPrompt }],
         max_tokens: 2500,
         search_parameters: {
@@ -292,7 +292,7 @@ Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words
       const factCheckPrompt = `Fact-check this story title and summary against real news recent (${today}): "${story.title}". ${story.summary}. Output ONLY a short HTML para: If verified, "<p>Verified facts incoming—check back.</p>"; else "<p>Unverified: Skipping for accuracy. Real update: [brief real alternative from live search].</p>". Perform live search first with query "${story.title} October 10-17 2025".`;
       try {
         const fallbackResponse = await openai.chat.completions.create({
-          model: 'grok-4',
+          model: 'grok-4-fast-reasoning',
           messages: [{ role: 'user', content: factCheckPrompt }],
           max_tokens: 300,
           search_parameters: {
