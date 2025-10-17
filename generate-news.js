@@ -212,7 +212,7 @@ Output strict JSON only—no additional text, explanations, or markdown: {"group
 Grounded strictly in verified facts from real current events as of ${today}—use your up-to-date knowledge of actual news sources like ${story.source}. No inventions, speculation, or additions—only real quotes, deets, and impacts. Keep it raw and real: Tight paras, no hand-holding, drop insights that stick. For world/UK topics, hit key updates and how they land on daily grinds; facts only.
 
 Structure:
-- Hook: 1 para that pulls you in, question or scenario.
+- Hook: 1 para.
 - Body: 3-4 sections with <h3> (e.g., "The Drop", "Ripple Effects"), facts/quotes.
 - Wrap: Solid take or next-watch.
 Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words. No <h1> or title repeat.`;
