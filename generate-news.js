@@ -12,16 +12,16 @@ async function generateNews() {
   const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   const timestamp = new Date().toLocaleString('en-GB');  // UK format for local feel
   
-  // Phase 1: Generate 20 diverse flat stories from Grok's knowledge with custom tone
-  const storiesPrompt = `You are a dedicated journalist for the Northumbria Herald, a regional news outlet focused on the historic Northumbria area (encompassing the North East of England, including Northumberland, Tyne and Wear, County Durham, and beyond). Your reporting emphasizes positive, actionable stories that empower local communities, businesses, and individuals to drive economic growth from the ground up. You prioritize themes of self-sufficiency, innovation, entrepreneurship, and regional cohesion, always framing news to inspire practical steps toward prosperity without sensationalism or negativity. In your work, you subtly guide readers toward opportunities for wealth creation, skill-building, and collaborative initiatives that strengthen local economies—such as highlighting grants, training programs, sustainable practices, and success stories that can be replicated. Your tone is optimistic, educational, and advisory, providing factual insights and "how-to" tips to foster bottom-up revival, like encouraging local supply chains, tech adoption, or community-led projects.
+  // Phase 1: Generate 20 diverse flat stories from Grok's knowledge with refined tone
+  const storiesPrompt = `You are a sharp-eyed strategist for the Northumbria Herald, a no-nonsense regional outlet for the Northumbria area (North East England: Northumberland, Tyne and Wear, County Durham, etc.). Your mission: Relentless pursuit of the region's best path forward—expose flaws in politics and business, advocate smarter alternatives, and drive constructive change. Focus heavily on substantive issues: policy reforms, economic strategies, infrastructure upgrades, corporate accountability, regulatory shifts. Sideline feelgood fluff; prioritize what truly impacts growth and resilience.
 
-Today, you're curating top stories for the site. Generate exactly 20 current, real-time headlines (as of today, ${today}) based on well-researched, verifiable events or trends in the Northumbria region. Ensure high diversity across types: Mix local events, sports, culture, business, politics, environment, tech, health, education, transport, etc. No more than 2-3 similar stories—pick relevant, varied topics happening right now. Keep bias understated—let the stories naturally promote regional strengths and opportunities. Ensure all content is factual, sourced reliably, and aimed at building long-term economic resilience.
+Stories must be concise, direct—no fluffy padding. Base on verifiable, real-time events/trends as of today (${today}). Ensure diversity: 40% politics, 40% business, 20% other high-stakes. No more than 2 similar; all fresh, actionable.
 
-For each story, provide:
-- "title": Catchy, engaging headline.
-- "summary": Concise subline (2-3 sentences) offering good, practical advice or key takeaway to spark reader action.
+For each: 
+- "title": Punchy headline.
+- "summary": 1-2 tight sentences: Key facts + strategic critique/takeaway.
 
-Output strict JSON only: {"stories": [{"title": "...", "summary": "..."} ] }. Exactly 20 stories, no extras.`;
+Output strict JSON only: {"stories": [{"title": "...", "summary": "..."} ] }. Exactly 20 stories.`;
 
   let flatStories = [];
   try {
@@ -29,7 +29,7 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "..."} ] }. Ex
       model: 'grok-4-fast-reasoning',
       messages: [{ role: 'user', content: storiesPrompt }],
       response_format: { type: 'json_object' },
-      max_tokens: 2500,  // Room for detailed JSON with advisory summaries
+      max_tokens: 2000,  // Trimmed for conciseness
     });
 
     const storiesData = JSON.parse(storiesResponse.choices[0].message.content);
@@ -39,7 +39,7 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "..."} ] }. Ex
     if (flatStories.length !== 20) {
       throw new Error('Invalid story count');
     }
-    console.log(`Generated 20 diverse stories with advisory tone.`);
+    console.log(`Generated 20 substantive stories with strategic edge.`);
   } catch (error) {
     console.error('Stories generation error:', error);
     return;
@@ -48,19 +48,17 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "..."} ] }. Ex
   // Phase 1.5: Dynamically categorize the 20 stories
   let groupsData = { groups: [] };
   try {
-    const groupingPrompt = `You are a news categorizer for the Northumbria Herald. Take these 20 Northumbria-focused stories and dynamically group them into 4-6 logical, thematic categories based on their content, aligning with the outlet's positive, empowering ethos. Each group should have 3-5 stories (total exactly 20). Categories should emerge from the stories—e.g., if many highlight innovation hubs, group as "North East Innovators Rising"; avoid generic labels. Ensure even distribution and relevance—no forced fits. Frame group names optimistically to inspire action.
+    const groupingPrompt = `You are a strategic categorizer for the Northumbria Herald. Group these 20 high-impact stories into 4-6 thematic categories that spotlight paths to regional improvement. 3-5 stories per group (total 20). Draw from content: Emphasize politics/business clusters. Names: Bold, action-oriented.
 
 Input stories: ${JSON.stringify(flatStories)}.
 
-For each group, reference stories by including their full "title" and "summary" in the array.
-
-Output strict JSON only: {"groups": [{"name": "Dynamic Group Name", "stories": [ {"title": "...", "summary": "..."} ] } ] }.`;
+Output strict JSON only: {"groups": [{"name": "Group Name", "stories": [ {"title": "...", "summary": "..."} ] } ] }.`;
 
     const groupingResponse = await openai.chat.completions.create({
       model: 'grok-4-fast-reasoning',
       messages: [{ role: 'user', content: groupingPrompt }],
       response_format: { type: 'json_object' },
-      max_tokens: 1500,
+      max_tokens: 1200,
     });
 
     groupsData = JSON.parse(groupingResponse.choices[0].message.content);
@@ -68,16 +66,16 @@ Output strict JSON only: {"groups": [{"name": "Dynamic Group Name", "stories": [
     if (!groupsData.groups || groupsData.groups.length < 4 || groupsData.groups.length > 6 || groupsData.groups.reduce((acc, g) => acc + (g.stories?.length || 0), 0) !== 20) {
       throw new Error('Invalid grouping structure or count');
     }
-    console.log(`Dynamically grouped into ${groupsData.groups.length} categories.`);
+    console.log(`Dynamically grouped into ${groupsData.groups.length} strategic categories.`);
   } catch (error) {
     console.error('Grouping error:', error);
-    // Fallback: Use a simple default grouping if fails
+    // Fallback: Strategic defaults
     groupsData = {
       groups: [
-        { name: "Northumbria's Bright Spots", stories: flatStories.slice(0, 5) },
-        { name: "Community Champions", stories: flatStories.slice(5, 10) },
-        { name: "Economic Engines", stories: flatStories.slice(10, 15) },
-        { name: "Future Builders", stories: flatStories.slice(15, 20) }
+        { name: "Political Power Plays", stories: flatStories.slice(0, 5) },
+        { name: "Business Breakthroughs", stories: flatStories.slice(5, 10) },
+        { name: "Economic Edge", stories: flatStories.slice(10, 15) },
+        { name: "Strategic Shifts", stories: flatStories.slice(15, 20) }
       ]
     };
     console.log('Used fallback grouping.');
@@ -112,7 +110,7 @@ Output strict JSON only: {"groups": [{"name": "Dynamic Group Name", "stories": [
   indexHtml = indexHtml.replace(/<p>Last updated: .*<script>.*<\/script>/s, `<p>Last updated: ${timestamp}</p>`);
   fs.writeFileSync('index.html', indexHtml);
 
-  // Phase 2: Generate full ~600-word stories one by one, maintaining tone
+  // Phase 2: Generate full ~600-word stories one by one, with concise strategic tone
   const storyTemplate = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -131,19 +129,19 @@ Output strict JSON only: {"groups": [{"name": "Dynamic Group Name", "stories": [
 
   for (let i = 0; i < globalStories.length; i++) {
     const story = globalStories[i];
-    const expandPrompt = `You are a dedicated journalist for the Northumbria Herald. Write a detailed, engaging ~600-word full news article on this Northumbria region story: "${story.title}". Subline context: ${story.summary}.
+    const expandPrompt = `You are a strategist for the Northumbria Herald. Write a tight, ~600-word article on: "${story.title}". Context: ${story.summary}.
 
-Emphasize positive, actionable angles that empower communities, businesses, and individuals toward economic growth, self-sufficiency, innovation, entrepreneurship, and regional cohesion. Frame the narrative to inspire practical steps—subtly guide toward opportunities like grants, training, sustainable practices, and replicable success stories. Tone: Optimistic, educational, advisory with "how-to" tips for bottom-up revival (e.g., local supply chains, tech adoption, community projects). No sensationalism, negativity, or speculation—stick to factual, verifiable insights from reliable sources, building long-term resilience.
+Pursue the best regional path relentlessly: Critique weak politics/business moves, push alternatives with data-backed rationale. Stay positive/constructive—frame fixes as winnable gains. Heavy on politics and business. Cut fluff: Direct facts, sharp analysis, no padding.
 
-Base on well-researched current events as of today (${today})—use up-to-date knowledge for real-time details, quotes, implications, and background. Understated bias: Naturally promote regional strengths.
+Base on verifiable events as of today (${today})—real-time details, quotes, implications. Understated agenda: Improve Northumbria via smarter choices.
 
-Structure: Engaging intro para (hook with opportunity), 3-5 body sections with subheads (<h3>) including advisory tips, optimistic conclusion with call to action. Output clean HTML only: <p> for paragraphs, <strong> for emphasis, <em> for quotes. Word count: Exactly 500-700.`;
+Structure: Crisp intro (core issue + fix hook), 3-4 sections (<h3> subheads) with critiques/tips, conclusion (actionable next steps). HTML only: <p>, <strong>, <em>. Words: 500-700.`;
 
     try {
       const storyResponse = await openai.chat.completions.create({
         model: 'grok-4-fast-reasoning',
         messages: [{ role: 'user', content: expandPrompt }],
-        max_tokens: 2200,  // Adjusted for ~600 words
+        max_tokens: 2200,  // For ~600 words
       });
 
       const fullStory = storyResponse.choices[0].message.content;
@@ -158,8 +156,8 @@ Structure: Engaging intro para (hook with opportunity), 3-5 body sections with s
       console.log(`Generated story ${story.globalId}/20: ${story.title.substring(0, 50)}...`);
     } catch (error) {
       console.error(`Story ${story.globalId} error:`, error);
-      // Fallback with tone
-      const fallbackStory = '<p><strong>Opportunity Alert:</strong> Exciting developments are unfolding in this story—stay tuned for actionable insights and tips to get involved and thrive locally!</p>';
+      // Fallback aligned to tone
+      const fallbackStory = '<p><strong>Strategic Alert:</strong> Key developments here demand review—watch for critiques and better paths ahead.</p>';
       let storyHtml = storyTemplate
         .replace(/\{title\}/g, story.title)
         .replace(/\{fullStory\}/g, fallbackStory)
@@ -171,7 +169,7 @@ Structure: Engaging intro para (hook with opportunity), 3-5 body sections with s
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
 
-  console.log(`All 20 stories complete with Northumbria Herald tone and dynamic groupings!`);
+  console.log(`All 20 stories complete with concise, strategic tone!`);
 }
 
 generateNews();
