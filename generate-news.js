@@ -49,12 +49,13 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source
 
   // Phase 1.5: Dynamically categorize the 20 stories for mixed-interest sections
   let groupsData = { groups: [] };
+  let rawGroupingResponse = '';
   try {
     const groupingPrompt = `You are a categorizer for a gamer's mixed feed. Take these 20 stories and group them into 4-6 dynamic, on-point categories based on content (e.g., "Epic Updates Incoming" for games, "Gear Grind" for hardware, "Global Alert" for wars/crises, "Gov Watch" for UK politics). Each group 3-5 stories (total 20). Make categories snap from the stories—direct, no fluff.
 
 Input stories: ${JSON.stringify(flatStories)}.
 
-Output strict JSON only: {"groups": [{"name": "On-Point Group Name", "stories": [ {"title": "...", "summary": "...", "source": "..."} ] } ] }.`;
+Output strict JSON only—no additional text, explanations, or markdown: {"groups": [{"name": "On-Point Group Name", "stories": [ {"title": "...", "summary": "...", "source": "..."} ] } ] }.`;
 
     const groupingResponse = await openai.chat.completions.create({
       model: 'grok-4-fast-reasoning',
@@ -63,7 +64,10 @@ Output strict JSON only: {"groups": [{"name": "On-Point Group Name", "stories": 
       max_tokens: 1500,
     });
 
-    groupsData = JSON.parse(groupingResponse.choices[0].message.content);
+    rawGroupingResponse = groupingResponse.choices[0].message.content;
+    console.log('Raw grouping response preview:', rawGroupingResponse.substring(0, 200) + '...');  // Log snippet for debug
+
+    groupsData = JSON.parse(rawGroupingResponse);
     
     if (!groupsData.groups || groupsData.groups.length < 4 || groupsData.groups.length > 6 || groupsData.groups.reduce((acc, g) => acc + (g.stories?.length || 0), 0) !== 20) {
       throw new Error('Invalid grouping structure or count');
@@ -71,16 +75,36 @@ Output strict JSON only: {"groups": [{"name": "On-Point Group Name", "stories": 
     console.log(`Dynamically grouped into ${groupsData.groups.length} mixed categories.`);
   } catch (error) {
     console.error('Grouping error:', error);
-    // Fallback: Mixed-themed groups
-    groupsData = {
-      groups: [
-        { name: "Game Drops", stories: flatStories.slice(0, 5) },
-        { name: "PC Power-Ups", stories: flatStories.slice(5, 10) },
-        { name: "World Buzz", stories: flatStories.slice(10, 15) },
-        { name: "UK Scoop", stories: flatStories.slice(15, 20) }
-      ]
-    };
-    console.log('Used fallback grouping.');
+    console.error('Raw response for debug:', rawGroupingResponse);  // Full raw for troubleshooting
+    // Retry once with cleaned prompt
+    try {
+      const retryPrompt = `Parse this input and output ONLY valid JSON for grouping: Input: ${JSON.stringify(flatStories)}. Groups: 4-6 categories, 3-5 stories each, total 20. Format: {"groups": [{"name": "Name", "stories": [story objects]} ] }. No other text.`;
+      const retryResponse = await openai.chat.completions.create({
+        model: 'grok-4-fast-reasoning',
+        messages: [{ role: 'user', content: retryPrompt }],
+        response_format: { type: 'json_object' },
+        max_tokens: 1500,
+      });
+      groupsData = JSON.parse(retryResponse.choices[0].message.content);
+      if (groupsData.groups && groupsData.groups.reduce((acc, g) => acc + (g.stories?.length || 0), 0) === 20) {
+        console.log('Retry grouping succeeded.');
+      } else {
+        throw new Error('Retry failed');
+      }
+    } catch (retryError) {
+      console.error('Retry failed:', retryError);
+      // Enhanced fallback: Simple even split into 5 groups
+      const groupNames = ["Game Drops", "PC Power-Ups", "World Buzz", "UK Scoop", "Tech Mix"];
+      groupsData = { groups: [] };
+      for (let g = 0; g < 5; g++) {
+        const start = g * 4;
+        groupsData.groups.push({
+          name: groupNames[g],
+          stories: flatStories.slice(start, start + 4)
+        });
+      }
+      console.log('Used enhanced fallback grouping.');
+    }
   }
 
   // Prepare global stories list with IDs for file naming
