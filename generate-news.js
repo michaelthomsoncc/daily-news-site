@@ -16,7 +16,7 @@ async function generateNews() {
     "title": "Engaging headline",
     "summary": "2-3 sentence teaser for index page",
     "fullStory": "Detailed 200-300 word article in clean HTML (<p>, <strong>, etc.). Neutral, engaging tone."
-  }. Focus on global top stories (world, tech, politics, etc.).`;
+  }. Focus on global top stories (world, tech, politics, etc.). Output as {"stories": [array]}.`;
 
   try {
     const response = await openai.chat.completions.create({
@@ -26,7 +26,8 @@ async function generateNews() {
     });
 
     const jsonStr = response.choices[0].message.content;
-    const stories = JSON.parse(jsonStr).stories || [];  // Assume root has 'stories' array
+    const data = JSON.parse(jsonStr);
+    const stories = data.stories || [];  // Root has 'stories' array
 
     if (stories.length === 0) throw new Error('No stories generated');
 
@@ -34,17 +35,21 @@ async function generateNews() {
     const storyFiles = fs.readdirSync('.').filter(f => f.startsWith('story') && f.endsWith('.html'));
     storyFiles.forEach(file => fs.unlinkSync(file));
 
-    // Generate index.html
+    // Generate index.html with regex replace for robustness
     let indexHtml = fs.readFileSync('index.html', 'utf8');
-    let newsList = '<ul>';
-    stories.forEach((story, i) => {
-      newsList += `<li><a href="story${i+1}.html">${story.title}</a>: ${story.summary}</li>`;
-    });
-    newsList += '</ul><p>Last updated: ' + timestamp + '</p>';
-    indexHtml = indexHtml.replace('<div id="news-content">Loading...</div>', `<div id="news-content">${newsList}</div>`);
+    
+    // Replace entire news-content div
+    const newDiv = `<div id="news-content"><ul>${stories.map((story, i) => 
+      `<li><a href="story${i+1}.html">${story.title}</a>: ${story.summary}</li>`
+    ).join('')}</ul></div>`;
+    indexHtml = indexHtml.replace(/<div id="news-content">.*?<\/div>/s, newDiv);
+    
+    // Update timestamp (remove old <p> and script for clean slate)
+    indexHtml = indexHtml.replace(/<p>Last updated: <span id="update-time"><\/span><\/p>.*?<\/script>/s, `<p>Last updated: ${timestamp}</p>`);
+    
     fs.writeFileSync('index.html', indexHtml);
 
-    // Generate story pages
+    // Generate story pages (unchanged)
     const storyTemplate = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -62,13 +67,13 @@ async function generateNews() {
 
     stories.forEach((story, i) => {
       let storyHtml = storyTemplate
-        .replace('{title}', story.title)
-        .replace('{fullStory}', story.fullStory)
-        .replace('{timestamp}', timestamp);
+        .replace(/\{title\}/g, story.title)
+        .replace(/\{fullStory\}/g, story.fullStory)
+        .replace(/\{timestamp\}/g, timestamp);
       fs.writeFileSync(`story${i+1}.html`, storyHtml);
     });
 
-    console.log(`Generated ${stories.length} stories!`);
+    console.log(`Generated ${stories.length} stories with links!`);
   } catch (error) {
     console.error('Error:', error);
   }
