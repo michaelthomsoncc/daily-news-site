@@ -1,0 +1,37 @@
+name: Update Daily News
+
+on:
+  schedule:
+    - cron: '0 6,12,18,22 * * *'  # 4 times a day UTC
+  workflow_dispatch:  # Manual trigger for testing
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4  # Checkout repo
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm init -y && npm install openai  # Use OpenAI SDK (Grok API compatible)
+
+      - name: Generate News HTML
+        env:
+          GROK_API_KEY: ${{ secrets.GROK_API_KEY }}
+        run: node generate-news.js
+
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add index.html
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update news for $(date)"
+            git push
+          fi
