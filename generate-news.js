@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
 
 const OpenAI = require('openai');
 
@@ -12,20 +13,50 @@ async function generateNews() {
   const currentDate = new Date();
   const today = currentDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   const timestamp = currentDate.toLocaleString('en-GB');  // UK format for local feel
-  const isoDate = currentDate.toISOString().split('T')[0];  // YYYY-MM-DD for prompts
+  const isoDate = currentDate.toISOString().split('T')[0];  // YYYY-MM-DD for API
   
-  // Profile of the target: A curious gaming enthusiast from Killingworth, UK. He's into the latest video game updates and upcoming releases, PC hardware drops, and real-world events—both exciting and gritty. He also tracks major global happenings like wars or crises  and UK government moves that could affect him (e.g., new tech taxes, gaming age limits, school policy changes). Wants quick, straight-up reads that hit hard, with real insights on builds or global ripples. Content must be real-time, factual, no fluff—grounded in today's news as of ${today}. Handle sensitive topics straight: Facts and impacts, no sugarcoating.
+  // Phase 0: Fetch real-time articles from NewsAPI for factual grounding
+  let articles = [];
+  try {
+    // Queries tailored to profile: gaming, PC hardware, world events, UK gov
+    const queries = [
+      `gaming OR "video games" OR fortnite OR "gta vi" from:${isoDate}`,  // Games
+      `pc hardware OR gpu OR "rtx 50" OR controller OR keyboard from:${isoDate}`,  // PC
+      `uk government OR policy OR tax OR regulation gaming OR tech from:${isoDate}`,  // UK Gov
+      `war OR ukraine OR "middle east" OR crisis global from:${isoDate}`  // World
+    ];
+    const allArticles = [];
+    for (const q of queries) {
+      const response = await axios.get(
+        `https://newsapi.org/v2/everything?q=${encodeURIComponent(q)}&from=${isoDate}&sortBy=publishedAt&pageSize=10&apiKey=${process.env.NEWS_API_KEY}`
+      );
+      allArticles.push(...response.data.articles.filter(a => a.title && a.description));
+    }
+    // Dedupe by title
+    const seen = new Set();
+    articles = allArticles.filter(article => {
+      if (seen.has(article.title)) return false;
+      seen.add(article.title);
+      return true;
+    }).slice(0, 30);  // Cap for efficiency
+    console.log(`Fetched ${articles.length} real articles from NewsAPI.`);
+  } catch (error) {
+    console.error('NewsAPI fetch error:', error.message);
+    articles = [];  // Fallback to Grok knowledge
+  }
 
-  // Phase 1: Generate 20 diverse flat stories tailored to the gaming/PC/world/UK gov profile
-  const storiesPrompt = `You are a gaming, tech, and world news curator for a sharp UK gamer. Generate exactly 20 unique, real-time stories based on well-researched, factually accurate current events from your up-to-date knowledge as of ${today}. Balance topics: ~7 on new game updates/releases or other gaming topics, ~5 on PC hardware, ~4 on major world events (wars, global crises, etc.—keep factual, focus on updates/impacts), ~4 on UK government actions that he might be interested in, particulary when they are affecting him.
+  // Phase 1: Use real articles to generate 20 diverse flat stories
+  const articlesJson = JSON.stringify(articles.map(a => ({ title: a.title, description: a.description, url: a.url, source: a.source.name })));
+  const storiesPrompt = `You are a gaming, tech, and world news curator for a sharp UK gamer. Using these ${articles.length} real-time articles from verified sources as of ${today} (${articlesJson}), generate exactly 20 unique stories grounded strictly in their facts—no inventions. Balance: ~7 game-related, ~5 PC hardware, ~4 world events (wars/crises—factual updates/impacts), ~4 UK gov actions (policies affecting tech/gaming).
 
-Mix for relevance:  Variety—no repeats, all fresh from today. For heavy topics, deliver the facts and ripple effects clean.
+If fewer articles, supplement with your factual knowledge of today's events only. Link where relevant (e.g., gov policy delaying hardware imports). Make it straight fire: Direct language, "This could flip your meta...", quotes from articles, end with a sharp insight. Variety—no repeats.
 
 For each story, provide:
 - "title": Punchy, no-BS headline.
-- "summary": 1-2 sentence teaser (under 50 words, cuts to the chase).
+- "summary": 1-2 sentence teaser (under 50 words).
+- "source": Original article source/URL if applicable.
 
-Output strict JSON only: {"stories": [{"title": "...", "summary": "..."} ] }. Exactly 20 stories, no extras.`;
+Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source": "..."} ] }. Exactly 20 stories.`;
 
   let flatStories = [];
   try {
@@ -33,7 +64,7 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "..."} ] }. Ex
       model: 'grok-4-fast-reasoning',
       messages: [{ role: 'user', content: storiesPrompt }],
       response_format: { type: 'json_object' },
-      max_tokens: 2500,  // Room for detailed JSON
+      max_tokens: 3000,
     });
 
     const storiesData = JSON.parse(storiesResponse.choices[0].message.content);
@@ -43,7 +74,7 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "..."} ] }. Ex
     if (flatStories.length !== 20) {
       throw new Error('Invalid story count');
     }
-    console.log(`Generated 20 diverse stories tailored to the gaming/world profile.`);
+    console.log(`Generated 20 factual stories from real sources.`);
   } catch (error) {
     console.error('Stories generation error:', error);
     return;
@@ -56,7 +87,7 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "..."} ] }. Ex
 
 Input stories: ${JSON.stringify(flatStories)}.
 
-Output strict JSON only: {"groups": [{"name": "On-Point Group Name", "stories": [ {"title": "...", "summary": "..."} ] } ] }.`;
+Output strict JSON only: {"groups": [{"name": "On-Point Group Name", "stories": [ {"title": "...", "summary": "...", "source": "..."} ] } ] }.`;
 
     const groupingResponse = await openai.chat.completions.create({
       model: 'grok-4-fast-reasoning',
@@ -98,21 +129,21 @@ Output strict JSON only: {"groups": [{"name": "On-Point Group Name", "stories": 
   const storyFiles = fs.readdirSync('.').filter(f => f.startsWith('story') && f.endsWith('.html'));
   storyFiles.forEach(file => fs.unlinkSync(file));
 
-  // Generate index.html with grouped structure (headlines only, cleaner layout)
+  // Generate index.html with grouped structure (full panels clickable)
   let indexHtml = fs.readFileSync('index.html', 'utf8');
   let newDiv = '<div id="news-content">';
   groupsData.groups.forEach(group => {
     newDiv += `<h2>${group.name}</h2><ul class="headlines-list">`;
     group.stories.forEach(story => {
       const globalStory = globalStories.find(s => s.title === story.title && s.summary === story.summary);
-      newDiv += `<li><a href="story${globalStory.globalId}.html"><strong>${story.title}</strong></a><br><small>${story.summary}</small></li>`;
+      newDiv += `<li class="clickable-panel"><a href="story${globalStory.globalId}.html" class="full-link"><strong>${story.title}</strong><br><small>${story.summary}</small><br><span class="source">Via ${story.source}</span></a></li>`;
     });
     newDiv += '</ul>';
   });
   newDiv += '</div>';
   indexHtml = indexHtml.replace(/<div id="news-content">.*?<\/div>/s, newDiv);
   indexHtml = indexHtml.replace(/<p>Last updated: .*<script>.*<\/script>/s, `<p>Last updated: ${timestamp} | Your Daily Gaming, Tech & World Fix</p>`);
-  // Add simple CSS for better layout, all text black
+  // Updated CSS for full clickable panels, all text black
   const cssUpdate = indexHtml.replace(
     /<style>.*?<\/style>/s,
     `<style> 
@@ -120,14 +151,16 @@ Output strict JSON only: {"groups": [{"name": "On-Point Group Name", "stories": 
       h1 { color: #000; } 
       h2 { color: #000; border-bottom: 2px solid #000; padding-bottom: 5px; } 
       ul.headlines-list { list-style: none; padding: 0; } 
-      ul.headlines-list li { margin: 15px 0; padding: 10px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); } 
-      a { color: #000; text-decoration: none; } a:hover { text-decoration: underline; } 
-      small { color: #666; display: block; margin-top: 5px; } 
+      ul.headlines-list li { margin: 15px 0; } 
+      .clickable-panel { cursor: pointer; } 
+      .full-link { display: block; padding: 10px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-decoration: none; color: inherit; } 
+      .full-link:hover { background: #f0f0f0; text-decoration: none; } 
+      .source { color: #666; font-size: 12px; } 
     </style>`
   );
   fs.writeFileSync('index.html', cssUpdate);
 
-  // Phase 2: Generate full ~500-word stories suited for a savvy gamer with world interests
+  // Phase 2: Generate full ~500-word stories from real sources
   const storyTemplate = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -142,12 +175,14 @@ Output strict JSON only: {"groups": [{"name": "On-Point Group Name", "stories": 
       .hook { font-style: italic; color: #000; font-size: 18px; } 
       a.back { color: #000; font-weight: bold; } 
       .tip { background: #f0f0f0; padding: 10px; border-left: 4px solid #000; margin: 20px 0; color: #000; } 
+      .source { font-style: italic; color: #666; } 
     </style>
 </head>
 <body>
     <h1>{title}</h1>
     <p><em>From the {groupName} section – Straight facts, no filter.</em></p>
     <div class="story">{fullStory}</div>
+    <p class="source">Sourced from: {source}</p>
     <div class="tip"><strong>Edge Insight:</strong> How's this shifting your play? Break it down with the crew.</div>
     <p><a href="index.html" class="back">← Back to headlines</a> | Updated: {timestamp}</p>
 </body>
@@ -155,9 +190,10 @@ Output strict JSON only: {"groups": [{"name": "On-Point Group Name", "stories": 
 
   for (let i = 0; i < globalStories.length; i++) {
     const story = globalStories[i];
+    const sourceDetails = story.source ? `Source: ${story.source}. Description: "${story.summary}". URL: ${story.source}` : 'Factual knowledge base.';
     const expandPrompt = `Write a sharp ~500-word article for a UK gamer tracking global moves: "${story.title}". Teaser: ${story.summary}.
 
-Based on real current events as of ${today}—verified facts, quotes from devs/leaders, leak deets. Keep it raw and real: Tight paras, no hand-holding, drop insights that stick. For world/UK topics, hit the key updates and how they land on daily grinds (e.g., "This could throttle your server speeds"); facts only, no drama spin.
+Grounded strictly in this real source as of ${today}—${sourceDetails}. Verified facts, quotes, deets only—no additions. Keep it raw and real: Tight paras, no hand-holding, drop insights that stick. For world/UK topics, hit key updates and how they land on daily grinds; facts only.
 
 Structure:
 - Hook: 1 para that pulls you in, question or scenario.
@@ -169,7 +205,7 @@ Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words
       const storyResponse = await openai.chat.completions.create({
         model: 'grok-4-fast-reasoning',
         messages: [{ role: 'user', content: expandPrompt }],
-        max_tokens: 2000,  // For ~500 words
+        max_tokens: 2000,
       });
 
       const fullStory = storyResponse.choices[0].message.content;
@@ -178,6 +214,7 @@ Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words
         .replace(/\{title\}/g, story.title)
         .replace(/\{fullStory\}/g, fullStory)
         .replace(/\{groupName\}/g, story.groupName)
+        .replace(/\{source\}/g, story.source || 'Independent Research')
         .replace(/\{timestamp\}/g, timestamp);
       fs.writeFileSync(`story${story.globalId}.html`, storyHtml);
       
@@ -190,6 +227,7 @@ Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words
         .replace(/\{title\}/g, story.title)
         .replace(/\{fullStory\}/g, fallbackStory)
         .replace(/\{groupName\}/g, story.groupName)
+        .replace(/\{source\}/g, story.source || 'Independent Research')
         .replace(/\{timestamp\}/g, timestamp);
       fs.writeFileSync(`story${story.globalId}.html`, storyHtml);
     }
@@ -197,7 +235,7 @@ Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
 
-  console.log(`All 20 stories complete – tailored for the savvy gamer with world vibes!`);
+  console.log(`All 20 stories complete – factual and sourced!`);
 }
 
 generateNews();
