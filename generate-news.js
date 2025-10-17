@@ -28,7 +28,7 @@ async function generateNews() {
   const storiesPerTopic = 10; // Overgenerate per topic
   let topicStories = {};
   for (let topic of topics) {
-    const topicPrompt = `You are a gaming, tech, and world news curator for a sharp 12 year old UK gamer. Use live search to generate exactly ${storiesPerTopic} unique stories from news in the last 24 hours based strictly on well-researched, factually accurate current events from the web as of ${today} on ${topic.description}. Do not invent, fabricate, or speculate—only use verified facts from real news. 
+    const topicPrompt = `You are a gaming, tech, and world news curator for a sharp 12 year old UK gamer. Use live search to generate exactly ${storiesPerTopic} unique stories from news in the last 24 hours based strictly on well-researched, factually accurate current events from the web as of ${today} on ${topic.description}. Do not invent, fabricate, or speculate—only use verified facts from real news.
 Mix for relevance: Link world/UK stuff to gaming/tech where it fits based on real connections. Make it straight fire: Direct language, real quotes from sources, end with a sharp insight. Variety—no repeats, all fresh. For heavy topics, deliver the facts and ripple effects clean.
 CRITICAL: Before generating, perform live search to verify 10-20 current events for this topic from the last 24 hours. Only include stories with confirmed sources. Require exact quotes and links in "source". If fewer than ${storiesPerTopic} recent events match, generate as many as possible.
 For each story, provide:
@@ -53,7 +53,7 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source
             { type: 'x' }
           ],
           from_date: fromDate,
-          to_date: toDate
+          toDate: toDate
         }
       });
       const data = JSON.parse(response.choices[0].message.content);
@@ -100,7 +100,7 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source
     summary: (s.summary || '').substring(0, 40)
   }));
   const targetSummary = topics.map(t => `${t.name}: ${t.target}`).join(', ');
-  const selectionPrompt = `You are curating a balanced news feed for a UK gamer. Select stories to meet these targets (${targetSummary}; total 20). 
+  const selectionPrompt = `You are curating a balanced news feed for a UK gamer. Select stories to meet these targets (${targetSummary}; total 20).
 From the provided stories, select up to the target number from each topic (prioritize diverse, high-impact, fresh ones across all). If fewer available for a topic, take all. Ensure no duplicates. Aim for exactly 20 total or as close as possible while maintaining proportions.
 Input stories: ${JSON.stringify(condensedForPrompt)}.
 Output strict JSON only: {"selectedIndices": [0, 5, 12, ...]} // List of global indices (numbers).`;
@@ -263,7 +263,7 @@ Output strict JSON only—no additional text, explanations, or markdown: {"group
   });
   newDiv += '</div>';
   indexHtml = indexHtml.replace(/<div id="news-content">.*?<\/div>/s, newDiv);
-  indexHtml = indexHtml.replace(/<p>Last updated: .*<script>.*<\/script>/s, `<p>Last updated: ${timestamp} | Your Daily Gaming, Tech & World Fix | Edition: ${folderName}</p>`);
+  indexHtml = indexHtml.replace(/<p>Last updated: .*?<\/p>/s, `<p>Last updated: ${timestamp} | Your Daily Gaming, Tech & World Fix | Edition: ${folderName}</p>`);
   // Updated CSS for full clickable panels, all text black
   const cssUpdate = indexHtml.replace(
     /<style>.*?<\/style>/s,
