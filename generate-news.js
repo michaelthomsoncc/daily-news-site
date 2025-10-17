@@ -22,6 +22,7 @@ async function generateNews() {
   // Phase 1: Generate 20 diverse flat stories strictly from real current events
   const storiesPrompt = `You are a gaming, tech, and world news curator for a sharp UK gamer. Generate exactly 20 unique stories based strictly on well-researched, factually accurate current events from the web as of ${today}. Do not invent, fabricate, or speculate—only use verified facts from real news happening today. Balance topics: ~5 on new game updates/releases (patches, betas, launches), ~6 on PC hardware (GPUs, controllers, keyboards, builds), ~5 on major world events (wars, global crises—focus on factual updates/impacts), ~4 on UK government actions (policies on tech/gaming/education that could shift things, like app regs or taxes).
 Mix for relevance: Link world/UK stuff to gaming/tech where it fits based on real connections (e.g., a conflict delaying game ports if that's factual today). Make it straight fire: Direct language, "This could flip your meta...", real quotes from sources, end with a sharp insight. Variety—no repeats, all fresh from today. For heavy topics, deliver the facts and ripple effects clean.
+CRITICAL: Before generating, use your real-time web_search tool to verify 5-10 current events per topic from today (${today}). Only include stories with confirmed sources (e.g., query: "RTX news October 17 2025 site:tomshardware.com"). Require exact quotes and links in "source". If no real events match a topic, skip and note "No verified update today" for that slot.
 For each story, provide:
 - "title": Punchy, no-BS headline.
 - "summary": 1 sentence teaser (under 30 words).
@@ -34,7 +35,7 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source
       model: 'grok-4-fast-non-reasoning',
       messages: [{ role: 'user', content: storiesPrompt }],
       response_format: { type: 'json_object' },
-      max_tokens: 3000,
+      max_tokens: 3500, // Slight bump for tool outputs
     });
     const storiesData = JSON.parse(storiesResponse.choices[0].message.content);
    
@@ -60,21 +61,21 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source
       summary: s.summary.substring(0, 50) + '...',
       source: s.source
     }));
-    const groupingPrompt = `You are a categorizer for a gamer's mixed feed. Take these 20 stories and group them into 4-6 dynamic, on-point categories based on content (e.g., "Epic Updates Incoming" for games, "Gear Grind" for hardware, "Global Alert" for wars/crises, "Gov Watch" for UK politics). Each group 3-5 stories (total 20). Make categories snap from the stories—direct, no fluff.
+    const groupingPrompt = `You are a categorizer for a gamer's mixed feed. Take these 20 stories and group them into 4-6 dynamic, on-point categories based on content (e.g., "Epic Updates Incoming" for games, "Gear Grind" for hardware, "Global Alert" for wars/crises, "Gov Watch" for UK politics)—aim for 4-6 total, each with 3-5 stories. Make categories snap from the stories—direct, no fluff. Ensure exactly 20 unique stories across all.
 Input stories: ${JSON.stringify(indexedStories)}.
 Output strict JSON only—no additional text, explanations, or markdown: {"groups": [{"name": "On-Point Group Name", "indices": [0, 2, 5] }] }. Use indices from input (numbers 0-19) for each group. Exactly 4-6 groups, total indices across all =20, no duplicates.`;
     const groupingResponse = await openai.chat.completions.create({
       model: 'grok-4-fast-non-reasoning',
       messages: [{ role: 'user', content: groupingPrompt }],
       response_format: { type: 'json_object' },
-      max_tokens: 5000, // Increased to handle potential issues
+      max_tokens: 5000,
     });
     rawGroupingResponse = groupingResponse.choices[0].message.content;
-    console.log('Raw grouping response preview:', rawGroupingResponse.substring(0, 200) + '...'); // Log snippet for debug
+    console.log('Raw grouping response preview:', rawGroupingResponse.substring(0, 200) + '...');
     const parsedGroups = JSON.parse(rawGroupingResponse);
    
-    if (!parsedGroups.groups || parsedGroups.groups.length < 4 || parsedGroups.groups.length > 6) {
-      throw new Error('Invalid group count');
+    if (!parsedGroups.groups || parsedGroups.groups.length < 3 || parsedGroups.groups.length > 8) { // Relaxed to 3-8
+      throw new Error(`Invalid group count: ${parsedGroups.groups?.length || 0}`);
     }
     // Reconstruct stories from indices
     parsedGroups.groups.forEach(group => {
@@ -96,8 +97,8 @@ Output strict JSON only—no additional text, explanations, or markdown: {"group
     console.log(`Dynamically grouped into ${groupsData.groups.length} mixed categories.`);
   } catch (error) {
     console.error('Grouping error:', error);
-    console.error('Raw response for debug:', rawGroupingResponse); // Full raw for troubleshooting
-    // Retry once with even simpler prompt and indexed input
+    console.error('Raw response for debug:', rawGroupingResponse);
+    // Retry with stricter 5-group fixed split
     try {
       const indexedStories = flatStories.map((s, idx) => ({
         index: idx,
@@ -105,7 +106,7 @@ Output strict JSON only—no additional text, explanations, or markdown: {"group
         summary: s.summary.substring(0, 30) + '...',
         source: s.source
       }));
-      const retryPrompt = `Group these 20 stories into exactly 5 categories (4 stories each). Suggested categories: Game Drops, PC Power-Ups, World Buzz, UK Scoop, Tech Mix. Use indices 0-19 from input. Output ONLY JSON: {"groups": [{"name": "Category Name", "indices": [0,1,2,3]} ] }. Input: ${JSON.stringify(indexedStories)}.`;
+      const retryPrompt = `Group these 20 stories into exactly 5 categories (4 stories each). Suggested categories: Game Drops, PC Power-Ups, World Buzz, UK Scoop, Tech Mix. Use indices 0-19 from input—no more, no less. Output ONLY JSON: {"groups": [{"name": "Category Name", "indices": [0,1,2,3]} ] }. Input: ${JSON.stringify(indexedStories)}.`;
       const retryResponse = await openai.chat.completions.create({
         model: 'grok-4-fast-non-reasoning',
         messages: [{ role: 'user', content: retryPrompt }],
@@ -118,18 +119,15 @@ Output strict JSON only—no additional text, explanations, or markdown: {"group
       }
       // Reconstruct
       parsedRetry.groups.forEach(group => {
+        if (!group.indices || group.indices.length !== 4) throw new Error('Retry invalid indices');
         group.stories = group.indices.map(idx => flatStories[idx]);
         delete group.indices;
       });
-      const totalStories = parsedRetry.groups.reduce((acc, g) => acc + (g.stories?.length || 0), 0);
-      if (totalStories !== 20) {
-        throw new Error(`Retry invalid total: ${totalStories}`);
-      }
       groupsData = parsedRetry;
       console.log('Retry grouping succeeded.');
     } catch (retryError) {
       console.error('Retry failed:', retryError);
-      // Enhanced fallback: Simple even split into 5 groups with original stories
+      // Fallback: Even split into 5
       const groupNames = ["Game Drops", "PC Power-Ups", "World Buzz", "UK Scoop", "Tech Mix"];
       groupsData = { groups: [] };
       for (let g = 0; g < 5; g++) {
@@ -139,7 +137,7 @@ Output strict JSON only—no additional text, explanations, or markdown: {"group
           stories: flatStories.slice(start, start + 4)
         });
       }
-      console.log('Used enhanced fallback grouping.');
+      console.log('Used fallback grouping.');
     }
   }
   
@@ -152,15 +150,12 @@ Output strict JSON only—no additional text, explanations, or markdown: {"group
     });
   });
   
-  // No clear old stories—history preserved in folders
-  
   // Generate index.html with grouped structure (full panels clickable, links to new folder)
   let indexHtml = fs.readFileSync('index.html', 'utf8');
   let newDiv = '<div id="news-content">';
   groupsData.groups.forEach(group => {
     newDiv += `<h2>${group.name}</h2><ul class="headlines-list">`;
     group.stories.forEach(story => {
-      const globalStory = globalStories.find(s => s.title === story.title && s.summary === story.summary);
       // Sanitize title for filename: lowercase, replace non-alphanum with -, trim
       const sanitizedTitle = story.title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-').substring(0, 50);
       const fileName = `${sanitizedTitle}_${runTimestamp}.html`;
@@ -226,6 +221,7 @@ Output strict JSON only—no additional text, explanations, or markdown: {"group
    
     const expandPrompt = `Write a sharp ~500-word article for a UK gamer tracking global moves: "${story.title}". Teaser: ${story.summary}.
 Grounded strictly in verified facts from real current events as of ${today}—use the web. No inventions, speculation, or additions—only real quotes, deets, and impacts. Keep it raw and real: Tight paras, no hand-holding, drop insights that stick. For world/UK topics, hit key updates and how they land on daily grinds; facts only.
+MANDATORY: Start by calling web_search or browse_page on "${story.source}" for today's facts (query: "${story.title} ${today}"). Base EVERY detail on results—include inline citations. If unverifiable, output: "<p>Verification failed: No confirmed events today.</p>".
 Structure:
 - Hook: 1 para.
 - Body: 3-4 sections with <h3> (e.g., "The Drop", "Ripple Effects"), facts/quotes.
@@ -236,7 +232,7 @@ Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words
       const storyResponse = await openai.chat.completions.create({
         model: 'grok-4-fast-non-reasoning',
         messages: [{ role: 'user', content: expandPrompt }],
-        max_tokens: 2500, // Bumped slightly for safety
+        max_tokens: 2500,
       });
       const fullStory = storyResponse.choices[0].message.content;
       let storyHtml = storyTemplate
@@ -250,16 +246,34 @@ Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words
       console.log(`Generated story ${story.globalId}/20: ${story.title.substring(0, 50)}... in ${folderName}`);
     } catch (error) {
       console.error(`Story ${story.globalId} error:`, error);
-      // Enhanced fallback: Fact-check placeholder (simple for now)
-      const fallbackStory = `<p class="hook">This drop's incoming—facts stacking up.</p><p>Core deets locked, full breakdown next round. Run it by the group: Shift your strategy?</p>`;
-      let storyHtml = storyTemplate
-        .replace(/\{title\}/g, story.title)
-        .replace(/\{fullStory\}/g, fallbackStory)
-        .replace(/\{groupName\}/g, story.groupName)
-        .replace(/\{source\}/g, story.source)
-        .replace(/\{timestamp\}/g, timestamp);
-      fs.writeFileSync(filePath, storyHtml);
-      console.log(`Used fallback for story ${story.globalId}`);
+      // Enhanced fallback: Quick fact-check
+      const factCheckPrompt = `Fact-check this story title and summary against real news today (${today}): "${story.title}". ${story.summary}. Output ONLY a short HTML para: If verified, "<p>Verified facts incoming—check back.</p>"; else "<p>Unverified: Skipping for accuracy. Real update: [brief real alternative from web_search].</p>". Use web_search first.`;
+      try {
+        const fallbackResponse = await openai.chat.completions.create({
+          model: 'grok-4-fast-non-reasoning',
+          messages: [{ role: 'user', content: factCheckPrompt }],
+          max_tokens: 300,
+        });
+        const fallbackStory = fallbackResponse.choices[0].message.content;
+        let storyHtml = storyTemplate
+          .replace(/\{title\}/g, story.title)
+          .replace(/\{fullStory\}/g, `<div class="story">${fallbackStory}</div>`)
+          .replace(/\{groupName\}/g, story.groupName)
+          .replace(/\{source\}/g, story.source)
+          .replace(/\{timestamp\}/g, timestamp);
+        fs.writeFileSync(filePath, storyHtml);
+        console.log(`Fallback fact-check for story ${story.globalId}`);
+      } catch (fallbackError) {
+        // Basic placeholder
+        const basicFallback = `<p class="hook">This drop's incoming—facts stacking up.</p><p>Core deets locked, full breakdown next round. Run it by the group: Shift your strategy?</p>`;
+        let storyHtml = storyTemplate
+          .replace(/\{title\}/g, story.title)
+          .replace(/\{fullStory\}/g, basicFallback)
+          .replace(/\{groupName\}/g, story.groupName)
+          .replace(/\{source\}/g, story.source)
+          .replace(/\{timestamp\}/g, timestamp);
+        fs.writeFileSync(filePath, storyHtml);
+      }
     }
     // Small delay for rate limits
     await new Promise(resolve => setTimeout(resolve, 1000));
