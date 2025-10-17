@@ -38,7 +38,7 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source
       search_parameters: {
         mode: 'on',
         return_citations: true,
-        max_search_results: 50,
+        max_search_results: 25,
         sources: [
           { type: 'web' },
           { type: 'news' },
@@ -263,7 +263,7 @@ Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words
         search_parameters: {
           mode: 'on',
           return_citations: true,
-          max_search_results: 50,
+          max_search_results: 10,
           sources: [
             { type: 'web' },
             { type: 'news' },
