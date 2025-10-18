@@ -1,3 +1,4 @@
+```js
 const fs = require('fs');
 const path = require('path');
 const OpenAI = require('openai');
@@ -24,9 +25,9 @@ async function generateNews() {
     { name: 'hardware', target: 5, description: 'PC hardware or similar (GPUs, controllers, keyboards, builds)' },
     { name: 'world', target: 5, description: 'major world events (wars, global crises—focus on factual updates/impacts)' },
     { name: 'ukgov', target: 4, description: 'UK government actions' },
-    { name: 'science', target: 3, description: 'new inventions and scientific discoveries or advancements' }  // Bumped to 3 for total 20
+    { name: 'science', target: 3, description: 'new inventions and scientific discoveries or advancements' } // Bumped to 3 for total 20
   ];
-  const storiesPerTopic = 10; 
+  const storiesPerTopic = 10;
   const maxTries = 3;
   let topicStories = {};
   for (let topic of topics) {
@@ -35,7 +36,7 @@ async function generateNews() {
     let success = false;
     while (topicStoriesList.length < storiesPerTopic && tries < maxTries && !success) {
       tries++;
-      console.log(`Starting try ${tries} for ${topic.name}...`);  // Explicit log start
+      console.log(`Starting try ${tries} for ${topic.name}...`); // Explicit log start
       let topicPrompt = `You are a gaming, tech, and world news curator for a sharp 12 year old UK gamer. Use live search to generate exactly ${storiesPerTopic} unique stories from news in the last 24 hours based strictly on well-researched, factually accurate current events from the web as of ${today} on ${topic.description}. Do not invent, fabricate, or speculate—only use verified facts from real news.
 Mix for relevance: Link world/UK stuff to gaming/tech where it fits based on real connections. Make it straight fire: Direct language, real quotes from sources, end with a sharp insight. Variety—no repeats, all fresh. For heavy topics, deliver the facts and ripple effects clean.
 CRITICAL: Before generating, perform live search to verify 10-20 current events for this topic from the last 24 hours. Only include stories with confirmed sources. Require exact quotes and links in "source". If fewer than ${storiesPerTopic} recent events match, generate as many as possible but aim high—expand search terms if needed.
@@ -55,11 +56,11 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source
           model: 'grok-4-fast-reasoning',
           messages: [{ role: 'user', content: topicPrompt }],
           response_format: { type: 'json_object' },
-          max_tokens: 2500,  // Slight bump for fuller outputs
+          max_tokens: 2500, // Slight bump for fuller outputs
           search_parameters: {
             mode: 'on',
             return_citations: true,
-            max_search_results: 15,  // Increased for better yield
+            max_search_results: 15, // Increased for better yield
             sources: [
               { type: 'web' },
               { type: 'news' },
@@ -71,18 +72,33 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source
         });
         const data = JSON.parse(response.choices[0].message.content);
         const raw = data.stories || [];
-        const newStories = raw.filter(s => {
-          if (!s || typeof s !== 'object' || !s.title || !s.summary || !s.source) {
-            console.warn(`Incomplete story skipped for ${topic.name} (try ${tries}):`, s);
-            return false;
+        console.log(`Raw stories count for ${topic.name} try ${tries}: ${raw.length}`); // Quick peek
+
+        const newStories = raw.map((s, index) => {  // Map to trim, filter out empties
+          if (!s || typeof s !== 'object') {
+            console.warn(`Null story #${index} skipped for ${topic.name}`);
+            return null;
           }
-          // Loosened: Allow source without strict prefix if it has a source name
-          if (!s.source.includes(':')) {
-            console.warn(`Weak source format for ${topic.name} (try ${tries}):`, s.source);
-            return false;  // Still require "Source: Basis" format
+          
+          // Trim fields, no defaults or patches
+          const trimmedTitle = s.title?.trim();
+          const trimmedSummary = s.summary?.trim();
+          const trimmedSource = s.source?.trim();
+          
+          if (!trimmedTitle || !trimmedSummary || !trimmedSource) {
+            console.warn(`Missing fields after trim for #${index} in ${topic.name}: title=${!!trimmedTitle}, summary=${!!trimmedSummary}, source=${!!trimmedSource}`);
+            return null;
           }
-          return s.summary.length < 30;  // Enforce under 30 words
-        });
+          
+          return {
+            title: trimmedTitle,
+            summary: trimmedSummary,
+            source: trimmedSource
+          };
+        }).filter(Boolean);  // Drop any nulls
+
+        console.log(`Post-validation for ${topic.name} try ${tries}: Valid now: ${newStories.length}`);
+
         // Merge with previous, dedupe on title + summary (better than title alone)
         const seen = new Set(topicStoriesList.map(st => `${st.title.toLowerCase()}||${st.summary.toLowerCase()}`));
         const uniqueNew = newStories.filter(st => !seen.has(`${st.title.toLowerCase()}||${st.summary.toLowerCase()}`));
@@ -91,7 +107,7 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source
         console.log(`Try ${tries}: Generated ${raw.length} raw, ${newStories.length} valid, ${addedCount} unique new, total now ${topicStoriesList.length} for ${topic.name}.`);
         if (topicStoriesList.length >= storiesPerTopic) {
           success = true;
-          topicStoriesList = topicStoriesList.slice(0, storiesPerTopic); // Cap at 8
+          topicStoriesList = topicStoriesList.slice(0, storiesPerTopic); // Cap at 10
         }
       } catch (error) {
         console.error(`Stories generation error for ${topic.name} (try ${tries}):`, error);
@@ -134,7 +150,7 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source
   }));
   const targetSummary = topics.map(t => `${t.name}: ${t.target}`).join(', ');
   const selectionPrompt = `You are curating a balanced news feed for a UK gamer. Select stories to meet these targets (${targetSummary}; total exactly 20).
-From the provided stories, select up to the target number from each topic (prioritize diverse, high-impact, fresh ones across all). If fewer available for a topic, take all. To reach exactly 20, add 1 extra from the topic with most available if needed after base targets. Ensure no duplicates. 
+From the provided stories, select up to the target number from each topic (prioritize diverse, high-impact, fresh ones across all). If fewer available for a topic, take all. To reach exactly 20, add 1 extra from the topic with most available if needed after base targets. Ensure no duplicates.
 Input stories: ${JSON.stringify(condensedForPrompt)}.
 Output strict JSON only: {"selectedIndices": [0, 5, 12, ...]} // List of global indices (numbers).`;
   try {
@@ -166,7 +182,7 @@ Output strict JSON only: {"selectedIndices": [0, 5, 12, ...]} // List of global 
       // Simplistic: Append remaining from allStoriesForSelection not in flat (using slice for extras)
       const availExtras = allStoriesForSelection.slice(20);
       flatStories = flatStories.concat(availExtras.slice(0, 20 - flatStories.length));
-      break;  // One pad pass
+      break; // One pad pass
     }
     console.log(`Fallback selection: ${flatStories.length} stories (padded to 20 if possible).`);
   }
@@ -408,3 +424,4 @@ Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words
   console.log(`All ${globalStories.length} stories complete – 100% factual and archived in ${folderName}!`);
 }
 generateNews();
+```
