@@ -20,7 +20,7 @@ async function generateNews() {
   console.log('Created folder: ' + folderName);
   // Phase 1: Generate stories per topic, overgenerate, then select balanced 20
   const topics = [
-    { name: 'gaming', target: 3, description: 'new game updates/releases or similar (patches, betas, launches)' },
+    { name: 'gaming', target: 3, description: 'new game updates/releases or similar, or other, focusing on Minecraft, Fortnite, Skate, Roblox or similar' },
     { name: 'hardware', target: 5, description: 'PC hardware or similar (GPUs, controllers, keyboards, builds)' },
     { name: 'world', target: 5, description: 'major world events (wars, global crises—focus on factual updates/impacts)' },
     { name: 'ukgov', target: 4, description: 'UK government actions' },
@@ -52,11 +52,9 @@ async function generateNews() {
           search_parameters: {
             mode: 'on',
             return_citations: true,
-            max_search_results: 15, // Increased for better yield
+            max_search_results: 10, // Increased for better yield
             sources: [
-              { type: 'web' },
-              { type: 'news' },
-              { type: 'x' }
+              { type: 'news' }
             ],
             from_date: fromDate,
             toDate: toDate
@@ -196,7 +194,7 @@ async function generateNews() {
       summary: (s.summary || '').substring(0, 50) + '...' || 'No summary...',
       source: s.source || 'Unknown'
     }));
-    const groupingPrompt = 'You are a categorizer for a gamer\'s mixed feed. Take these ' + numStories + ' stories and group them into 3-6 dynamic, on-point categories based on content (e.g., "Epic Updates Incoming" for games, "Gear Grind" for hardware, "Global Alert" for wars/crises, "Gov Watch" for UK politics)—aim for 3-6 total, each with 2-6 stories to cover all. Make categories snap from the stories—direct, no fluff. Ensure all ' + numStories + ' unique stories are covered.\nInput stories: ' + JSON.stringify(indexedStories) + '.\nOutput strict JSON only—no additional text, explanations, or markdown: {"groups": [{"name": "On-Point Group Name", "indices": [0, 2, 5] }] }. Use indices from input (numbers 0-' + (numStories-1) + ') for each group. Exactly 3-6 groups, total indices across all =' + numStories + ', no duplicates.';
+    const groupingPrompt = 'You are a categorizer for a gamer\'s mixed feed. Take these ' + numStories + ' stories and group them into 3-6 dynamic, on-point categories based on content — aim for 3-6 total, each with 2-6 stories to cover all. Make categories snap from the stories—direct, no fluff. Ensure all ' + numStories + ' unique stories are covered.\nInput stories: ' + JSON.stringify(indexedStories) + '.\nOutput strict JSON only—no additional text, explanations, or markdown: {"groups": [{"name": "On-Point Group Name", "indices": [0, 2, 5] }] }. Use indices from input (numbers 0-' + (numStories-1) + ') for each group. Exactly 3-6 groups, total indices across all =' + numStories + ', no duplicates.';
     const groupingResponse = await openai.chat.completions.create({
       model: 'grok-4-fast-reasoning',
       messages: [{ role: 'user', content: groupingPrompt }],
@@ -331,11 +329,9 @@ async function generateNews() {
         search_parameters: {
           mode: 'on',
           return_citations: true,
-          max_search_results: 5,
+          max_search_results: 2,
           sources: [
-            { type: 'web' },
-            { type: 'news' },
-            { type: 'x' }
+            { type: 'news' }
           ],
           from_date: fromDate,
           to_date: toDate
