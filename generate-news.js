@@ -26,7 +26,7 @@ async function generateNews() {
     { name: 'ukgov', target: 4, description: 'UK government actions' },
     { name: 'science', target: 3, description: 'new inventions and scientific discoveries or advancements' }  // Bumped to 3 for total 20
   ];
-  const storiesPerTopic = 8; // Reduced overgen to avoid excess merging
+  const storiesPerTopic = 10; 
   const maxTries = 3;
   let topicStories = {};
   for (let topic of topics) {
@@ -96,7 +96,7 @@ Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source
       } catch (error) {
         console.error(`Stories generation error for ${topic.name} (try ${tries}):`, error);
       }
-      if (tries < maxTries && topicStoriesList.length < storiesPerTopic) {
+      if (tries < maxTries && topicStoriesList.length < storiesPerTopic - 3) {
         // Small delay between retries
         await new Promise(resolve => setTimeout(resolve, 2000));
       }
