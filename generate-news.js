@@ -27,9 +27,15 @@ async function generateNews() {
     { name: 'science', target: 2, description: 'new inventions and scientific discoveries or advancements' }
   ];
   const storiesPerTopic = 10; // Overgenerate per topic
+  const maxTries = 3;
   let topicStories = {};
   for (let topic of topics) {
-    const topicPrompt = `You are a gaming, tech, and world news curator for a sharp 12 year old UK gamer. Use live search to generate exactly ${storiesPerTopic} unique stories from news in the last 24 hours based strictly on well-researched, factually accurate current events from the web as of ${today} on ${topic.description}. Do not invent, fabricate, or speculate—only use verified facts from real news.
+    let topicStoriesList = [];
+    let tries = 0;
+    let success = false;
+    while (topicStoriesList.length < storiesPerTopic && tries < maxTries && !success) {
+      tries++;
+      let topicPrompt = `You are a gaming, tech, and world news curator for a sharp 12 year old UK gamer. Use live search to generate exactly ${storiesPerTopic} unique stories from news in the last 24 hours based strictly on well-researched, factually accurate current events from the web as of ${today} on ${topic.description}. Do not invent, fabricate, or speculate—only use verified facts from real news.
 Mix for relevance: Link world/UK stuff to gaming/tech where it fits based on real connections. Make it straight fire: Direct language, real quotes from sources, end with a sharp insight. Variety—no repeats, all fresh. For heavy topics, deliver the facts and ripple effects clean.
 CRITICAL: Before generating, perform live search to verify 10-20 current events for this topic from the last 24 hours. Only include stories with confirmed sources. Require exact quotes and links in "source". If fewer than ${storiesPerTopic} recent events match, generate as many as possible.
 For each story, provide:
@@ -37,39 +43,58 @@ For each story, provide:
 - "summary": 1 sentence teaser (under 30 words).
 - "source": Real news source (e.g., BBC, IGN, Reuters) and brief fact basis (e.g., "BBC: Official announcement").
 Output strict JSON only: {"stories": [{"title": "...", "summary": "...", "source": "..."} ] }.`;
-    let topicStoriesList = [];
-    try {
-      const response = await openai.chat.completions.create({
-        model: 'grok-4-fast-reasoning',
-        messages: [{ role: 'user', content: topicPrompt }],
-        response_format: { type: 'json_object' },
-        max_tokens: 2000,
-        search_parameters: {
-          mode: 'on',
-          return_citations: true,
-          max_search_results: 20,
-          sources: [
-            { type: 'web' },
-            { type: 'news' },
-            { type: 'x' }
-          ],
-          from_date: fromDate,
-          toDate: toDate
+      if (tries > 1) {
+        topicPrompt = topicPrompt.replace(
+          `generate exactly ${storiesPerTopic} unique stories`,
+          `generate as close to ${storiesPerTopic} as possible unique stories (aim for at least ${storiesPerTopic}, expand search if needed)`
+        );
+      }
+      try {
+        const response = await openai.chat.completions.create({
+          model: 'grok-4-fast-reasoning',
+          messages: [{ role: 'user', content: topicPrompt }],
+          response_format: { type: 'json_object' },
+          max_tokens: 2000,
+          search_parameters: {
+            mode: 'on',
+            return_citations: true,
+            max_search_results: 10,
+            sources: [
+              { type: 'web' },
+              { type: 'news' },
+              { type: 'x' }
+            ],
+            from_date: fromDate,
+            toDate: toDate
+          }
+        });
+        const data = JSON.parse(response.choices[0].message.content);
+        const raw = data.stories || [];
+        const newStories = raw.filter(s => {
+          if (!s || typeof s !== 'object' || !s.title || !s.summary || !s.source) {
+            console.warn(`Incomplete story skipped for ${topic.name} (try ${tries}):`, s);
+            return false;
+          }
+          return true;
+        });
+        // Merge with previous, but avoid duplicates (simple check on title)
+        const seenTitles = new Set(topicStoriesList.map(st => st.title.toLowerCase()));
+        const uniqueNew = newStories.filter(st => !seenTitles.has(st.title.toLowerCase()));
+        topicStoriesList = topicStoriesList.concat(uniqueNew);
+        console.log(`Try ${tries}: Generated ${raw.length} raw, ${newStories.length} valid new, total now ${topicStoriesList.length} for ${topic.name}.`);
+        if (topicStoriesList.length >= storiesPerTopic) {
+          success = true;
+          topicStoriesList = topicStoriesList.slice(0, storiesPerTopic); // Cap at 10
         }
-      });
-      const data = JSON.parse(response.choices[0].message.content);
-      const raw = data.stories || [];
-      topicStoriesList = raw.filter(s => {
-        if (!s || typeof s !== 'object' || !s.title || !s.summary || !s.source) {
-          console.warn(`Incomplete story skipped for ${topic.name}:`, s);
-          return false;
-        }
-        return true;
-      });
-      console.log(`Generated ${raw.length} raw stories; ${topicStoriesList.length} valid for ${topic.name}.`);
-    } catch (error) {
-      console.error(`Stories generation error for ${topic.name}:`, error);
+      } catch (error) {
+        console.error(`Stories generation error for ${topic.name} (try ${tries}):`, error);
+      }
+      if (tries < maxTries && topicStoriesList.length < storiesPerTopic) {
+        // Small delay between retries
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
     }
+    console.log(`Final for ${topic.name}: ${topicStoriesList.length} stories after ${tries} tries.`);
     topicStories[topic.name] = topicStoriesList;
   }
   // Prepare all stories for selection
