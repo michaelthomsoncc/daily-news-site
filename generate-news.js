@@ -20,10 +20,11 @@ async function generateNews() {
   console.log(`Created folder: ${folderName}`);
   // Phase 1: Generate stories per topic, overgenerate, then select balanced 20
   const topics = [
-    { name: 'gaming', target: 5, description: 'new game updates/releases or similar (patches, betas, launches)' },
-    { name: 'hardware', target: 6, description: 'PC hardware or similar (GPUs, controllers, keyboards, builds)' },
+    { name: 'gaming', target: 3, description: 'new game updates/releases or similar (patches, betas, launches)' },
+    { name: 'hardware', target: 5, description: 'PC hardware or similar (GPUs, controllers, keyboards, builds)' },
     { name: 'world', target: 5, description: 'major world events (wars, global crises—focus on factual updates/impacts)' },
-    { name: 'ukgov', target: 4, description: 'UK government actions' }
+    { name: 'ukgov', target: 4, description: 'UK government actions' },
+    { name: 'science', target: 2, description: 'new inventions and scientific discoveries or advancements' }
   ];
   const storiesPerTopic = 10; // Overgenerate per topic
   let topicStories = {};
@@ -349,45 +350,16 @@ Output clean HTML only: <p> paras, <strong> emphasis, <em> quotes. 400-600 words
       console.log(`Generated story ${story.globalId}/${globalStories.length}: ${story.title.substring(0, 50)}... in ${folderName}`);
     } catch (error) {
       console.error(`Story ${story.globalId} error:`, error);
-      // Enhanced fallback: Quick fact-check
-      const factCheckPrompt = `Fact-check this story title and summary against real news from the last 24 hours as of ${today}: "${story.title}". ${story.summary}. Output ONLY a short HTML para: If verified, "<p>Verified facts incoming—check back.</p>"; else "<p>Unverified: Skipping for accuracy. Real update: [brief real alternative from live search].</p>". Perform live search first with query "${story.title} ${fromDate} to ${toDate}".`;
-      try {
-        const fallbackResponse = await openai.chat.completions.create({
-          model: 'grok-4-fast-reasoning',
-          messages: [{ role: 'user', content: factCheckPrompt }],
-          max_tokens: 300,
-          search_parameters: {
-            mode: 'on',
-            return_citations: true,
-            max_search_results: 5,
-            sources: [
-              { type: 'web' },
-              { type: 'news' }
-            ],
-            from_date: fromDate,
-            to_date: toDate
-          }
-        });
-        const fallbackStory = fallbackResponse.choices[0].message.content;
-        let storyHtml = storyTemplate
-          .replace(/\{title\}/g, story.title)
-          .replace(/\{fullStory\}/g, `<div class="story">${fallbackStory}</div>`)
-          .replace(/\{groupName\}/g, story.groupName)
-          .replace(/\{source\}/g, story.source)
-          .replace(/\{timestamp\}/g, timestamp);
-        fs.writeFileSync(filePath, storyHtml);
-        console.log(`Fallback fact-check for story ${story.globalId}`);
-      } catch (fallbackError) {
-        // Basic placeholder
-        const basicFallback = `<p class="hook">This drop's incoming—facts stacking up.</p><p>Core deets locked, full breakdown next round. Run it by the group: Shift your strategy?</p>`;
-        let storyHtml = storyTemplate
-          .replace(/\{title\}/g, story.title)
-          .replace(/\{fullStory\}/g, basicFallback)
-          .replace(/\{groupName\}/g, story.groupName)
-          .replace(/\{source\}/g, story.source)
-          .replace(/\{timestamp\}/g, timestamp);
-        fs.writeFileSync(filePath, storyHtml);
-      }
+      // Basic placeholder
+      const basicFallback = `<p class="hook">This drop's incoming—facts stacking up.</p><p>Core deets locked, full breakdown next round. Run it by the group: Shift your strategy?</p>`;
+      let storyHtml = storyTemplate
+        .replace(/\{title\}/g, story.title)
+        .replace(/\{fullStory\}/g, basicFallback)
+        .replace(/\{groupName\}/g, story.groupName)
+        .replace(/\{source\}/g, story.source)
+        .replace(/\{timestamp\}/g, timestamp);
+      fs.writeFileSync(filePath, storyHtml);
+      console.log(`Fallback placeholder for story ${story.globalId}`);
     }
     // Small delay for rate limits
     await new Promise(resolve => setTimeout(resolve, 1000));
