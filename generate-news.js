@@ -7,8 +7,8 @@ const openai = new OpenAI({
 });
 async function generateNews() {
   const currentDate = new Date();
-  const today = currentDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  const timestamp = currentDate.toLocaleString('en-GB'); // UK format for local feel
+  const today = currentDate.toLocaleDateString('en-GB', { timeZone: 'Europe/London', year: 'numeric', month: 'long', day: 'numeric' });
+  const timestamp = currentDate.toLocaleString('en-GB', { timeZone: 'Europe/London' }); // UK local time
   const fromDate = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
   const toDate = currentDate.toISOString().split('T')[0];
   const folderName = currentDate.toISOString().replace(/[:.]/g, '-').slice(0, 16); // e.g., 2025-10-17T14-30-00
