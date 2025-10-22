@@ -404,7 +404,7 @@ function updateIndexHtml(folderName, runTimestamp, timestamp, groupedStories) {
 }
 // Generate daily summary
 async function generateDailySummary(selectedStories, today, history) {
-  const summaryPrompt = `You are a news summarizer for a sharp 12 year old UK gamer. Create a concise one-paragraph summary (100-200 words) of today's key news highlights from these stories. Make it engaging, focusing on gaming, tech, world events, and their connections. Do not invent facts. Stories: ${JSON.stringify(selectedStories.map(s => ({title: s.title, summary: s.summary})))}\nPrevious history from last 14 days:\n${history}\nBuild on evolving stories from history without repeating old details; reference ongoing narratives if relevant (e.g., 'Building on last week's developments...').`;
+  const summaryPrompt = `You are a news summarizer for a sharp 12 year old UK gamer. Create a concise one-paragraph summary of today's key news highlights from these stories, focusing solely on what happened without any speculation, slang, engagement hooks, or audience-specific language. Stick strictly to verified facts from the provided stories. Stories: ${JSON.stringify(selectedStories.map(s => ({title: s.title, summary: s.summary})))}\nPrevious history from last 14 days:\n${history}\nBuild on evolving stories from history without repeating old details; reference ongoing narratives if relevant (e.g., 'Building on last week's developments...').`;
   try {
     const response = await openai.chat.completions.create({
       model: 'grok-4-fast-reasoning',
