@@ -8,10 +8,10 @@ const openai = new OpenAI({
 });
 const TOPICS = [
   { name: 'gaming', target: 3, description: 'new game updates/releases or similar, or other, focusing on Minecraft, Fortnite, Skate, Roblox or similar' },
-  { name: 'hardware', target: 5, description: 'PC hardware or similar (GPUs, controllers, keyboards, builds)' },
+  { name: 'hardware', target: 4, description: 'PC hardware or similar (GPUs, controllers, keyboards, builds)' },
   { name: 'world', target: 5, description: 'major world events (wars, global crises—focus on factual updates/impacts)' },
   { name: 'ukgov', target: 4, description: 'UK government actions' },
-  { name: 'science', target: 3, description: 'new inventions and scientific discoveries or advancements' } // Bumped to 3 for total 20
+  { name: 'science', target: 4, description: 'new inventions and scientific discoveries or advancements' } // Bumped to 3 for total 20
 ];
 const STORIES_PER_TOPIC = 10;
 const MAX_TRIES = 3;
