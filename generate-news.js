@@ -389,13 +389,13 @@ function updateIndexHtml(folderName, runTimestamp, timestamp, groupedStories) {
     group.stories.forEach(story => {
       const sanitizedTitle = (story.title || 'untitled').toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-').substring(0, 50);
       const fileName = `${sanitizedTitle}_${runTimestamp}.html`;
-      newDiv += `<li class="clickable-panel"><a href="${folderName}/${fileName}" class="full-link"><strong>${story.title || 'Untitled'}</strong><br><small>${story.summary || 'No summary'}</small></a></li>`;
+      newDiv += `<li class="clickable-panel"><a href="/${folderName}/${fileName}" class="full-link"><strong>${story.title || 'Untitled'}</strong><br><small>${story.summary || 'No summary'}</small></a></li>`;
     });
     newDiv += '</ul>';
   });
   newDiv += '</div>';
   indexHtml = indexHtml.replace(/<div id="news-content">.*?<\/div>/s, newDiv);
-  indexHtml = indexHtml.replace(/<p>Last updated: .*?<\/p>/s, `<p>Last updated: ${timestamp} | Your Daily Gaming, Tech & World Fix | Edition: ${folderName} | <a href="archive.html">View Archive</a></p>`);
+  indexHtml = indexHtml.replace(/<p>Last updated: .*?<\/p>/s, `<p>Last updated: ${timestamp} | Your Daily Gaming, Tech & World Fix | Edition: ${folderName} | <a href="/archive.html">View Archive</a></p>`);
   const cssUpdate = indexHtml.replace(
     /<style>.*?<\/style>/s,
     '<style>\n body { font-family: Arial; max-width: 800px; margin: 0 auto; padding: 20px; background: #f9f9f9; color: #000; }\n h1 { color: #000; }\n h2 { color: #000; border-bottom: 2px solid #000; padding-bottom: 5px; }\n ul.headlines-list { list-style: none; padding: 0; }\n ul.headlines-list li { margin: 15px 0; }\n .clickable-panel { cursor: pointer; }\n .full-link { display: block; padding: 10px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-decoration: none; color: inherit; }\n .full-link:hover { background: #f0f0f0; text-decoration: none; }\n .source { color: #666; font-size: 12px; }\n </style>'
