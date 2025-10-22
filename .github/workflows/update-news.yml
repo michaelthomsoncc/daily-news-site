@@ -17,7 +17,7 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: npm init -y && npm install openai  # Use OpenAI SDK (Grok API compatible)
+        run: npm init -y && npm install openai cheerio  # Use OpenAI SDK (Grok API compatible)
 
       - name: Generate News HTML
         env:
