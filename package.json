@@ -11,6 +11,6 @@
   "license": "ISC",
   "dependencies": {
     "cheerio": "^1.2.0",
-    "openai": "^6.21.0"
+    "openai": "^6.22.0"
   }
 }
