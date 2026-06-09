@@ -1,24 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily News</title>
-    <style>
- body { font-family: Arial; max-width: 800px; margin: 0 auto; padding: 20px; background: #f9f9f9; color: #000; }
- h1 { color: #000; }
- h2 { color: #000; border-bottom: 2px solid #000; padding-bottom: 5px; }
- ul.headlines-list { list-style: none; padding: 0; }
- ul.headlines-list li { margin: 15px 0; }
- .clickable-panel { cursor: pointer; }
- .full-link { display: block; padding: 10px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-decoration: none; color: inherit; }
- .full-link:hover { background: #f0f0f0; text-decoration: none; }
- .source { color: #666; font-size: 12px; }
- </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travian SQL Playpen</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: system-ui, sans-serif; }
+  </style>
 </head>
-<body>
-    <h1>Today's Top News</h1>
-    <div id="news-content"><h2>Gaming Updates</h2><ul class="headlines-list"><li class="clickable-panel"><a href="/2025-11-08T05-15/skate-beta-expands-with-uk-skate-spot-additions-fr_2025-11-08T05-15-47.html" class="full-link"><strong>Skate Beta Expands with UK Skate Spot Additions from Community Feedback</strong><br><small>Full Circle's Skate update incorporates British skate parks based on beta tester input, enhancing authenticity ahead of 2026 full release.</small></a></li><li class="clickable-panel"><a href="/2025-11-08T05-15/minecraft-marketplace-celebrates-500m-downloads-wi_2025-11-08T05-15-47.html" class="full-link"><strong>Minecraft Marketplace Celebrates 500M Downloads with Free UK Folklore Pack</strong><br><small>Mojang releases a complimentary UK folklore-themed pack for Minecraft to mark the Marketplace milestone, featuring mythical builds for all players.</small></a></li><li class="clickable-panel"><a href="/2025-11-08T05-15/fortnite-festival-season-7-adds-rock-tracks-and-cu_2025-11-08T05-15-47.html" class="full-link"><strong>Fortnite Festival Season 7 Adds Rock Tracks and Customizable Stages</strong><br><small>Latest Fortnite Festival update brings rock anthems and stage-building features, turning the mode into a player-driven concert arena.</small></a></li></ul><h2>PC Gaming Hardware</h2><ul class="headlines-list"><li class="clickable-panel"><a href="/2025-11-08T05-15/rtx-3060-stays-dominant-in-latest-steam-uk-gpu-ran_2025-11-08T05-15-47.html" class="full-link"><strong>RTX 3060 Stays Dominant in Latest Steam UK GPU Rankings</strong><br><small>Valve's November 2025 Steam Hardware Survey keeps NVIDIA's GeForce RTX 3060 as the most used graphics card among UK PC gamers for reliable 1080p performance.</small></a></li><li class="clickable-panel"><a href="/2025-11-08T05-15/top-budget-pc-builds-refresh-for-november-uk-high-_2025-11-08T05-15-47.html" class="full-link"><strong>Top Budget PC Builds Refresh for November UK High-Res Play</strong><br><small>New guides spotlight RTX 4060 and Ryzen combos under £900, delivering 1440p power for Fortnite and VR without wallet pain.</small></a></li><li class="clickable-panel"><a href="/2025-11-08T05-15/nvidia-teases-major-geforce-now-boost-for-uk-cloud_2025-11-08T05-15-47.html" class="full-link"><strong>Nvidia Teases Major GeForce Now Boost for UK Cloud Gamers</strong><br><small>Upcoming announcement promises software upgrades without new hardware, enhancing streaming for high-end play on modest PCs.</small></a></li><li class="clickable-panel"><a href="/2025-11-08T05-15/gamecube-controller-adapters-revive-retro-hits-on-_2025-11-08T05-15-47.html" class="full-link"><strong>GameCube Controller Adapters Revive Retro Hits on Modern UK PCs</strong><br><small>New hardware bridges classic Nintendo pads to PCs, letting UK gamers relive Smash Bros with precise inputs in emulated worlds.</small></a></li></ul><h2>Global Conflicts</h2><ul class="headlines-list"><li class="clickable-panel"><a href="/2025-11-08T05-15/hamas-returns-israeli-captives-body-as-gaza-faces-_2025-11-08T05-15-47.html" class="full-link"><strong>Hamas Returns Israeli Captive's Body as Gaza Faces Severe Aid Curbs</strong><br><small>Hamas handed over the body of an Israeli captive amid Israel's tightened restrictions on aid entering Gaza, worsening the humanitarian crisis for 2.3 million residents.</small></a></li><li class="clickable-panel"><a href="/2025-11-08T05-15/myanmar-aftershocks-trigger-landslides-displacing-_2025-11-08T05-15-47.html" class="full-link"><strong>Myanmar Aftershocks Trigger Landslides Displacing 7,000 in Conflict Zones</strong><br><small>New tremors from October quake cause deadly slides in war-torn areas, blocking aid as junta restricts access and swells refugee numbers near borders.</small></a></li><li class="clickable-panel"><a href="/2025-11-08T05-15/ukraine-intercepts-north-korean-missiles-in-donbas_2025-11-08T05-15-47.html" class="full-link"><strong>Ukraine Intercepts North Korean Missiles in Donbas Russian Push</strong><br><small>Kyiv forces downed DPRK-supplied rockets during Moscow's advance, exposing deeper arms alliances and straining global security amid the prolonged war.</small></a></li><li class="clickable-panel"><a href="/2025-11-08T05-15/iran-missile-barrage-hits-israeli-bases-in-retalia_2025-11-08T05-15-47.html" class="full-link"><strong>Iran Missile Barrage Hits Israeli Bases in Retaliatory Escalation</strong><br><small>Dozens of rockets targeted military sites, triggering sirens and oil price surges that impact UK fuel costs and tech manufacturing for gaming gear.</small></a></li><li class="clickable-panel"><a href="/2025-11-08T05-15/global-conflicts-surge-to-record-highs-in-2025-hum_2025-11-08T05-15-47.html" class="full-link"><strong>Global Conflicts Surge to Record Highs in 2025 Humanitarian Crises</strong><br><small>Over 70 hotspots see rising violence per CrisisWatch, with wars in Sudan and Gaza driving mass displacement and straining international aid like tech for relief drones.</small></a></li></ul><h2>UK Economic Policy</h2><ul class="headlines-list"><li class="clickable-panel"><a href="/2025-11-08T05-15/uk-chancellor-confirms-autumn-budget-delivery-on-n_2025-11-08T05-15-47.html" class="full-link"><strong>UK Chancellor Confirms Autumn Budget Delivery on November 26</strong><br><small>Rachel Reeves set to present the Autumn Budget on November 26, including OBR's economic forecast to address growth and tech investments.</small></a></li><li class="clickable-panel"><a href="/2025-11-08T05-15/hmrc-launches-simplified-tools-for-rd-tax-relief-i_2025-11-08T05-15-47.html" class="full-link"><strong>HMRC Launches Simplified Tools for R&D Tax Relief in Tech Sector</strong><br><small>New HMRC digital tools from November 7 ease claims for research and development, helping UK developers claim relief on game engine tech faster.</small></a></li><li class="clickable-panel"><a href="/2025-11-08T05-15/yougov-tracks-public-reaction-to-budget-previews_2025-11-08T05-15-47.html" class="full-link"><strong>YouGov Tracks Public Reaction to Budget Previews</strong><br><small>Poll from November 7 shows mixed views on economic fixes, with focus on tech affordability amid rising hardware costs for gamers.</small></a></li><li class="clickable-panel"><a href="/2025-11-08T05-15/government-monitors-unwanted-medicines-disposal-co_2025-11-08T05-15-47.html" class="full-link"><strong>Government Monitors Unwanted Medicines Disposal Costs</strong><br><small>November 7 update eyes policy tweaks for soaring unused drug expenses, ensuring clean environments for late-night gaming without health worries.</small></a></li></ul><h2>Scientific Discoveries</h2><ul class="headlines-list"><li class="clickable-panel"><a href="/2025-11-08T05-15/comet-3iatlas-glows-green-in-fresh-night-sky-obser_2025-11-08T05-15-47.html" class="full-link"><strong>Comet 3I/ATLAS Glows Green in Fresh Night Sky Observations</strong><br><small>Astronomers capture vivid green hues from interstellar Comet 3I/ATLAS as it streaks closer to Earth, revealing icy compositions from beyond our solar system.</small></a></li><li class="clickable-panel"><a href="/2025-11-08T05-15/ancient-roman-roads-uncovered-with-ground-penetrat_2025-11-08T05-15-47.html" class="full-link"><strong>Ancient Roman Roads Uncovered with Ground-Penetrating Radar Tech</strong><br><small>New radar advancements reveal hidden Roman road networks in the UK countryside, mapping trade routes that inspired epic strategy games like Civilization.</small></a></li><li class="clickable-panel"><a href="/2025-11-08T05-15/blood-test-for-alzheimers-gains-uk-nhs-approval-fo_2025-11-08T05-15-47.html" class="full-link"><strong>Blood Test for Alzheimer's Gains UK NHS Approval for Early Detection</strong><br><small>Simple blood test identifying Alzheimer's biomarkers years ahead receives fast-track approval, enabling proactive treatments to keep brains sharp for gaming.</small></a></li><li class="clickable-panel"><a href="/2025-11-08T05-15/tardigrade-inspired-materials-withstand-extreme-ra_2025-11-08T05-15-47.html" class="full-link"><strong>Tardigrade-Inspired Materials Withstand Extreme Radiation for Tech</strong><br><small>Genes from indestructible tardigrades create radiation-proof fabrics, ideal for durable gaming gear that survives drops and spills like a pro rig.</small></a></li></ul></div>
-    <p>Last updated: 08/11/2025, 05:15:47 | Your Daily Gaming, Tech & World Fix | Edition: 2025-11-08T05-15 | <a href="/archive.html">View Archive</a></p>
+<body class="bg-slate-950 text-slate-200">
+<div class="max-w-3xl mx-auto p-6">
+
+  <!-- Hero -->
+  <div class="mb-8">
+    <h1 class="text-4xl font-semibold mb-2">Travian SQL Playpen</h1>
+    <p class="text-xl text-slate-400">A personal sandbox for experimenting with Travian map.sql data.</p>
+  </div>
+
+  <div class="mb-8 p-6 bg-slate-900 border border-slate-700 rounded-2xl">
+    <p class="mb-4">
+      This is a playpen for me to play with the Travian SQL output.
+    </p>
+    <p class="text-sm text-slate-400">
+      Everything here is built from the official daily <code>map.sql</code> dumps that Travian makes publicly available for every server.
+    </p>
+  </div>
+
+  <div class="mb-8 p-6 bg-slate-900 border border-slate-700 rounded-2xl">
+    <p class="mb-3 font-medium">You probably got here by removing the rest of the URL.</p>
+    <p class="text-slate-400">
+      This is not a public directory of tools. 
+      If someone wanted you to see something specific, they would have given you a direct link.
+    </p>
+  </div>
+
+  <!-- Business redirect / About -->
+  <div class="p-6 bg-slate-900 border border-slate-700 rounded-2xl">
+    <p class="mb-3">
+      This playpen is maintained by the team behind
+    </p>
+    <a href="https://www.cloudconnectsoftware.com" 
+       target="_blank"
+       class="text-xl font-semibold text-emerald-300 hover:text-emerald-200">
+      CloudConnect Software
+    </a>
+
+    <p class="mt-4 text-sm text-slate-400">
+      We specialise in Intelligent Document Processing (IDP). Our platform uses Agentic AI combined with a declarative rules engine to deliver 100% accurate, touchless extraction from invoices, orders, remittances, and other complex business documents — with full ERP integration and guaranteed data accuracy.
+    </p>
+
+    <p class="mt-3 text-sm text-slate-400">
+      Over 40 years of combined experience. Trusted by organisations including SAP, IBM, Airbus, KPMG, and many others. Fully managed service running on Azure Kubernetes Service.
+    </p>
+
+    <a href="https://www.cloudconnectsoftware.com/contact" 
+       target="_blank"
+       class="mt-4 inline-block px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-sm font-medium">
+      Book a free demo →
+    </a>
+  </div>
+
+  <footer class="mt-8 text-xs text-slate-500">
+    All data is sourced from official Travian <code>map.sql</code> dumps. This is a personal experiment, not an official Travian service.
+  </footer>
+
+</div>
 </body>
 </html>
