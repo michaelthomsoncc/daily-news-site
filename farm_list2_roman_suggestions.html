@@ -1,0 +1,1893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roman Farm Suggestions - farm_list2.txt (Imperians + EIs)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: system-ui, sans-serif; }
+    .batch { scroll-margin-top: 1rem; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-200">
+<div class="max-w-6xl mx-auto p-6">
+  <h1 class="text-3xl font-semibold mb-1">Roman Farm Suggestions - farm_list2.txt (Imperians + EIs)</h1>
+  <p class="text-slate-400 mb-2">Center: (-133|48) • 171 farms from parsed data • Sorted by distance (closest first) • Batches of 10</p>
+
+  <div class="mb-6 p-4 bg-slate-900 border border-slate-700 rounded-xl text-sm">
+    <strong>How to use:</strong> Closest villages are at the top. Each batch of 10 has one recommended raid size (mix of Imperians for capacity + EIs for speed). 
+    Use the "Open all in tabs" button to quickly visit the map screens and add them to a dedicated farm list for that troop count. 
+    Process batches in the order shown (closest first). The current clubswinger data was used to inform reasonable sizes for these low-pop close farms.
+  </div>
+
+
+  <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+    <div class="px-5 py-3 bg-slate-800 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="text-xl font-semibold">Batch 1</span>
+        <span class="inline-block px-3 py-1 bg-violet-600 text-white text-sm font-medium rounded-full">10 Imperians</span>
+        <span class="text-xs text-slate-400">(10 farms • closest first)</span>
+      </div>
+      <button onclick="openBatch(0)"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition rounded-lg text-sm font-medium shadow">
+        🗺️ Open all 10 in new tabs
+      </button>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-133&y=46" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          TassLee faluja <span class="text-xs text-slate-500">(-133|46)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 23<br>d 2.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=132&y=46" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−132|46) <span class="text-xs text-slate-500">(132|46)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 2.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=131&y=47" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−131|47) <span class="text-xs text-slate-500">(131|47)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 2.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-135&y=49" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          CropCrusher Köyü <span class="text-xs text-slate-500">(-135|49)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 28<br>d 2.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-135&y=46" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Село од Dragan <span class="text-xs text-slate-500">(-135|46)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 8<br>d 2.8
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-136&y=48" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Vesnice: Petr <span class="text-xs text-slate-500">(-136|48)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 19<br>d 3.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=132&y=51" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−132|51) <span class="text-xs text-slate-500">(132|51)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 3.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-135&y=51" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          StK_85 Köyü <span class="text-xs text-slate-500">(-135|51)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 8<br>d 3.6
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=133&y=44" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−133|44) <span class="text-xs text-slate-500">(133|44)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 4.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−132|44) <span class="text-xs text-slate-500">(-134|41)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 4.1
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+    <div class="px-5 py-3 bg-slate-800 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="text-xl font-semibold">Batch 2</span>
+        <span class="inline-block px-3 py-1 bg-violet-600 text-white text-sm font-medium rounded-full">10 Imperians + 5 EIs</span>
+        <span class="text-xs text-slate-400">(10 farms • closest first)</span>
+      </div>
+      <button onclick="openBatch(1)"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition rounded-lg text-sm font-medium shadow">
+        🗺️ Open all 10 in new tabs
+      </button>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−136|45) <span class="text-xs text-slate-500">(-134|41)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 4.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-130&y=51" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          zaid`s village <span class="text-xs text-slate-500">(-130|51)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 10<br>d 4.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-129&y=46" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          SonPeygamber Köyü <span class="text-xs text-slate-500">(-129|46)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 9<br>d 4.5
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−130|44) <span class="text-xs text-slate-500">(-134|41)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 5.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-128&y=50" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Aldeia do Dicezin <span class="text-xs text-slate-500">(-128|50)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 10<br>d 5.4
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-138&y=50" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Dorf von Systemfehler <span class="text-xs text-slate-500">(-138|50)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 11<br>d 5.4
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-135&y=53" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          let me live faluja <span class="text-xs text-slate-500">(-135|53)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 12<br>d 5.4
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-129&y=44" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Villaggio di RoquenMorna <span class="text-xs text-slate-500">(-129|44)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 80<br>d 5.7
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-137&y=44" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          kemalist Köyü <span class="text-xs text-slate-500">(-137|44)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 9<br>d 5.7
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-130&y=43" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Tko faluja <span class="text-xs text-slate-500">(-130|43)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 8<br>d 5.8
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+    <div class="px-5 py-3 bg-slate-800 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="text-xl font-semibold">Batch 3</span>
+        <span class="inline-block px-3 py-1 bg-violet-600 text-white text-sm font-medium rounded-full">10 Imperians + 5 EIs</span>
+        <span class="text-xs text-slate-400">(10 farms • closest first)</span>
+      </div>
+      <button onclick="openBatch(2)"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition rounded-lg text-sm font-medium shadow">
+        🗺️ Open all 10 in new tabs
+      </button>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-130&y=53" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          HOLİGAN Köyü <span class="text-xs text-slate-500">(-130|53)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 15<br>d 5.8
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-127&y=48" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Village de DarkEgyptian <span class="text-xs text-slate-500">(-127|48)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 17<br>d 6.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−139|49) <span class="text-xs text-slate-500">(-134|41)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 6.1
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=42" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          KimInNaRi faluja <span class="text-xs text-slate-500">(-134|42)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 12<br>d 6.1
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-139&y=46" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Vesnice: hacek <span class="text-xs text-slate-500">(-139|46)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 26<br>d 6.3
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−129|53) <span class="text-xs text-slate-500">(-134|41)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 6.4
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-128&y=52" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Pelaajan JusmoFIN kylä <span class="text-xs text-slate-500">(-128|52)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 16<br>d 6.4
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-133&y=55" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Dorf von Avatar <span class="text-xs text-slate-500">(-133|55)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 18<br>d 7.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−132|41) <span class="text-xs text-slate-500">(-134|41)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 7.1
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-127&y=44" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          tuuba Köyü <span class="text-xs text-slate-500">(-127|44)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 52<br>d 7.2
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+    <div class="px-5 py-3 bg-slate-800 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="text-xl font-semibold">Batch 4</span>
+        <span class="inline-block px-3 py-1 bg-violet-600 text-white text-sm font-medium rounded-full">20 Imperians + 10 EIs</span>
+        <span class="text-xs text-slate-400">(10 farms • closest first)</span>
+      </div>
+      <button onclick="openBatch(3)"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition rounded-lg text-sm font-medium shadow">
+        🗺️ Open all 10 in new tabs
+      </button>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-129&y=42" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Деревня TrueTiger <span class="text-xs text-slate-500">(-129|42)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 18<br>d 7.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-140&y=50" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Aldeia do arrebentabilhas <span class="text-xs text-slate-500">(-140|50)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 140<br>d 7.3
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-140&y=45" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Village de ryaume <span class="text-xs text-slate-500">(-140|45)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 14<br>d 7.6
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-139&y=43" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Annisette’s landsby <span class="text-xs text-slate-500">(-139|43)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 134<br>d 7.8
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=56" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Villaggio di negaboy <span class="text-xs text-slate-500">(-134|56)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 10<br>d 8.1
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-125&y=47" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Деревня TyzemezZ <span class="text-xs text-slate-500">(-125|47)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 17<br>d 8.1
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-140&y=52" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Pelaajan SpeedySaku kylä <span class="text-xs text-slate-500">(-140|52)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 69<br>d 8.1
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−130|40) <span class="text-xs text-slate-500">(-134|41)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 8.5
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Natars -130|56 <span class="text-xs text-slate-500">(-134|41)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 7<br>d 8.5
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-125&y=51" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Natars -125|51 <span class="text-xs text-slate-500">(-125|51)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 14<br>d 8.5
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+    <div class="px-5 py-3 bg-slate-800 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="text-xl font-semibold">Batch 5</span>
+        <span class="inline-block px-3 py-1 bg-violet-600 text-white text-sm font-medium rounded-full">10 Imperians + 5 EIs</span>
+        <span class="text-xs text-slate-400">(10 farms • closest first)</span>
+      </div>
+      <button onclick="openBatch(4)"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition rounded-lg text-sm font-medium shadow">
+        🗺️ Open all 10 in new tabs
+      </button>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-140&y=42" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          WoodLeader faluja <span class="text-xs text-slate-500">(-140|42)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 8<br>d 9.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−141|43) <span class="text-xs text-slate-500">(-134|41)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 9.4
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−142|51) <span class="text-xs text-slate-500">(-134|41)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 9.5
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−142|45) <span class="text-xs text-slate-500">(-134|41)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 9.5
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−129|39) <span class="text-xs text-slate-500">(-134|41)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 9.8
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-140&y=55" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Village de Rovo <span class="text-xs text-slate-500">(-140|55)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 10<br>d 9.9
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-139&y=56" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Aldeia do AMFernandes <span class="text-xs text-slate-500">(-139|56)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 40<br>d 10.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=142&y=53" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−142|53) <span class="text-xs text-slate-500">(142|53)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 10.3
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-142&y=43" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          uzunn 444 Köyü <span class="text-xs text-slate-500">(-142|43)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 13<br>d 10.3
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-132&y=37" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          LuisaMidosi`s village <span class="text-xs text-slate-500">(-132|37)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 13<br>d 11.0
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+    <div class="px-5 py-3 bg-slate-800 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="text-xl font-semibold">Batch 6</span>
+        <span class="inline-block px-3 py-1 bg-violet-600 text-white text-sm font-medium rounded-full">20 Imperians + 10 EIs</span>
+        <span class="text-xs text-slate-400">(10 farms • closest first)</span>
+      </div>
+      <button onclick="openBatch(5)"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition rounded-lg text-sm font-medium shadow">
+        🗺️ Open all 10 in new tabs
+      </button>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-128&y=58" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Dorf von Lumar <span class="text-xs text-slate-500">(-128|58)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 11<br>d 11.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-123&y=53" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          WarWarlord Köyü <span class="text-xs text-slate-500">(-123|53)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 10<br>d 11.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-125&y=40" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Aldea de adime <span class="text-xs text-slate-500">(-125|40)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 16<br>d 11.3
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-143&y=54" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Dorf von Lady87 <span class="text-xs text-slate-500">(-143|54)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 165<br>d 11.7
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-144&y=52" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          DirtyAttacker`s village <span class="text-xs text-slate-500">(-144|52)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 8<br>d 11.7
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-139&y=38" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Villaggio di Remigio <span class="text-xs text-slate-500">(-139|38)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 11<br>d 11.7
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-127&y=38" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Abhishek`s village <span class="text-xs text-slate-500">(-127|38)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 11<br>d 11.7
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-137&y=37" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Koala`s village <span class="text-xs text-slate-500">(-137|37)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 16<br>d 11.7
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-137&y=59" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Gokhan34 Köyü <span class="text-xs text-slate-500">(-137|59)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 14<br>d 11.7
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-144&y=44" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          FearGuns Köyü <span class="text-xs text-slate-500">(-144|44)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 117<br>d 11.7
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+    <div class="px-5 py-3 bg-slate-800 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="text-xl font-semibold">Batch 7</span>
+        <span class="inline-block px-3 py-1 bg-violet-600 text-white text-sm font-medium rounded-full">15 Imperians + 10 EIs</span>
+        <span class="text-xs text-slate-400">(10 farms • closest first)</span>
+      </div>
+      <button onclick="openBatch(6)"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition rounded-lg text-sm font-medium shadow">
+        🗺️ Open all 10 in new tabs
+      </button>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=125&y=57" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−125|57) <span class="text-xs text-slate-500">(125|57)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 12.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-142&y=40" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Деревня ShipTeuton3 <span class="text-xs text-slate-500">(-142|40)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 9<br>d 12.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-121&y=49" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Деревня Kupidon777 <span class="text-xs text-slate-500">(-121|49)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 32<br>d 12.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-145&y=50" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Village de fregates <span class="text-xs text-slate-500">(-145|50)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 125<br>d 12.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-143&y=41" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Dorf von EpicSnake6912 <span class="text-xs text-slate-500">(-143|41)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 8<br>d 12.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-145&y=45" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Villaggio di Fridu <span class="text-xs text-slate-500">(-145|45)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 8<br>d 12.4
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-124&y=39" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Деревня ClayGuardian <span class="text-xs text-slate-500">(-124|39)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 12<br>d 12.7
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=146&y=49" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−146|49) <span class="text-xs text-slate-500">(146|49)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 13.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-146&y=47" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Osada: SharpSnake <span class="text-xs text-slate-500">(-146|47)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 13<br>d 13.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-131&y=61" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Lafka Village <span class="text-xs text-slate-500">(-131|61)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 10<br>d 13.2
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+    <div class="px-5 py-3 bg-slate-800 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="text-xl font-semibold">Batch 8</span>
+        <span class="inline-block px-3 py-1 bg-violet-600 text-white text-sm font-medium rounded-full">15 Imperians + 10 EIs</span>
+        <span class="text-xs text-slate-400">(10 farms • closest first)</span>
+      </div>
+      <button onclick="openBatch(7)"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition rounded-lg text-sm font-medium shadow">
+        🗺️ Open all 10 in new tabs
+      </button>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-120&y=46" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          OneTeuton`s village <span class="text-xs text-slate-500">(-120|46)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 9<br>d 13.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=141&y=37" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−141|37) <span class="text-xs text-slate-500">(141|37)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 13.6
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-146&y=52" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Isca Dumnoniorum <span class="text-xs text-slate-500">(-146|52)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 36<br>d 13.6
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-145&y=55" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Village de the geex <span class="text-xs text-slate-500">(-145|55)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 20<br>d 13.9
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-126&y=60" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Osada: RideOuT <span class="text-xs text-slate-500">(-126|60)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 38<br>d 13.9
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=62" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Villaggio di LadyGrizia <span class="text-xs text-slate-500">(-134|62)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 11<br>d 14.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-127&y=35" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Село од aco <span class="text-xs text-slate-500">(-127|35)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 10<br>d 14.3
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-120&y=54" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Деревня Rebal <span class="text-xs text-slate-500">(-120|54)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 14<br>d 14.3
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-139&y=35" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          RedBuilder Köyü <span class="text-xs text-slate-500">(-139|35)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 16<br>d 14.3
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-144&y=58" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Villaggio di avvenire <span class="text-xs text-slate-500">(-144|58)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 29<br>d 14.9
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+    <div class="px-5 py-3 bg-slate-800 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="text-xl font-semibold">Batch 9</span>
+        <span class="inline-block px-3 py-1 bg-violet-600 text-white text-sm font-medium rounded-full">20 Imperians + 10 EIs</span>
+        <span class="text-xs text-slate-400">(10 farms • closest first)</span>
+      </div>
+      <button onclick="openBatch(8)"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition rounded-lg text-sm font-medium shadow">
+        🗺️ Open all 10 in new tabs
+      </button>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-122&y=38" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Villaggio di pac <span class="text-xs text-slate-500">(-122|38)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 10<br>d 14.9
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-142&y=60" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          uahtsy`s village <span class="text-xs text-slate-500">(-142|60)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 8<br>d 15.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-133&y=63" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          nougat’s landsby <span class="text-xs text-slate-500">(-133|63)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 8<br>d 15.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-129&y=63" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Village de MindfulEmperor <span class="text-xs text-slate-500">(-129|63)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 15<br>d 15.5
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-143&y=36" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Osada: WielkiBaca <span class="text-xs text-slate-500">(-143|36)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 59<br>d 15.6
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-121&y=58" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Hadrian faluja <span class="text-xs text-slate-500">(-121|58)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 28<br>d 15.6
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-148&y=43" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          kings`s village <span class="text-xs text-slate-500">(-148|43)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 8<br>d 15.8
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=149&y=46" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−149|46) <span class="text-xs text-slate-500">(149|46)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 16.1
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-125&y=62" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          smak Köyü <span class="text-xs text-slate-500">(-125|62)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 36<br>d 16.1
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-135&y=32" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Aldea de wrc63 <span class="text-xs text-slate-500">(-135|32)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 13<br>d 16.1
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+    <div class="px-5 py-3 bg-slate-800 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="text-xl font-semibold">Batch 10</span>
+        <span class="inline-block px-3 py-1 bg-violet-600 text-white text-sm font-medium rounded-full">20 Imperians + 10 EIs</span>
+        <span class="text-xs text-slate-400">(10 farms • closest first)</span>
+      </div>
+      <button onclick="openBatch(9)"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition rounded-lg text-sm font-medium shadow">
+        🗺️ Open all 10 in new tabs
+      </button>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-122&y=60" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Село од Kosingas <span class="text-xs text-slate-500">(-122|60)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 40<br>d 16.3
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-143&y=61" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          FierceHorseman1 Köyü <span class="text-xs text-slate-500">(-143|61)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 10<br>d 16.4
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-137&y=64" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Dorf von SilverKnight <span class="text-xs text-slate-500">(-137|64)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 9<br>d 16.5
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-126&y=63" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Coco0000`s village <span class="text-xs text-slate-500">(-126|63)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 22<br>d 16.6
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-124&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Satul lui mircea <span class="text-xs text-slate-500">(-124|34)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 10<br>d 16.6
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-117&y=53" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Eutrass faluja <span class="text-xs text-slate-500">(-117|53)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 37<br>d 16.8
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-122&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−121|60) <span class="text-xs text-slate-500">(-122|34)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 17.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-132&y=65" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Villaggio di Dom <span class="text-xs text-slate-500">(-132|65)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 68<br>d 17.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-144&y=35" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          RaidEgyptian faluja <span class="text-xs text-slate-500">(-144|35)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 36<br>d 17.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-146&y=36" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Деревня RomaDroba <span class="text-xs text-slate-500">(-146|36)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 10<br>d 17.7
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+    <div class="px-5 py-3 bg-slate-800 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="text-xl font-semibold">Batch 11</span>
+        <span class="inline-block px-3 py-1 bg-violet-600 text-white text-sm font-medium rounded-full">20 Imperians + 10 EIs</span>
+        <span class="text-xs text-slate-400">(10 farms • closest first)</span>
+      </div>
+      <button onclick="openBatch(10)"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition rounded-lg text-sm font-medium shadow">
+        🗺️ Open all 10 in new tabs
+      </button>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-121&y=35" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Sindoma Köyü <span class="text-xs text-slate-500">(-121|35)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 16<br>d 17.7
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-117&y=56" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          STORM....`s village <span class="text-xs text-slate-500">(-117|56)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 10<br>d 17.9
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=115&y=48" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−115|48) <span class="text-xs text-slate-500">(115|48)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 18.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-148&y=38" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Dorf von VanGogh501 <span class="text-xs text-slate-500">(-148|38)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 27<br>d 18.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-133&y=30" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Osada: SirBlob <span class="text-xs text-slate-500">(-133|30)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 11<br>d 18.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-116&y=42" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          GoldBuilder`s village <span class="text-xs text-slate-500">(-116|42)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 16<br>d 18.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-138&y=30" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Villaggio di Sabry <span class="text-xs text-slate-500">(-138|30)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 10<br>d 18.7
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-141&y=31" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Dorf von Floyd_Larkin <span class="text-xs text-slate-500">(-141|31)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 17<br>d 18.8
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-150&y=40" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          lucche96`s village <span class="text-xs text-slate-500">(-150|40)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 28<br>d 18.8
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-114&y=48" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Aldeia do Whymaximus <span class="text-xs text-slate-500">(-114|48)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 22<br>d 19.0
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+    <div class="px-5 py-3 bg-slate-800 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="text-xl font-semibold">Batch 12</span>
+        <span class="inline-block px-3 py-1 bg-violet-600 text-white text-sm font-medium rounded-full">20 Imperians + 10 EIs</span>
+        <span class="text-xs text-slate-400">(10 farms • closest first)</span>
+      </div>
+      <button onclick="openBatch(11)"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition rounded-lg text-sm font-medium shadow">
+        🗺️ Open all 10 in new tabs
+      </button>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=29" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          TC-Sinan Köyü <span class="text-xs text-slate-500">(-134|29)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 17<br>d 19.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-139&y=66" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Dorf von MindfulSnake <span class="text-xs text-slate-500">(-139|66)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 14<br>d 19.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-119&y=61" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Shadow Equitz’s landsby <span class="text-xs text-slate-500">(-119|61)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 23<br>d 19.1
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-120&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Dorf von paradekopf <span class="text-xs text-slate-500">(-120|34)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 27<br>d 19.1
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-131&y=67" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Andrius`s village <span class="text-xs text-slate-500">(-131|67)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 20<br>d 19.1
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-148&y=36" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Aldea de Gasamuem <span class="text-xs text-slate-500">(-148|36)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 9<br>d 19.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-116&y=39" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Vesnice: Thor1986 <span class="text-xs text-slate-500">(-116|39)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 15<br>d 19.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-136&y=67" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Elektrikas`s village <span class="text-xs text-slate-500">(-136|67)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 11<br>d 19.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-126&y=30" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Деревня MindfulHunter <span class="text-xs text-slate-500">(-126|30)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 22<br>d 19.3
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-123&y=31" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          megaTRonic Köyü <span class="text-xs text-slate-500">(-123|31)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 24<br>d 19.7
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+    <div class="px-5 py-3 bg-slate-800 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="text-xl font-semibold">Batch 13</span>
+        <span class="inline-block px-3 py-1 bg-violet-600 text-white text-sm font-medium rounded-full">15 Imperians + 10 EIs</span>
+        <span class="text-xs text-slate-400">(10 farms • closest first)</span>
+      </div>
+      <button onclick="openBatch(12)"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition rounded-lg text-sm font-medium shadow">
+        🗺️ Open all 10 in new tabs
+      </button>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-115&y=56" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Aldea de eponse <span class="text-xs text-slate-500">(-115|56)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 13<br>d 19.7
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-147&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Villaggio di cicerone <span class="text-xs text-slate-500">(-147|34)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 11<br>d 19.8
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=117&y=36" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−117|36) <span class="text-xs text-slate-500">(117|36)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 20.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-122&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Unoccupied oasis (−121|32) <span class="text-xs text-slate-500">(-122|34)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 0<br>d 20.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-135&y=28" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Kingofdeath`s village <span class="text-xs text-slate-500">(-135|28)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 10<br>d 20.1
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-126&y=67" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          D.j.king`s village <span class="text-xs text-slate-500">(-126|67)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 9<br>d 20.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-144&y=31" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Osada: Lime4 <span class="text-xs text-slate-500">(-144|31)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 22<br>d 20.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-118&y=62" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Carbonnn Köyü <span class="text-xs text-slate-500">(-118|62)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 15<br>d 20.5
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-118&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Osada: EpicSpartan <span class="text-xs text-slate-500">(-118|34)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 19<br>d 20.5
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-120&y=32" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          csabi faluja <span class="text-xs text-slate-500">(-120|32)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 21<br>d 20.6
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+    <div class="px-5 py-3 bg-slate-800 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="text-xl font-semibold">Batch 14</span>
+        <span class="inline-block px-3 py-1 bg-violet-600 text-white text-sm font-medium rounded-full">20 Imperians + 10 EIs</span>
+        <span class="text-xs text-slate-400">(10 farms • closest first)</span>
+      </div>
+      <button onclick="openBatch(13)"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition rounded-lg text-sm font-medium shadow">
+        🗺️ Open all 10 in new tabs
+      </button>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-149&y=35" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Zerobran`s village <span class="text-xs text-slate-500">(-149|35)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 12<br>d 20.6
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-138&y=68" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          9uyt6`s village <span class="text-xs text-slate-500">(-138|68)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 8<br>d 20.6
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-132&y=27" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          AdolfNigler`s village <span class="text-xs text-slate-500">(-132|27)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 28<br>d 21.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=27" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Ronne`s village <span class="text-xs text-slate-500">(-134|27)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 23<br>d 21.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-147&y=32" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          LeoBee`s village <span class="text-xs text-slate-500">(-147|32)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 11<br>d 21.3
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-146&y=31" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          BoldMaster45´s Dorp <span class="text-xs text-slate-500">(-146|31)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 9<br>d 21.4
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-112&y=53" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Aldea de North <span class="text-xs text-slate-500">(-112|53)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 11<br>d 21.6
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-128&y=70" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          HolmOvergaard’s landsby <span class="text-xs text-slate-500">(-128|70)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 43<br>d 22.6
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-147&y=30" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Aldeia do Extra <span class="text-xs text-slate-500">(-147|30)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 38<br>d 22.8
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-112&y=57" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Деревня Mego <span class="text-xs text-slate-500">(-112|57)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 10<br>d 22.8
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+    <div class="px-5 py-3 bg-slate-800 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="text-xl font-semibold">Batch 15</span>
+        <span class="inline-block px-3 py-1 bg-violet-600 text-white text-sm font-medium rounded-full">20 Imperians + 10 EIs</span>
+        <span class="text-xs text-slate-400">(10 farms • closest first)</span>
+      </div>
+      <button onclick="openBatch(14)"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition rounded-lg text-sm font-medium shadow">
+        🗺️ Open all 10 in new tabs
+      </button>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-133&y=71" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Osada: wocla <span class="text-xs text-slate-500">(-133|71)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 8<br>d 23.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=25" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Naselje - Zany <span class="text-xs text-slate-500">(-134|25)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 20<br>d 23.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-130&y=25" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Vesnice: Geriatrixx <span class="text-xs text-slate-500">(-130|25)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 9<br>d 23.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-117&y=65" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Dorf von Nitro <span class="text-xs text-slate-500">(-117|65)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 15<br>d 23.3
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-141&y=26" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          ato Köyü <span class="text-xs text-slate-500">(-141|26)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 9<br>d 23.4
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-114&y=62" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Aston <span class="text-xs text-slate-500">(-114|62)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 11<br>d 23.6
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-122&y=27" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Villaggio di auron <span class="text-xs text-slate-500">(-122|27)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 9<br>d 23.7
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-111&y=39" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Osada: Bartolinho <span class="text-xs text-slate-500">(-111|39)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 12<br>d 23.8
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-126&y=25" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Aldeia do kebas17 <span class="text-xs text-slate-500">(-126|25)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 8<br>d 24.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-116&y=31" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Efknliskr Köyü <span class="text-xs text-slate-500">(-116|31)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 10<br>d 24.0
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+    <div class="px-5 py-3 bg-slate-800 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="text-xl font-semibold">Batch 16</span>
+        <span class="inline-block px-3 py-1 bg-violet-600 text-white text-sm font-medium rounded-full">20 Imperians + 10 EIs</span>
+        <span class="text-xs text-slate-400">(10 farms • closest first)</span>
+      </div>
+      <button onclick="openBatch(15)"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition rounded-lg text-sm font-medium shadow">
+        🗺️ Open all 10 in new tabs
+      </button>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-135&y=72" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Osada: Djaka <span class="text-xs text-slate-500">(-135|72)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 10<br>d 24.1
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-108&y=47" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          VaG χωριό <span class="text-xs text-slate-500">(-108|47)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 9<br>d 25.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-108&y=50" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Aldea de TutanKabron7212 <span class="text-xs text-slate-500">(-108|50)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 15<br>d 25.1
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-119&y=69" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Aldea de Caliburry <span class="text-xs text-slate-500">(-119|69)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 9<br>d 25.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-130&y=23" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Zakir12345 Köyü <span class="text-xs text-slate-500">(-130|23)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 22<br>d 25.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-147&y=27" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          BattleLeader/sostinė <span class="text-xs text-slate-500">(-147|27)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 10<br>d 25.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-136&y=73" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          sanuy`s village <span class="text-xs text-slate-500">(-136|73)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 8<br>d 25.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-109&y=40" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Dorf von Nurkris <span class="text-xs text-slate-500">(-109|40)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 10<br>d 25.3
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-129&y=73" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          ADavid faluja <span class="text-xs text-slate-500">(-129|73)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 49<br>d 25.3
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-116&y=67" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Naselje - bobek <span class="text-xs text-slate-500">(-116|67)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 12<br>d 25.5
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+    <div class="px-5 py-3 bg-slate-800 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="text-xl font-semibold">Batch 17</span>
+        <span class="inline-block px-3 py-1 bg-violet-600 text-white text-sm font-medium rounded-full">20 Imperians + 10 EIs</span>
+        <span class="text-xs text-slate-400">(10 farms • closest first)</span>
+      </div>
+      <button onclick="openBatch(16)"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition rounded-lg text-sm font-medium shadow">
+        🗺️ Open all 10 in new tabs
+      </button>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-122&y=71" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Aldea de Nuferan <span class="text-xs text-slate-500">(-122|71)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 9<br>d 25.5
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-120&y=70" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Natars -120|70 <span class="text-xs text-slate-500">(-120|70)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 9<br>d 25.6
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-117&y=28" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Mtk Köyü <span class="text-xs text-slate-500">(-117|28)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 32<br>d 25.6
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-123&y=72" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Aldea de Mosha <span class="text-xs text-slate-500">(-123|72)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 22<br>d 26.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-109&y=58" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Dorf von Vern1 <span class="text-xs text-slate-500">(-109|58)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 12<br>d 26.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-132&y=74" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Village de NiceWolf <span class="text-xs text-slate-500">(-132|74)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 17<br>d 26.0
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-111&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          NiceRider`s village <span class="text-xs text-slate-500">(-111|34)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 12<br>d 26.1
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-113&y=65" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Dorf von ZeuZ <span class="text-xs text-slate-500">(-113|65)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 9<br>d 26.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-136&y=22" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Osada: aaa <span class="text-xs text-slate-500">(-136|22)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 30<br>d 26.2
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-130&y=74" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          meandros83 χωριό <span class="text-xs text-slate-500">(-130|74)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 14<br>d 26.2
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+    <div class="px-5 py-3 bg-slate-800 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="text-xl font-semibold">Batch 18</span>
+        <span class="inline-block px-3 py-1 bg-violet-600 text-white text-sm font-medium rounded-full">20 Imperians + 10 EIs</span>
+        <span class="text-xs text-slate-400">(1 farms • closest first)</span>
+      </div>
+      <button onclick="openBatch(17)"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition rounded-lg text-sm font-medium shadow">
+        🗺️ Open all 1 in new tabs
+      </button>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+      <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+        <a href="https://ts4.x1.europe.travian.com/karte.php?x=-152&y=30" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">
+          Villaggio di Sterminetor <span class="text-xs text-slate-500">(-152|30)</span>
+        </a>
+        <div class="text-right text-xs text-slate-400 whitespace-nowrap">
+          pop 18<br>d 26.2
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="text-xs text-slate-500 mt-8">
+    Generated from farm_list2.txt • 18 batches • Use the map links to add to your Roman farm lists (one list per recommended size).
+  </div>
+</div>
+
+<script>
+const batches = [{"urls": ["https://ts4.x1.europe.travian.com/karte.php?x=-133&y=46", "https://ts4.x1.europe.travian.com/karte.php?x=132&y=46", "https://ts4.x1.europe.travian.com/karte.php?x=131&y=47", "https://ts4.x1.europe.travian.com/karte.php?x=-135&y=49", "https://ts4.x1.europe.travian.com/karte.php?x=-135&y=46", "https://ts4.x1.europe.travian.com/karte.php?x=-136&y=48", "https://ts4.x1.europe.travian.com/karte.php?x=132&y=51", "https://ts4.x1.europe.travian.com/karte.php?x=-135&y=51", "https://ts4.x1.europe.travian.com/karte.php?x=133&y=44", "https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41"], "infos": ["TassLee faluja (-133|46) pop=23 d=2.0", "Unoccupied oasis (\u2212132|46) (132|46) pop=0 d=2.2", "Unoccupied oasis (\u2212131|47) (131|47) pop=0 d=2.2", "CropCrusher K\u00f6y\u00fc (-135|49) pop=28 d=2.2", "\u0421\u0435\u043b\u043e \u043e\u0434 Dragan (-135|46) pop=8 d=2.8", "Vesnice: Petr (-136|48) pop=19 d=3.0", "Unoccupied oasis (\u2212132|51) (132|51) pop=0 d=3.2", "StK_85 K\u00f6y\u00fc (-135|51) pop=8 d=3.6", "Unoccupied oasis (\u2212133|44) (133|44) pop=0 d=4.0", "Unoccupied oasis (\u2212132|44) (-134|41) pop=0 d=4.1"]}, {"urls": ["https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41", "https://ts4.x1.europe.travian.com/karte.php?x=-130&y=51", "https://ts4.x1.europe.travian.com/karte.php?x=-129&y=46", "https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41", "https://ts4.x1.europe.travian.com/karte.php?x=-128&y=50", "https://ts4.x1.europe.travian.com/karte.php?x=-138&y=50", "https://ts4.x1.europe.travian.com/karte.php?x=-135&y=53", "https://ts4.x1.europe.travian.com/karte.php?x=-129&y=44", "https://ts4.x1.europe.travian.com/karte.php?x=-137&y=44", "https://ts4.x1.europe.travian.com/karte.php?x=-130&y=43"], "infos": ["Unoccupied oasis (\u2212136|45) (-134|41) pop=0 d=4.2", "zaid`s village (-130|51) pop=10 d=4.2", "SonPeygamber K\u00f6y\u00fc (-129|46) pop=9 d=4.5", "Unoccupied oasis (\u2212130|44) (-134|41) pop=0 d=5.0", "Aldeia do Dicezin (-128|50) pop=10 d=5.4", "Dorf von Systemfehler (-138|50) pop=11 d=5.4", "let me live faluja (-135|53) pop=12 d=5.4", "Villaggio di RoquenMorna (-129|44) pop=80 d=5.7", "kemalist K\u00f6y\u00fc (-137|44) pop=9 d=5.7", "Tko faluja (-130|43) pop=8 d=5.8"]}, {"urls": ["https://ts4.x1.europe.travian.com/karte.php?x=-130&y=53", "https://ts4.x1.europe.travian.com/karte.php?x=-127&y=48", "https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41", "https://ts4.x1.europe.travian.com/karte.php?x=-134&y=42", "https://ts4.x1.europe.travian.com/karte.php?x=-139&y=46", "https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41", "https://ts4.x1.europe.travian.com/karte.php?x=-128&y=52", "https://ts4.x1.europe.travian.com/karte.php?x=-133&y=55", "https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41", "https://ts4.x1.europe.travian.com/karte.php?x=-127&y=44"], "infos": ["HOL\u0130GAN K\u00f6y\u00fc (-130|53) pop=15 d=5.8", "Village de DarkEgyptian (-127|48) pop=17 d=6.0", "Unoccupied oasis (\u2212139|49) (-134|41) pop=0 d=6.1", "KimInNaRi faluja (-134|42) pop=12 d=6.1", "Vesnice: hacek (-139|46) pop=26 d=6.3", "Unoccupied oasis (\u2212129|53) (-134|41) pop=0 d=6.4", "Pelaajan JusmoFIN kyl\u00e4 (-128|52) pop=16 d=6.4", "Dorf von Avatar (-133|55) pop=18 d=7.0", "Unoccupied oasis (\u2212132|41) (-134|41) pop=0 d=7.1", "tuuba K\u00f6y\u00fc (-127|44) pop=52 d=7.2"]}, {"urls": ["https://ts4.x1.europe.travian.com/karte.php?x=-129&y=42", "https://ts4.x1.europe.travian.com/karte.php?x=-140&y=50", "https://ts4.x1.europe.travian.com/karte.php?x=-140&y=45", "https://ts4.x1.europe.travian.com/karte.php?x=-139&y=43", "https://ts4.x1.europe.travian.com/karte.php?x=-134&y=56", "https://ts4.x1.europe.travian.com/karte.php?x=-125&y=47", "https://ts4.x1.europe.travian.com/karte.php?x=-140&y=52", "https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41", "https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41", "https://ts4.x1.europe.travian.com/karte.php?x=-125&y=51"], "infos": ["\u0414\u0435\u0440\u0435\u0432\u043d\u044f TrueTiger (-129|42) pop=18 d=7.2", "Aldeia do arrebentabilhas (-140|50) pop=140 d=7.3", "Village de ryaume (-140|45) pop=14 d=7.6", "Annisette\u2019s landsby (-139|43) pop=134 d=7.8", "Villaggio di negaboy (-134|56) pop=10 d=8.1", "\u0414\u0435\u0440\u0435\u0432\u043d\u044f TyzemezZ (-125|47) pop=17 d=8.1", "Pelaajan SpeedySaku kyl\u00e4 (-140|52) pop=69 d=8.1", "Unoccupied oasis (\u2212130|40) (-134|41) pop=0 d=8.5", "Natars -130|56 (-134|41) pop=7 d=8.5", "Natars -125|51 (-125|51) pop=14 d=8.5"]}, {"urls": ["https://ts4.x1.europe.travian.com/karte.php?x=-140&y=42", "https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41", "https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41", "https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41", "https://ts4.x1.europe.travian.com/karte.php?x=-134&y=41", "https://ts4.x1.europe.travian.com/karte.php?x=-140&y=55", "https://ts4.x1.europe.travian.com/karte.php?x=-139&y=56", "https://ts4.x1.europe.travian.com/karte.php?x=142&y=53", "https://ts4.x1.europe.travian.com/karte.php?x=-142&y=43", "https://ts4.x1.europe.travian.com/karte.php?x=-132&y=37"], "infos": ["WoodLeader faluja (-140|42) pop=8 d=9.2", "Unoccupied oasis (\u2212141|43) (-134|41) pop=0 d=9.4", "Unoccupied oasis (\u2212142|51) (-134|41) pop=0 d=9.5", "Unoccupied oasis (\u2212142|45) (-134|41) pop=0 d=9.5", "Unoccupied oasis (\u2212129|39) (-134|41) pop=0 d=9.8", "Village de Rovo (-140|55) pop=10 d=9.9", "Aldeia do AMFernandes (-139|56) pop=40 d=10.0", "Unoccupied oasis (\u2212142|53) (142|53) pop=0 d=10.3", "uzunn 444 K\u00f6y\u00fc (-142|43) pop=13 d=10.3", "LuisaMidosi`s village (-132|37) pop=13 d=11.0"]}, {"urls": ["https://ts4.x1.europe.travian.com/karte.php?x=-128&y=58", "https://ts4.x1.europe.travian.com/karte.php?x=-123&y=53", "https://ts4.x1.europe.travian.com/karte.php?x=-125&y=40", "https://ts4.x1.europe.travian.com/karte.php?x=-143&y=54", "https://ts4.x1.europe.travian.com/karte.php?x=-144&y=52", "https://ts4.x1.europe.travian.com/karte.php?x=-139&y=38", "https://ts4.x1.europe.travian.com/karte.php?x=-127&y=38", "https://ts4.x1.europe.travian.com/karte.php?x=-137&y=37", "https://ts4.x1.europe.travian.com/karte.php?x=-137&y=59", "https://ts4.x1.europe.travian.com/karte.php?x=-144&y=44"], "infos": ["Dorf von Lumar (-128|58) pop=11 d=11.2", "WarWarlord K\u00f6y\u00fc (-123|53) pop=10 d=11.2", "Aldea de adime (-125|40) pop=16 d=11.3", "Dorf von Lady87 (-143|54) pop=165 d=11.7", "DirtyAttacker`s village (-144|52) pop=8 d=11.7", "Villaggio di Remigio (-139|38) pop=11 d=11.7", "Abhishek`s village (-127|38) pop=11 d=11.7", "Koala`s village (-137|37) pop=16 d=11.7", "Gokhan34 K\u00f6y\u00fc (-137|59) pop=14 d=11.7", "FearGuns K\u00f6y\u00fc (-144|44) pop=117 d=11.7"]}, {"urls": ["https://ts4.x1.europe.travian.com/karte.php?x=125&y=57", "https://ts4.x1.europe.travian.com/karte.php?x=-142&y=40", "https://ts4.x1.europe.travian.com/karte.php?x=-121&y=49", "https://ts4.x1.europe.travian.com/karte.php?x=-145&y=50", "https://ts4.x1.europe.travian.com/karte.php?x=-143&y=41", "https://ts4.x1.europe.travian.com/karte.php?x=-145&y=45", "https://ts4.x1.europe.travian.com/karte.php?x=-124&y=39", "https://ts4.x1.europe.travian.com/karte.php?x=146&y=49", "https://ts4.x1.europe.travian.com/karte.php?x=-146&y=47", "https://ts4.x1.europe.travian.com/karte.php?x=-131&y=61"], "infos": ["Unoccupied oasis (\u2212125|57) (125|57) pop=0 d=12.0", "\u0414\u0435\u0440\u0435\u0432\u043d\u044f ShipTeuton3 (-142|40) pop=9 d=12.0", "\u0414\u0435\u0440\u0435\u0432\u043d\u044f Kupidon777 (-121|49) pop=32 d=12.0", "Village de fregates (-145|50) pop=125 d=12.2", "Dorf von EpicSnake6912 (-143|41) pop=8 d=12.2", "Villaggio di Fridu (-145|45) pop=8 d=12.4", "\u0414\u0435\u0440\u0435\u0432\u043d\u044f ClayGuardian (-124|39) pop=12 d=12.7", "Unoccupied oasis (\u2212146|49) (146|49) pop=0 d=13.0", "Osada: SharpSnake (-146|47) pop=13 d=13.0", "Lafka Village (-131|61) pop=10 d=13.2"]}, {"urls": ["https://ts4.x1.europe.travian.com/karte.php?x=-120&y=46", "https://ts4.x1.europe.travian.com/karte.php?x=141&y=37", "https://ts4.x1.europe.travian.com/karte.php?x=-146&y=52", "https://ts4.x1.europe.travian.com/karte.php?x=-145&y=55", "https://ts4.x1.europe.travian.com/karte.php?x=-126&y=60", "https://ts4.x1.europe.travian.com/karte.php?x=-134&y=62", "https://ts4.x1.europe.travian.com/karte.php?x=-127&y=35", "https://ts4.x1.europe.travian.com/karte.php?x=-120&y=54", "https://ts4.x1.europe.travian.com/karte.php?x=-139&y=35", "https://ts4.x1.europe.travian.com/karte.php?x=-144&y=58"], "infos": ["OneTeuton`s village (-120|46) pop=9 d=13.2", "Unoccupied oasis (\u2212141|37) (141|37) pop=0 d=13.6", "Isca Dumnoniorum (-146|52) pop=36 d=13.6", "Village de the geex (-145|55) pop=20 d=13.9", "Osada: RideOuT (-126|60) pop=38 d=13.9", "Villaggio di LadyGrizia (-134|62) pop=11 d=14.0", "\u0421\u0435\u043b\u043e \u043e\u0434 aco (-127|35) pop=10 d=14.3", "\u0414\u0435\u0440\u0435\u0432\u043d\u044f Rebal (-120|54) pop=14 d=14.3", "RedBuilder K\u00f6y\u00fc (-139|35) pop=16 d=14.3", "Villaggio di avvenire (-144|58) pop=29 d=14.9"]}, {"urls": ["https://ts4.x1.europe.travian.com/karte.php?x=-122&y=38", "https://ts4.x1.europe.travian.com/karte.php?x=-142&y=60", "https://ts4.x1.europe.travian.com/karte.php?x=-133&y=63", "https://ts4.x1.europe.travian.com/karte.php?x=-129&y=63", "https://ts4.x1.europe.travian.com/karte.php?x=-143&y=36", "https://ts4.x1.europe.travian.com/karte.php?x=-121&y=58", "https://ts4.x1.europe.travian.com/karte.php?x=-148&y=43", "https://ts4.x1.europe.travian.com/karte.php?x=149&y=46", "https://ts4.x1.europe.travian.com/karte.php?x=-125&y=62", "https://ts4.x1.europe.travian.com/karte.php?x=-135&y=32"], "infos": ["Villaggio di pac (-122|38) pop=10 d=14.9", "uahtsy`s village (-142|60) pop=8 d=15.0", "nougat\u2019s landsby (-133|63) pop=8 d=15.0", "Village de MindfulEmperor (-129|63) pop=15 d=15.5", "Osada: WielkiBaca (-143|36) pop=59 d=15.6", "Hadrian faluja (-121|58) pop=28 d=15.6", "kings`s village (-148|43) pop=8 d=15.8", "Unoccupied oasis (\u2212149|46) (149|46) pop=0 d=16.1", "smak K\u00f6y\u00fc (-125|62) pop=36 d=16.1", "Aldea de wrc63 (-135|32) pop=13 d=16.1"]}, {"urls": ["https://ts4.x1.europe.travian.com/karte.php?x=-122&y=60", "https://ts4.x1.europe.travian.com/karte.php?x=-143&y=61", "https://ts4.x1.europe.travian.com/karte.php?x=-137&y=64", "https://ts4.x1.europe.travian.com/karte.php?x=-126&y=63", "https://ts4.x1.europe.travian.com/karte.php?x=-124&y=34", "https://ts4.x1.europe.travian.com/karte.php?x=-117&y=53", "https://ts4.x1.europe.travian.com/karte.php?x=-122&y=34", "https://ts4.x1.europe.travian.com/karte.php?x=-132&y=65", "https://ts4.x1.europe.travian.com/karte.php?x=-144&y=35", "https://ts4.x1.europe.travian.com/karte.php?x=-146&y=36"], "infos": ["\u0421\u0435\u043b\u043e \u043e\u0434 Kosingas (-122|60) pop=40 d=16.3", "FierceHorseman1 K\u00f6y\u00fc (-143|61) pop=10 d=16.4", "Dorf von SilverKnight (-137|64) pop=9 d=16.5", "Coco0000`s village (-126|63) pop=22 d=16.6", "Satul lui mircea (-124|34) pop=10 d=16.6", "Eutrass faluja (-117|53) pop=37 d=16.8", "Unoccupied oasis (\u2212121|60) (-122|34) pop=0 d=17.0", "Villaggio di Dom (-132|65) pop=68 d=17.0", "RaidEgyptian faluja (-144|35) pop=36 d=17.0", "\u0414\u0435\u0440\u0435\u0432\u043d\u044f RomaDroba (-146|36) pop=10 d=17.7"]}, {"urls": ["https://ts4.x1.europe.travian.com/karte.php?x=-121&y=35", "https://ts4.x1.europe.travian.com/karte.php?x=-117&y=56", "https://ts4.x1.europe.travian.com/karte.php?x=115&y=48", "https://ts4.x1.europe.travian.com/karte.php?x=-148&y=38", "https://ts4.x1.europe.travian.com/karte.php?x=-133&y=30", "https://ts4.x1.europe.travian.com/karte.php?x=-116&y=42", "https://ts4.x1.europe.travian.com/karte.php?x=-138&y=30", "https://ts4.x1.europe.travian.com/karte.php?x=-141&y=31", "https://ts4.x1.europe.travian.com/karte.php?x=-150&y=40", "https://ts4.x1.europe.travian.com/karte.php?x=-114&y=48"], "infos": ["Sindoma K\u00f6y\u00fc (-121|35) pop=16 d=17.7", "STORM....`s village (-117|56) pop=10 d=17.9", "Unoccupied oasis (\u2212115|48) (115|48) pop=0 d=18.0", "Dorf von VanGogh501 (-148|38) pop=27 d=18.0", "Osada: SirBlob (-133|30) pop=11 d=18.0", "GoldBuilder`s village (-116|42) pop=16 d=18.0", "Villaggio di Sabry (-138|30) pop=10 d=18.7", "Dorf von Floyd_Larkin (-141|31) pop=17 d=18.8", "lucche96`s village (-150|40) pop=28 d=18.8", "Aldeia do Whymaximus (-114|48) pop=22 d=19.0"]}, {"urls": ["https://ts4.x1.europe.travian.com/karte.php?x=-134&y=29", "https://ts4.x1.europe.travian.com/karte.php?x=-139&y=66", "https://ts4.x1.europe.travian.com/karte.php?x=-119&y=61", "https://ts4.x1.europe.travian.com/karte.php?x=-120&y=34", "https://ts4.x1.europe.travian.com/karte.php?x=-131&y=67", "https://ts4.x1.europe.travian.com/karte.php?x=-148&y=36", "https://ts4.x1.europe.travian.com/karte.php?x=-116&y=39", "https://ts4.x1.europe.travian.com/karte.php?x=-136&y=67", "https://ts4.x1.europe.travian.com/karte.php?x=-126&y=30", "https://ts4.x1.europe.travian.com/karte.php?x=-123&y=31"], "infos": ["TC-Sinan K\u00f6y\u00fc (-134|29) pop=17 d=19.0", "Dorf von MindfulSnake (-139|66) pop=14 d=19.0", "Shadow Equitz\u2019s landsby (-119|61) pop=23 d=19.1", "Dorf von paradekopf (-120|34) pop=27 d=19.1", "Andrius`s village (-131|67) pop=20 d=19.1", "Aldea de Gasamuem (-148|36) pop=9 d=19.2", "Vesnice: Thor1986 (-116|39) pop=15 d=19.2", "Elektrikas`s village (-136|67) pop=11 d=19.2", "\u0414\u0435\u0440\u0435\u0432\u043d\u044f MindfulHunter (-126|30) pop=22 d=19.3", "megaTRonic K\u00f6y\u00fc (-123|31) pop=24 d=19.7"]}, {"urls": ["https://ts4.x1.europe.travian.com/karte.php?x=-115&y=56", "https://ts4.x1.europe.travian.com/karte.php?x=-147&y=34", "https://ts4.x1.europe.travian.com/karte.php?x=117&y=36", "https://ts4.x1.europe.travian.com/karte.php?x=-122&y=34", "https://ts4.x1.europe.travian.com/karte.php?x=-135&y=28", "https://ts4.x1.europe.travian.com/karte.php?x=-126&y=67", "https://ts4.x1.europe.travian.com/karte.php?x=-144&y=31", "https://ts4.x1.europe.travian.com/karte.php?x=-118&y=62", "https://ts4.x1.europe.travian.com/karte.php?x=-118&y=34", "https://ts4.x1.europe.travian.com/karte.php?x=-120&y=32"], "infos": ["Aldea de eponse (-115|56) pop=13 d=19.7", "Villaggio di cicerone (-147|34) pop=11 d=19.8", "Unoccupied oasis (\u2212117|36) (117|36) pop=0 d=20.0", "Unoccupied oasis (\u2212121|32) (-122|34) pop=0 d=20.0", "Kingofdeath`s village (-135|28) pop=10 d=20.1", "D.j.king`s village (-126|67) pop=9 d=20.2", "Osada: Lime4 (-144|31) pop=22 d=20.2", "Carbonnn K\u00f6y\u00fc (-118|62) pop=15 d=20.5", "Osada: EpicSpartan (-118|34) pop=19 d=20.5", "csabi faluja (-120|32) pop=21 d=20.6"]}, {"urls": ["https://ts4.x1.europe.travian.com/karte.php?x=-149&y=35", "https://ts4.x1.europe.travian.com/karte.php?x=-138&y=68", "https://ts4.x1.europe.travian.com/karte.php?x=-132&y=27", "https://ts4.x1.europe.travian.com/karte.php?x=-134&y=27", "https://ts4.x1.europe.travian.com/karte.php?x=-147&y=32", "https://ts4.x1.europe.travian.com/karte.php?x=-146&y=31", "https://ts4.x1.europe.travian.com/karte.php?x=-112&y=53", "https://ts4.x1.europe.travian.com/karte.php?x=-128&y=70", "https://ts4.x1.europe.travian.com/karte.php?x=-147&y=30", "https://ts4.x1.europe.travian.com/karte.php?x=-112&y=57"], "infos": ["Zerobran`s village (-149|35) pop=12 d=20.6", "9uyt6`s village (-138|68) pop=8 d=20.6", "AdolfNigler`s village (-132|27) pop=28 d=21.0", "Ronne`s village (-134|27) pop=23 d=21.0", "LeoBee`s village (-147|32) pop=11 d=21.3", "BoldMaster45\u00b4s Dorp (-146|31) pop=9 d=21.4", "Aldea de North (-112|53) pop=11 d=21.6", "HolmOvergaard\u2019s landsby (-128|70) pop=43 d=22.6", "Aldeia do Extra (-147|30) pop=38 d=22.8", "\u0414\u0435\u0440\u0435\u0432\u043d\u044f Mego (-112|57) pop=10 d=22.8"]}, {"urls": ["https://ts4.x1.europe.travian.com/karte.php?x=-133&y=71", "https://ts4.x1.europe.travian.com/karte.php?x=-134&y=25", "https://ts4.x1.europe.travian.com/karte.php?x=-130&y=25", "https://ts4.x1.europe.travian.com/karte.php?x=-117&y=65", "https://ts4.x1.europe.travian.com/karte.php?x=-141&y=26", "https://ts4.x1.europe.travian.com/karte.php?x=-114&y=62", "https://ts4.x1.europe.travian.com/karte.php?x=-122&y=27", "https://ts4.x1.europe.travian.com/karte.php?x=-111&y=39", "https://ts4.x1.europe.travian.com/karte.php?x=-126&y=25", "https://ts4.x1.europe.travian.com/karte.php?x=-116&y=31"], "infos": ["Osada: wocla (-133|71) pop=8 d=23.0", "Naselje - Zany (-134|25) pop=20 d=23.0", "Vesnice: Geriatrixx (-130|25) pop=9 d=23.2", "Dorf von Nitro (-117|65) pop=15 d=23.3", "ato K\u00f6y\u00fc (-141|26) pop=9 d=23.4", "Aston (-114|62) pop=11 d=23.6", "Villaggio di auron (-122|27) pop=9 d=23.7", "Osada: Bartolinho (-111|39) pop=12 d=23.8", "Aldeia do kebas17 (-126|25) pop=8 d=24.0", "Efknliskr K\u00f6y\u00fc (-116|31) pop=10 d=24.0"]}, {"urls": ["https://ts4.x1.europe.travian.com/karte.php?x=-135&y=72", "https://ts4.x1.europe.travian.com/karte.php?x=-108&y=47", "https://ts4.x1.europe.travian.com/karte.php?x=-108&y=50", "https://ts4.x1.europe.travian.com/karte.php?x=-119&y=69", "https://ts4.x1.europe.travian.com/karte.php?x=-130&y=23", "https://ts4.x1.europe.travian.com/karte.php?x=-147&y=27", "https://ts4.x1.europe.travian.com/karte.php?x=-136&y=73", "https://ts4.x1.europe.travian.com/karte.php?x=-109&y=40", "https://ts4.x1.europe.travian.com/karte.php?x=-129&y=73", "https://ts4.x1.europe.travian.com/karte.php?x=-116&y=67"], "infos": ["Osada: Djaka (-135|72) pop=10 d=24.1", "VaG \u03c7\u03c9\u03c1\u03b9\u03cc (-108|47) pop=9 d=25.0", "Aldea de TutanKabron7212 (-108|50) pop=15 d=25.1", "Aldea de Caliburry (-119|69) pop=9 d=25.2", "Zakir12345 K\u00f6y\u00fc (-130|23) pop=22 d=25.2", "BattleLeader/sostin\u0117 (-147|27) pop=10 d=25.2", "sanuy`s village (-136|73) pop=8 d=25.2", "Dorf von Nurkris (-109|40) pop=10 d=25.3", "ADavid faluja (-129|73) pop=49 d=25.3", "Naselje - bobek (-116|67) pop=12 d=25.5"]}, {"urls": ["https://ts4.x1.europe.travian.com/karte.php?x=-122&y=71", "https://ts4.x1.europe.travian.com/karte.php?x=-120&y=70", "https://ts4.x1.europe.travian.com/karte.php?x=-117&y=28", "https://ts4.x1.europe.travian.com/karte.php?x=-123&y=72", "https://ts4.x1.europe.travian.com/karte.php?x=-109&y=58", "https://ts4.x1.europe.travian.com/karte.php?x=-132&y=74", "https://ts4.x1.europe.travian.com/karte.php?x=-111&y=34", "https://ts4.x1.europe.travian.com/karte.php?x=-113&y=65", "https://ts4.x1.europe.travian.com/karte.php?x=-136&y=22", "https://ts4.x1.europe.travian.com/karte.php?x=-130&y=74"], "infos": ["Aldea de Nuferan (-122|71) pop=9 d=25.5", "Natars -120|70 (-120|70) pop=9 d=25.6", "Mtk K\u00f6y\u00fc (-117|28) pop=32 d=25.6", "Aldea de Mosha (-123|72) pop=22 d=26.0", "Dorf von Vern1 (-109|58) pop=12 d=26.0", "Village de NiceWolf (-132|74) pop=17 d=26.0", "NiceRider`s village (-111|34) pop=12 d=26.1", "Dorf von ZeuZ (-113|65) pop=9 d=26.2", "Osada: aaa (-136|22) pop=30 d=26.2", "meandros83 \u03c7\u03c9\u03c1\u03b9\u03cc (-130|74) pop=14 d=26.2"]}, {"urls": ["https://ts4.x1.europe.travian.com/karte.php?x=-152&y=30"], "infos": ["Villaggio di Sterminetor (-152|30) pop=18 d=26.2"]}];
+
+function openBatch(idx) {
+  const data = batches[idx];
+  if (!data || !data.urls || !data.urls.length) return alert('No links for this batch');
+  data.urls.forEach((url, i) => {
+    setTimeout(() => {
+      const w = window.open(url, '_blank');
+      if (w) {
+        w.blur();
+        window.focus();
+      }
+    }, i * 90);
+  });
+}
+</script>
+</body>
+</html>
