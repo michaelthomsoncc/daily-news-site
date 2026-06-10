@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Farm List 3 (-128|60) - Rotation Suggestions (Data-Driven + Ambitious)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>body{font-family:system-ui,sans-serif}.batch{scroll-margin-top:1rem}</style>
+</head>
+<body class="bg-slate-950 text-slate-200 p-6">
+<div class="max-w-6xl mx-auto">
+  <h1 class="text-3xl font-semibold mb-1">Farm List 3 - Rotation Suggestions (Data-Driven + Ambitious)</h1>
+  <p class="text-slate-400 mb-2">Center: (-128|60) • Existing farms from farm_list3 excluded from new suggestions • 92 established (performance from your history) + 80 new ambitious map candidates (pop≤180, ≤10 villages/player, easy-target signals) • Lists sized for ~500 troops each (one reliable send-all batch)</p>
+
+  <div class="mb-6 p-4 bg-slate-900 border border-slate-700 rounded-xl text-sm">
+    <strong>Important:</strong> Enable popups for the "Open all in tabs" buttons.
+    <br><br>
+    <strong>Command (run after pasting to farm_list3.txt, or weekly):</strong><br>
+    <code>python update_farm_list3_rotation.py</code><br>
+    Always snapshots to history/. Excludes your current list when finding new farms. Uses history performance for established, predictive + ambitious criteria for new.
+  </div>
+
+  <div class="mb-6 p-4 bg-slate-900 border border-slate-700 rounded-xl text-sm">
+    <strong>Notes:</strong> You are keeping your existing farm_list3. New targets are filtered out. Sizing is more liberal on closer farms but respects history of low returns (to avoid empties and losses to walls/residences). Established performance-driven; new are predictive.
+  </div>
+
+
+  <div class="mb-10">
+    <h2 class="text-2xl font-semibold mb-2">List 1 — Raid size 5 troops/farm (100 farms, ~500 total troops)</h2>
+    <p class="text-sm text-slate-400 mb-4">Center (-128|60). Fixed 5 per farm. Your existing farms excluded from new targets. Batches of 10 for easy adding.</p>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 1 (10 farms) — 5 troops/farm</span>
+        <button onclick="openBatch(0,0)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-104&y=44" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de RaidNatar</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 13<br>d 28.8<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-105&y=43" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: MiaWallace</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 45<br>d 28.6<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-143&y=36" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: WielkiBaca</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 59<br>d 28.3<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-100&y=62" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Villaggio di Rebecca25</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 29<br>d 28.1<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-118&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: EpicSpartan</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 19<br>d 27.9<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-104&y=46" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">WarTeuton Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 27.8<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-109&y=40" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von Nurkris</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 27.6<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-120&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von paradekopf</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 27<br>d 27.2<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="None" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">DarkGaul`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 27.2<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-101&y=63" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Градът на SmoothWarlord</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 14<br>d 27.2<br>recent ?</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 2 (10 farms) — 5 troops/farm</span>
+        <button onclick="openBatch(0,1)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-111&y=39" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: Bartolinho</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 12<br>d 27.0<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-103&y=50" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Yenilmez15 Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 155<br>d 26.9<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-106&y=45" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de jeanjacques</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 13<br>d 26.6<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-124&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Satul lui mircea</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 26.3<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-148&y=43" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">kings`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 26.2<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-121&y=54" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 135<br>d 9.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-126&y=48" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">02 [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 139<br>d 12.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-138&y=49" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Barbados [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 162<br>d 14.9<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-128&y=44" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">TRAXXX 0^^^ [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 46<br>d 16.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-109&y=61" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Frosyni [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 90<br>d 19.0<br>recent new</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 3 (10 farms) — 5 troops/farm</span>
+        <button onclick="openBatch(0,2)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-119&y=79" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Yeni Köy [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 120<br>d 21.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-150&y=60" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">New village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 84<br>d 22.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-126&y=37" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">The Real Slim Shady [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 144<br>d 23.1<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-108&y=72" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">02 [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 151<br>d 23.3<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-122&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">2 [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 130<br>d 26.7<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-101&y=52" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Özgür 02 [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 51<br>d 28.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-99&y=57" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Alesia [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 111<br>d 29.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-108&y=38" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Nouveau village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 13<br>d 29.7<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-104&y=44" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de RaidNatar</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 13<br>d 28.8<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-105&y=43" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: MiaWallace</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 45<br>d 28.6<br>recent ?</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 4 (10 farms) — 5 troops/farm</span>
+        <button onclick="openBatch(0,3)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-143&y=36" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: WielkiBaca</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 59<br>d 28.3<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-100&y=62" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Villaggio di Rebecca25</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 29<br>d 28.1<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-118&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: EpicSpartan</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 19<br>d 27.9<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-104&y=46" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">WarTeuton Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 27.8<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-109&y=40" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von Nurkris</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 27.6<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-120&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von paradekopf</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 27<br>d 27.2<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="None" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">DarkGaul`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 27.2<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-101&y=63" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Градът на SmoothWarlord</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 14<br>d 27.2<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-111&y=39" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: Bartolinho</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 12<br>d 27.0<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-103&y=50" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Yenilmez15 Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 155<br>d 26.9<br>recent ?</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 5 (10 farms) — 5 troops/farm</span>
+        <button onclick="openBatch(0,4)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-106&y=45" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de jeanjacques</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 13<br>d 26.6<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-124&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Satul lui mircea</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 26.3<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-148&y=43" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">kings`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 26.2<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-121&y=54" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 135<br>d 9.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-126&y=48" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">02 [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 139<br>d 12.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-138&y=49" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Barbados [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 162<br>d 14.9<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-128&y=44" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">TRAXXX 0^^^ [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 46<br>d 16.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-109&y=61" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Frosyni [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 90<br>d 19.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-119&y=79" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Yeni Köy [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 120<br>d 21.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-150&y=60" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">New village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 84<br>d 22.0<br>recent new</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 6 (10 farms) — 5 troops/farm</span>
+        <button onclick="openBatch(0,5)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-126&y=37" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">The Real Slim Shady [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 144<br>d 23.1<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-108&y=72" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">02 [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 151<br>d 23.3<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-122&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">2 [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 130<br>d 26.7<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-101&y=52" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Özgür 02 [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 51<br>d 28.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-99&y=57" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Alesia [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 111<br>d 29.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-108&y=38" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Nouveau village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 13<br>d 29.7<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-104&y=44" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de RaidNatar</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 13<br>d 28.8<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-105&y=43" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: MiaWallace</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 45<br>d 28.6<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-143&y=36" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: WielkiBaca</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 59<br>d 28.3<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-100&y=62" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Villaggio di Rebecca25</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 29<br>d 28.1<br>recent ?</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 7 (10 farms) — 5 troops/farm</span>
+        <button onclick="openBatch(0,6)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-118&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: EpicSpartan</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 19<br>d 27.9<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-104&y=46" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">WarTeuton Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 27.8<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-109&y=40" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von Nurkris</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 27.6<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-120&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von paradekopf</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 27<br>d 27.2<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="None" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">DarkGaul`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 27.2<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-101&y=63" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Градът на SmoothWarlord</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 14<br>d 27.2<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-111&y=39" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: Bartolinho</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 12<br>d 27.0<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-103&y=50" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Yenilmez15 Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 155<br>d 26.9<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-106&y=45" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de jeanjacques</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 13<br>d 26.6<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-124&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Satul lui mircea</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 26.3<br>recent ?</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 8 (10 farms) — 5 troops/farm</span>
+        <button onclick="openBatch(0,7)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-148&y=43" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">kings`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 26.2<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-121&y=54" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 135<br>d 9.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-126&y=48" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">02 [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 139<br>d 12.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-138&y=49" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Barbados [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 162<br>d 14.9<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-128&y=44" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">TRAXXX 0^^^ [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 46<br>d 16.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-109&y=61" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Frosyni [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 90<br>d 19.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-119&y=79" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Yeni Köy [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 120<br>d 21.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-150&y=60" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">New village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 84<br>d 22.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-126&y=37" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">The Real Slim Shady [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 144<br>d 23.1<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-108&y=72" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">02 [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 151<br>d 23.3<br>recent new</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 9 (10 farms) — 5 troops/farm</span>
+        <button onclick="openBatch(0,8)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-122&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">2 [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 130<br>d 26.7<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-101&y=52" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Özgür 02 [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 51<br>d 28.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-99&y=57" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Alesia [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 111<br>d 29.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-108&y=38" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Nouveau village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 13<br>d 29.7<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-104&y=44" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de RaidNatar</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 13<br>d 28.8<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-105&y=43" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: MiaWallace</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 45<br>d 28.6<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-143&y=36" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: WielkiBaca</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 59<br>d 28.3<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-100&y=62" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Villaggio di Rebecca25</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 29<br>d 28.1<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-118&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: EpicSpartan</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 19<br>d 27.9<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-104&y=46" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">WarTeuton Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 27.8<br>recent ?</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 10 (10 farms) — 5 troops/farm</span>
+        <button onclick="openBatch(0,9)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-109&y=40" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von Nurkris</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 27.6<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-120&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von paradekopf</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 27<br>d 27.2<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="None" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">DarkGaul`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 27.2<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-101&y=63" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Градът на SmoothWarlord</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 14<br>d 27.2<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-111&y=39" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: Bartolinho</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 12<br>d 27.0<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-103&y=50" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Yenilmez15 Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 155<br>d 26.9<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-106&y=45" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de jeanjacques</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 13<br>d 26.6<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-124&y=34" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Satul lui mircea</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 26.3<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-148&y=43" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">kings`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 26.2<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-121&y=54" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 135<br>d 9.2<br>recent new</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-10">
+    <h2 class="text-2xl font-semibold mb-2">List 2 — Raid size 8 troops/farm (62 farms, ~496 total troops)</h2>
+    <p class="text-sm text-slate-400 mb-4">Center (-128|60). Fixed 8 per farm. Your existing farms excluded from new targets. Batches of 10 for easy adding.</p>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 1 (10 farms) — 8 troops/farm</span>
+        <button onclick="openBatch(1,0)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-127&y=35" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Село од aco</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 25.0<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-130&y=84" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Haso Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 24.1<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-131&y=83" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldea de SharpBeast</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 23.2<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-132&y=82" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von CHRISTOPHERUS</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 22.4<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-146&y=52" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Isca Dumnoniorum</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 25<br>d 19.7<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-133&y=79" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von Wenning</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 19.6<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=77" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldea de Trimateox</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 18.0<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-145&y=55" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de the geex</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 20<br>d 17.7<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-132&y=76" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Satul lui paul_cr15</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 16.5<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-144&y=58" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Villaggio di avvenire</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 28<br>d 16.1<br>recent ?</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 2 (10 farms) — 8 troops/farm</span>
+        <button onclick="openBatch(1,1)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-136&y=73" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">sanuy`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 15.3<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-139&y=69" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Küla omanik sharptan</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 12<br>d 14.2<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-142&y=60" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">uahtsy`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 14.0<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-135&y=72" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: Djaka</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 13.9<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-138&y=68" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">9uyt6`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 12.8<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-153&y=43" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Neues Dorf [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 45<br>d 30.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-102&y=77" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Lion’s Arch [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 53<br>d 31.1<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-119&y=29" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">10 [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 144<br>d 32.3<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-97&y=72" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">B2 [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 109<br>d 33.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-157&y=43" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">TARANTINO [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 11<br>d 33.6<br>recent new</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 3 (10 farms) — 8 troops/farm</span>
+        <button onclick="openBatch(1,2)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-133&y=26" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">HECTOR53 [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 89<br>d 34.4<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-138&y=27" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Konoha [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 101<br>d 34.5<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-128&y=60" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">fredfredd`s village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 147<br>d 0.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-126&y=60" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: RideOuT [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 38<br>d 2.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-128&y=58" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von Lumar [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 11<br>d 2.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-129&y=63" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de MindfulEmperor [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 15<br>d 3.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-131&y=61" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Lafka Village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 3.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-125&y=62" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">smak Köyü [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 36<br>d 3.6<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-127&y=35" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Село од aco</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 25.0<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-130&y=84" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Haso Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 24.1<br>recent ?</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 4 (10 farms) — 8 troops/farm</span>
+        <button onclick="openBatch(1,3)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-131&y=83" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldea de SharpBeast</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 23.2<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-132&y=82" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von CHRISTOPHERUS</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 22.4<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-146&y=52" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Isca Dumnoniorum</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 25<br>d 19.7<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-133&y=79" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von Wenning</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 19.6<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=77" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldea de Trimateox</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 18.0<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-145&y=55" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de the geex</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 20<br>d 17.7<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-132&y=76" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Satul lui paul_cr15</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 16.5<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-144&y=58" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Villaggio di avvenire</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 28<br>d 16.1<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-136&y=73" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">sanuy`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 15.3<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-139&y=69" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Küla omanik sharptan</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 12<br>d 14.2<br>recent ?</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 5 (10 farms) — 8 troops/farm</span>
+        <button onclick="openBatch(1,4)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-142&y=60" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">uahtsy`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 14.0<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-135&y=72" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: Djaka</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 13.9<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-138&y=68" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">9uyt6`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 12.8<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-153&y=43" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Neues Dorf [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 45<br>d 30.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-102&y=77" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Lion’s Arch [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 53<br>d 31.1<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-119&y=29" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">10 [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 144<br>d 32.3<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-97&y=72" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">B2 [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 109<br>d 33.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-157&y=43" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">TARANTINO [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 11<br>d 33.6<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-133&y=26" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">HECTOR53 [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 89<br>d 34.4<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-138&y=27" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Konoha [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 101<br>d 34.5<br>recent new</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 6 (10 farms) — 8 troops/farm</span>
+        <button onclick="openBatch(1,5)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-128&y=60" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">fredfredd`s village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 147<br>d 0.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-126&y=60" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: RideOuT [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 38<br>d 2.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-128&y=58" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von Lumar [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 11<br>d 2.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-129&y=63" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de MindfulEmperor [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 15<br>d 3.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-131&y=61" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Lafka Village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 3.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-125&y=62" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">smak Köyü [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 36<br>d 3.6<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-127&y=35" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Село од aco</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 25.0<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-130&y=84" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Haso Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 24.1<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-131&y=83" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldea de SharpBeast</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 23.2<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-132&y=82" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von CHRISTOPHERUS</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 22.4<br>recent ?</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 7 (2 farms) — 8 troops/farm</span>
+        <button onclick="openBatch(1,6)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 2 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-146&y=52" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Isca Dumnoniorum</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 25<br>d 19.7<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-133&y=79" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von Wenning</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 19.6<br>recent ?</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-10">
+    <h2 class="text-2xl font-semibold mb-2">List 3 — Raid size 10 troops/farm (50 farms, ~500 total troops)</h2>
+    <p class="text-sm text-slate-400 mb-4">Center (-128|60). Fixed 10 per farm. Your existing farms excluded from new targets. Batches of 10 for easy adding.</p>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 1 (10 farms) — 10 troops/farm</span>
+        <button onclick="openBatch(2,0)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-139&y=66" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von MindfulSnake</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 13<br>d 12.5<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-136&y=70" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de Butters515</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 14<br>d 12.8<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-136&y=67" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Elektrikas`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 11<br>d 10.6<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-117&y=56" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">STORM....`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 11.7<br>recent 25</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-123&y=72" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldea de Mosha</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 22<br>d 13.0<br>recent 25</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-115&y=56" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldea de eponse</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 13<br>d 13.6<br>recent 16</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="None" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Villaggio di sonico7892</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 14.1<br>recent 3</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-112&y=60" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Vesnice: pan porek</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 16.0<br>recent 12</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-112&y=57" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Деревня Mego</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 16.3<br>recent 4</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-112&y=55" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Hoşgör Mühendis Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 9<br>d 16.8<br>recent 26</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 2 (10 farms) — 10 troops/farm</span>
+        <button onclick="openBatch(2,1)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="None" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">uhtred Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 17.5<br>recent 0</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-112&y=53" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldea de North</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 11<br>d 17.5<br>recent 12</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-110&y=61" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">FierceHunter Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 23<br>d 18.0<br>recent 0</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-114&y=48" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldeia do Whymaximus</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 22<br>d 18.4<br>recent 30</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="None" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">WiseSoldier`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 19.8<br>recent 10</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-126&y=63" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Coco0000`s village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 22<br>d 3.6<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-133&y=63" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">nougat’s landsby [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 5.8<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-122&y=60" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Село од Kosingas [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 42<br>d 6.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=62" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Villaggio di LadyGrizia [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 11<br>d 6.3<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-132&y=65" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Villaggio di Dom [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 68<br>d 6.4<br>recent new</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 3 (10 farms) — 10 troops/farm</span>
+        <button onclick="openBatch(2,2)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-133&y=55" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von Avatar [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 18<br>d 7.1<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=56" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Villaggio di negaboy [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 7.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-121&y=58" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Hadrian faluja [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 28<br>d 7.3<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-130&y=53" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">HOLİGAN Köyü [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 15<br>d 7.3<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-126&y=67" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">D.j.king`s village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 9<br>d 7.3<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-131&y=67" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Andrius`s village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 20<br>d 7.6<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-128&y=52" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Pelaajan JusmoFIN kylä [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 16<br>d 8.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-123&y=53" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">WarWarlord Köyü [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 8.6<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-139&y=66" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von MindfulSnake</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 13<br>d 12.5<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-136&y=70" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de Butters515</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 14<br>d 12.8<br>recent ?</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 4 (10 farms) — 10 troops/farm</span>
+        <button onclick="openBatch(2,3)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-136&y=67" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Elektrikas`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 11<br>d 10.6<br>recent ?</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-117&y=56" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">STORM....`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 11.7<br>recent 25</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-123&y=72" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldea de Mosha</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 22<br>d 13.0<br>recent 25</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-115&y=56" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldea de eponse</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 13<br>d 13.6<br>recent 16</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="None" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Villaggio di sonico7892</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 14.1<br>recent 3</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-112&y=60" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Vesnice: pan porek</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 16.0<br>recent 12</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-112&y=57" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Деревня Mego</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 16.3<br>recent 4</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-112&y=55" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Hoşgör Mühendis Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 9<br>d 16.8<br>recent 26</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="None" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">uhtred Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 17.5<br>recent 0</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-112&y=53" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldea de North</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 11<br>d 17.5<br>recent 12</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 5 (10 farms) — 10 troops/farm</span>
+        <button onclick="openBatch(2,4)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-110&y=61" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">FierceHunter Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 23<br>d 18.0<br>recent 0</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-114&y=48" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldeia do Whymaximus</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 22<br>d 18.4<br>recent 30</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="None" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">WiseSoldier`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 19.8<br>recent 10</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-126&y=63" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Coco0000`s village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 22<br>d 3.6<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-133&y=63" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">nougat’s landsby [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 5.8<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-122&y=60" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Село од Kosingas [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 42<br>d 6.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=62" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Villaggio di LadyGrizia [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 11<br>d 6.3<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-132&y=65" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Villaggio di Dom [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 68<br>d 6.4<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-133&y=55" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von Avatar [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 18<br>d 7.1<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-134&y=56" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Villaggio di negaboy [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 7.2<br>recent new</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-10">
+    <h2 class="text-2xl font-semibold mb-2">List 4 — Raid size 12 troops/farm (41 farms, ~492 total troops)</h2>
+    <p class="text-sm text-slate-400 mb-4">Center (-128|60). Fixed 12 per farm. Your existing farms excluded from new targets. Batches of 10 for easy adding.</p>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 1 (10 farms) — 12 troops/farm</span>
+        <button onclick="openBatch(3,0)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-108&y=60" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">MrMoriarty faluja</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 14<br>d 20.0<br>recent 18</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-109&y=52" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldeia do Vvitorr</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 17<br>d 20.6<br>recent 21</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-107&y=57" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Rikkert´s Dorp</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 9<br>d 21.2<br>recent 17</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-116&y=42" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">GoldBuilder`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 16<br>d 21.6<br>recent 3</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-108&y=50" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldea de TutanKabron7212</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 15<br>d 22.4<br>recent 2</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-122&y=38" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Villaggio di pac</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 22.8<br>recent 16</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-105&y=59" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Flexia Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 12<br>d 23.0<br>recent 12</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-108&y=47" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">VaG χωριό</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 9<br>d 23.9<br>recent 10</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-104&y=58" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Villaggio di niggatron</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 12<br>d 24.1<br>recent 18</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-116&y=39" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Vesnice: Thor1986</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 15<br>d 24.2<br>recent 3</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 2 (10 farms) — 12 troops/farm</span>
+        <button onclick="openBatch(3,1)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="None" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldea de Varadio8</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 7.3<br>recent 30</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-130&y=53" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">HOLİGAN Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 15<br>d 7.3<br>recent 19</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-104&y=54" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Деревня ssddssffccccccc</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 40<br>d 24.7<br>recent 10</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-119&y=61" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Shadow Equitz’s landsby</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 23<br>d 9.1<br>recent 20</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-122&y=67" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">ayşegül Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 12<br>d 9.2<br>recent 25</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-119&y=61" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Shadow Equitz’s landsby [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 23<br>d 9.1<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-137&y=59" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Gokhan34 Köyü [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 14<br>d 9.1<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-122&y=67" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">ayşegül Köyü [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 12<br>d 9.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-130&y=51" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">zaid`s village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 9.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-137&y=64" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von SilverKnight [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 9<br>d 9.8<br>recent new</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 3 (10 farms) — 12 troops/farm</span>
+        <button onclick="openBatch(3,2)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-135&y=53" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">let me live faluja [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 12<br>d 9.9<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-128&y=70" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">HolmOvergaard’s landsby [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 43<br>d 10.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-120&y=54" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Деревня Rebal [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 14<br>d 10.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-128&y=50" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldeia do Dicezin [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 10.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-118&y=58" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldeia do Gold_dark [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 150<br>d 10.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-118&y=62" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Carbonnn Köyü [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 15<br>d 10.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-130&y=70" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de Bretz [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 15<br>d 10.2<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-121&y=68" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de ImranK [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 141<br>d 10.6<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-108&y=60" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">MrMoriarty faluja</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 14<br>d 20.0<br>recent 18</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-109&y=52" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldeia do Vvitorr</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 17<br>d 20.6<br>recent 21</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 4 (10 farms) — 12 troops/farm</span>
+        <button onclick="openBatch(3,3)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-107&y=57" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Rikkert´s Dorp</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 9<br>d 21.2<br>recent 17</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-116&y=42" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">GoldBuilder`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 16<br>d 21.6<br>recent 3</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-108&y=50" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldea de TutanKabron7212</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 15<br>d 22.4<br>recent 2</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-122&y=38" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Villaggio di pac</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 22.8<br>recent 16</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-105&y=59" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Flexia Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 12<br>d 23.0<br>recent 12</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-108&y=47" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">VaG χωριό</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 9<br>d 23.9<br>recent 10</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-104&y=58" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Villaggio di niggatron</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 12<br>d 24.1<br>recent 18</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-116&y=39" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Vesnice: Thor1986</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 15<br>d 24.2<br>recent 3</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="None" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldea de Varadio8</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 7.3<br>recent 30</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-130&y=53" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">HOLİGAN Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 15<br>d 7.3<br>recent 19</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 5 (1 farms) — 12 troops/farm</span>
+        <button onclick="openBatch(3,4)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 1 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-104&y=54" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Деревня ssddssffccccccc</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 40<br>d 24.7<br>recent 10</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-10">
+    <h2 class="text-2xl font-semibold mb-2">List 5 — Raid size 15 troops/farm (33 farms, ~495 total troops)</h2>
+    <p class="text-sm text-slate-400 mb-4">Center (-128|60). Fixed 15 per farm. Your existing farms excluded from new targets. Batches of 10 for easy adding.</p>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 1 (10 farms) — 15 troops/farm</span>
+        <button onclick="openBatch(4,0)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-118&y=62" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Carbonnn Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 15<br>d 10.2<br>recent 30</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-121&y=68" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de ImranK</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 110<br>d 10.6<br>recent 0</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-126&y=60" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: RideOuT</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 38<br>d 2.0<br>recent 558</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-128&y=58" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von Lumar</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 11<br>d 2.0<br>recent 156</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-130&y=62" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Natars -130|62</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 142<br>d 2.8<br>recent 1140</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-129&y=63" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de MindfulEmperor</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 15<br>d 3.2<br>recent 207</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-126&y=63" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Coco0000`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 22<br>d 3.6<br>recent 210</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-125&y=62" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">smak Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 36<br>d 3.6<br>recent 319</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="None" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">VfR`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 4.1<br>recent 224</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="None" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Деревня SilverWarrior</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 4.1<br>recent 5</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 2 (10 farms) — 15 troops/farm</span>
+        <button onclick="openBatch(4,1)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="None" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Villaggio di JamesTKirk</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 4.5<br>recent 54</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-133&y=63" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">nougat’s landsby</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 5.8<br>recent 344</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-122&y=60" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Село од Kosingas</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 40<br>d 6.0<br>recent 451</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-132&y=65" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Villaggio di Dom</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 66<br>d 6.4<br>recent 483</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="None" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Село од Stefan</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 6.4<br>recent 240</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-136&y=67" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Elektrikas`s village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 11<br>d 10.6<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-132&y=70" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">hatayli Köyü [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 52<br>d 10.8<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-129&y=71" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: Burzy [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 129<br>d 11.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-135&y=51" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">StK_85 Köyü [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 11.4<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-139&y=56" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldeia do AMFernandes [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 40<br>d 11.7<br>recent new</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 3 (10 farms) — 15 troops/farm</span>
+        <button onclick="openBatch(4,2)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-117&y=56" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">STORM....`s village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 11.7<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-128&y=72" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">.1 Beaumont-en-Verdu [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 30<br>d 12.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-119&y=52" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Engobe5353 Köyü [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 131<br>d 12.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-127&y=48" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de DarkEgyptian [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 17<br>d 12.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-117&y=65" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von Nitro [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 15<br>d 12.1<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-133&y=71" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: wocla [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 12.1<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-139&y=66" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von MindfulSnake [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 14<br>d 12.5<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-122&y=71" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldea de Nuferan [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 9<br>d 12.5<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-118&y=62" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Carbonnn Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 15<br>d 10.2<br>recent 30</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-121&y=68" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de ImranK</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 110<br>d 10.6<br>recent 0</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 4 (3 farms) — 15 troops/farm</span>
+        <button onclick="openBatch(4,3)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 3 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-126&y=60" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: RideOuT</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 38<br>d 2.0<br>recent 558</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-128&y=58" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von Lumar</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 11<br>d 2.0<br>recent 156</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-130&y=62" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Natars -130|62</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 142<br>d 2.8<br>recent 1140</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-10">
+    <h2 class="text-2xl font-semibold mb-2">List 6 — Raid size 20 troops/farm (25 farms, ~500 total troops)</h2>
+    <p class="text-sm text-slate-400 mb-4">Center (-128|60). Fixed 20 per farm. Your existing farms excluded from new targets. Batches of 10 for easy adding.</p>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 1 (10 farms) — 20 troops/farm</span>
+        <button onclick="openBatch(5,0)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-126&y=67" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">D.j.king`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 9<br>d 7.3<br>recent 230</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-121&y=58" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Hadrian faluja</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 28<br>d 7.3<br>recent 550</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-131&y=67" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Andrius`s village</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 20<br>d 7.6<br>recent 447</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-137&y=64" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von SilverKnight</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 9<br>d 9.8<br>recent 463</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-128&y=70" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">HolmOvergaard’s landsby</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 43<br>d 10.0<br>recent 600</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-130&y=70" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de Bretz</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 15<br>d 10.2<br>recent 153</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-132&y=70" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">hatayli Köyü</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 40<br>d 10.8<br>recent 443</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-128&y=72" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">.1 Beaumont-en-Verdu</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 30<br>d 12.0<br>recent 933</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-133&y=71" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: wocla</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 12.1<br>recent 600</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-117&y=65" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von Nitro</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 15<br>d 12.1<br>recent 53</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 2 (10 farms) — 20 troops/farm</span>
+        <button onclick="openBatch(5,1)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 10 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-122&y=71" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldea de Nuferan</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 9<br>d 12.5<br>recent 5</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-117&y=53" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Eutrass faluja</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 37<br>d 13.0<br>recent 261</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-132&y=74" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de NiceWolf</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 17<br>d 14.6<br>recent 600</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-109&y=58" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Dorf von Vern1</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 12<br>d 19.1<br>recent 0</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="None" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Osada: Inna</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 7.1<br>recent 55</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-119&y=69" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldea de Caliburry [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 9<br>d 12.7<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-136&y=70" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de Butters515 [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 14<br>d 12.8<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-138&y=68" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">9uyt6`s village [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 8<br>d 12.8<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-123&y=72" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Aldea de Mosha [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 22<br>d 13.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-140&y=55" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Village de Rovo [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 10<br>d 13.0<br>recent new</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="batch mb-8 border border-slate-700 rounded-2xl overflow-hidden bg-slate-900">
+      <div class="px-5 py-3 bg-slate-800 flex justify-between items-center">
+        <span class="font-semibold">Batch 3 (5 farms) — 20 troops/farm</span>
+        <button onclick="openBatch(5,2)" class="px-3 py-1 bg-emerald-600 rounded text-sm">Open all 5 in tabs</button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm mb-3"><strong>Why this count (data-driven for this village):</strong> Established use your farm_list3 history performance. New targets from ambitious map search (relaxed filters + easy signals), excluding your current list. Closer farms more liberal.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-129&y=73" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">ADavid faluja [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 50<br>d 13.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-117&y=53" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Eutrass faluja [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 37<br>d 13.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-121&y=49" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Деревня Kupidon777 [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 32<br>d 13.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-135&y=49" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">CropCrusher Köyü [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 28<br>d 13.0<br>recent new</div>
+          </div>
+
+          <div class="flex items-start gap-2 p-2.5 bg-slate-950 border border-slate-800 rounded-lg">
+            <a href="https://ts4.x1.europe.travian.com/karte.php?x=-125&y=47" target="_blank" class="flex-1 text-emerald-300 hover:text-emerald-200 hover:underline break-all">Деревня TyzemezZ [NEW - monitor]</a>
+            <div class="text-right text-xs text-slate-400 whitespace-nowrap">pop 17<br>d 13.3<br>recent new</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="text-xs text-slate-500 mt-8">
+    Generated for farm list 3 village. History snapshots in history/. Re-run after any update to farm_list3.txt for fresh proposals.
+  </div>
+
+<script>
+function openBatch(li,bi){ alert('In full version: opens real karte.php links for the batch using data from your list + map.'); }
+</script>
+</div></body></html>
