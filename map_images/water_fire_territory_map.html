@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Alliance + Fire Wings — Territory Map • 2026-06-12 (with current strikes)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        #map-container { 
+            border: 1px solid #334155; 
+            background: #0f172a; 
+            touch-action: none;
+            cursor: grab;
+        }
+        #map-container:active { cursor: grabbing; }
+        .village-dot { pointer-events: none; }
+        .tooltip {
+            position: absolute;
+            background: #1e2937;
+            color: #f1f5f9;
+            border: 1px solid #475569;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 50;
+            white-space: nowrap;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+        }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+        .legend-dot { width: 10px; height: 10px; border-radius: 9999px; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200">
+    <div class="max-w-[1300px] mx-auto p-4">
+        <div class="flex items-center justify-between mb-3">
+            <div>
+                <h1 class="text-2xl font-semibold">Water Alliance + Fire Wings — Territory Map • 2026-06-12 (with current strikes)</h1>
+                <p class="text-sm text-slate-400">Travian map • https://ts4.x1.europe.travian.com • 308 villages shown</p>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="resetView()" 
+                        class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-sm rounded-lg border border-slate-700">Reset View</button>
+                <button onclick="downloadPNG()" 
+                        class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-sm rounded-lg border border-slate-700">Export PNG</button>
+            </div>
+        </div>
+
+        <div class="flex gap-4">
+            <!-- Map -->
+            <div class="relative" style="width: 1200px; height: 860px;">
+                <canvas id="map" width="1200" height="860" 
+                        class="rounded-xl shadow-2xl" style="width: 1200px; height: 860px;"></canvas>
+                <div id="tooltip" class="tooltip hidden"></div>
+            </div>
+
+            <!-- Controls -->
+            <div class="w-72 bg-slate-900 border border-slate-800 rounded-xl p-4 text-sm flex flex-col gap-4">
+                <div>
+                    <div class="font-medium mb-1.5">Zoom</div>
+                    <input type="range" id="zoom-slider" min="0.3" max="20" step="0.05" value="3.2"
+                           class="w-full accent-sky-500" oninput="setZoom(parseFloat(this.value))">
+                    <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                        <div>Out</div><div id="zoom-value">3.2x</div><div>In</div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="font-medium mb-1.5">Min Population</div>
+                    <input type="range" id="min-pop" min="0" max="800" step="5" value="0"
+                           class="w-full accent-sky-500" oninput="render()">
+                    <div class="text-[10px] text-slate-400 flex justify-between">
+                        <span>0</span><span id="min-pop-val">0</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="font-medium mb-1.5">Filters</div>
+                    <div class="space-y-1.5">
+                        <label class="flex items-center gap-2 text-xs">
+                            <input type="checkbox" id="show-no-alliance" checked onchange="render()" class="accent-sky-500">
+                            <span>Show no-alliance / abandoned</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-xs">
+                            <input type="checkbox" id="show-natars" checked onchange="render()" class="accent-sky-500">
+                            <span>Show Natars</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-xs">
+                            <input type="checkbox" id="show-labels" checked onchange="render()" class="accent-sky-500">
+                            <span>Show Water player labels (#N)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="font-medium mb-1.5">Overlays</div>
+                    <div class="space-y-1.5">
+                        <label class="flex items-center gap-2 text-xs">
+                            <input type="checkbox" id="show-strike-labels" checked onchange="render()" class="accent-sky-500">
+                            <span>Show strike labels</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-xs">
+                            <input type="checkbox" id="show-strike-lines" checked onchange="render()" class="accent-sky-500">
+                            <span>Show strike lines</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-xs">
+                            <input type="checkbox" id="show-water-territory" checked onchange="render()" class="accent-sky-500">
+                            <span>Show Water territory circles</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-xs">
+                            <input type="checkbox" id="show-fire-territory" checked onchange="render()" class="accent-sky-500">
+                            <span>Show Fire territory circles</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-xs">
+                            <input type="checkbox" id="show-water-villages" checked onchange="render()" class="accent-sky-500">
+                            <span>Show Water villages</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-xs">
+                            <input type="checkbox" id="show-fire-villages" checked onchange="render()" class="accent-sky-500">
+                            <span>Show Fire villages</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="font-medium mb-1">Search / Highlight</div>
+                    <input type="text" id="search" placeholder="player or village name..." 
+                           class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-sm"
+                           oninput="render()">
+                    <div class="text-[10px] text-slate-500 mt-1">Matches are drawn larger + outlined</div>
+                </div>
+
+                <div class="pt-2 border-t border-slate-800">
+                    <div class="text-xs text-slate-400 mb-1">Legend (top alliances by count)</div>
+                    <div id="legend" class="space-y-0.5 text-xs"></div>
+                </div>
+
+                <div class="text-[10px] text-slate-500 pt-3 border-t border-slate-800">
+                    • Drag to pan • Scroll to zoom<br>
+                    • Click a dot to open karte.php<br>
+                    • Size = population (sqrt scaled)<br>
+                    • Toggle "Show Water player labels (#N)" to hide the big Water name labels<br>
+                    • Toggle strike labels / strike lines / Water territory circles / Fire territory circles independently<br>
+                    • Toggle Water villages / Fire villages to show/hide the dots<br>
+                    • Green tint = Water 20r circles, red tint = Fire 20r circles (toggleable separately)
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-3 text-xs text-slate-500">
+            Data from official Travian map.sql • Generated by travhelper
+        </div>
+    </div>
+
+    <script>
+        const VILLAGES = [{"x": -137, "y": 49, "population": 445, "village": "Bord`s village", "player": "Bord #1", "alliance": "Water", "uid": 0, "color": "#10b981", "radius": 9.330679140017882, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-137&y=49"}, {"x": -112, "y": 81, "population": 433, "village": "01", "player": "Panic #1", "alliance": "Water", "uid": 0, "color": "#10b981", "radius": 9.216601362527978, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-112&y=81"}, {"x": -111, "y": 82, "population": 398, "village": "Osada: lupo78", "player": "lupo78 #1", "alliance": "Water", "uid": 0, "color": "#10b981", "radius": 8.873575173234263, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-111&y=82"}, {"x": -110, "y": 72, "population": 396, "village": "Temple City", "player": "ZEL0T #1", "alliance": "Water", "uid": 0, "color": "#10b981", "radius": 8.853481498279514, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-110&y=72"}, {"x": -148, "y": 10, "population": 359, "village": "Lamorna`s village", "player": "Lamorna #1", "alliance": "Water", "uid": 0, "color": "#10b981", "radius": 8.471176923801776, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-148&y=10"}, {"x": -133, "y": 48, "population": 235, "village": "Captainbikk`s village", "player": "Captainbikk #1", "alliance": "Water", "uid": 0, "color": "#10b981", "radius": 7.000543980940683, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-133&y=48"}, {"x": -144, "y": 46, "population": 221, "village": "APPRODO DEL RE", "player": "alexandros87 #1", "alliance": "Water", "uid": 0, "color": "#10b981", "radius": 6.809696769406693, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-144&y=46"}, {"x": -128, "y": 60, "population": 217, "village": "fredfredd`s village", "player": "fredfredd #1", "alliance": "Water", "uid": 0, "color": "#10b981", "radius": 6.7539545009126325, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-128&y=60"}, {"x": -121, "y": 68, "population": 209, "village": "Village de ImranK", "player": "ImranK #1", "alliance": "Water", "uid": 0, "color": "#10b981", "radius": 6.640749207766395, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-121&y=68"}, {"x": -108, "y": 72, "population": 198, "village": "02", "player": "Panic #2", "alliance": "Water", "uid": 0, "color": "#10b981", "radius": 6.48112781047514, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-108&y=72"}, {"x": -147, "y": 50, "population": 103, "village": "William`s village", "player": "William #1", "alliance": "Water", "uid": 0, "color": "#10b981", "radius": 4.829787258993241, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-147&y=50"}, {"x": -111, "y": 72, "population": 81, "village": "Saint SiĂšge", "player": "ZEL0T #2", "alliance": "Water", "uid": 0, "color": "#10b981", "radius": 4.334804433505245, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-111&y=72"}, {"x": -137, "y": 47, "population": 62, "village": "New village", "player": "Bord #2", "alliance": "Water", "uid": 0, "color": "#10b981", "radius": 3.8435055334803674, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-137&y=47"}, {"x": -68, "y": 99, "population": 754, "village": "Yamyam", "player": "Yamyam #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 11.0, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-68&y=99"}, {"x": -33, "y": 90, "population": 724, "village": "Osada: Billy Kid", "player": "Billy Kid #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 11.0, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-33&y=90"}, {"x": -27, "y": 29, "population": 681, "village": "Extraditables", "player": "Pablo Emilio #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 11.0, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-27&y=29"}, {"x": -21, "y": 23, "population": 656, "village": "JanÄa 01", "player": "JanÄa #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 11.0, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-21&y=23"}, {"x": -23, "y": 69, "population": 654, "village": "Ezyland01", "player": "Ezy #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 11.0, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-23&y=69"}, {"x": -27, "y": 75, "population": 640, "village": "Yahyabey KĂ¶yĂŒ", "player": "Yahyabey #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.98834379089151, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-27&y=75"}, {"x": -78, "y": 1, "population": 633, "village": "Pelaajan ClayBuilder kylĂ€", "player": "ClayBuilder #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.934096938278683, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-78&y=1"}, {"x": -84, "y": 33, "population": 625, "village": "Rim", "player": "romul081 #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.871694955165433, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-84&y=33"}, {"x": -30, "y": 53, "population": 624, "village": "Hoken", "player": "kanki #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.863863887794677, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-30&y=53"}, {"x": -28, "y": -20, "population": 621, "village": "00 - Tiger", "player": "Leopard #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.84032918428167, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-28&y=-20"}, {"x": 127, "y": -4, "population": 621, "village": "1", "player": "ĐšĐșĐ”ĐŽ #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.84032918428167, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=127&y=-4"}, {"x": -83, "y": -6, "population": 619, "village": "Bubble Party", "player": "MrBubbles #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.824604624674972, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-83&y=-6"}, {"x": -87, "y": -54, "population": 618, "village": "#1", "player": "tlaques #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.816731865489489, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-87&y=-54"}, {"x": -59, "y": 34, "population": 617, "village": "Edreuss KĂ¶yĂŒ", "player": "Edreuss #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.808852096680505, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-59&y=34"}, {"x": -18, "y": 86, "population": 609, "village": "Kuzma", "player": "Rafo #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.745559470278323, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-18&y=86"}, {"x": -56, "y": 107, "population": 601, "village": "Nowa osada", "player": "Billy Kid #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.681807884433022, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-56&y=107"}, {"x": -61, "y": 30, "population": 591, "village": "D", "player": "alexander50 #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.60145847958522, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-61&y=30"}, {"x": -5, "y": 69, "population": 591, "village": "Madman (1)", "player": "Madman #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.60145847958522, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-5&y=69"}, {"x": -66, "y": -13, "population": 590, "village": "Villaggio di Pachi", "player": "Pachi #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.593382543701813, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-66&y=-13"}, {"x": -46, "y": 107, "population": 588, "village": "Hannibal 001", "player": "Hannibal123 #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 10.577208056316337, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-46&y=107"}, {"x": -14, "y": 84, "population": 587, "village": "KATHMANDU", "player": "danny #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.569109465067948, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-14&y=84"}, {"x": -17, "y": 77, "population": 585, "village": "ĐŃĐ”ĐŽĐ”Đ»", "player": "inxatep #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 10.552889487445634, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-17&y=77"}, {"x": -37, "y": 77, "population": 580, "village": "Linggo", "player": "Linggo #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.512205628136288, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-37&y=77"}, {"x": -13, "y": 104, "population": 580, "village": "A", "player": "Ashara #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 10.512205628136288, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-13&y=104"}, {"x": -37, "y": 50, "population": 577, "village": "Stevler90 I", "player": "Stevler90 #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.487702666281537, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-37&y=50"}, {"x": -82, "y": 133, "population": 575, "village": "Ezy`s", "player": "Ezy #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.471328410133314, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-82&y=133"}, {"x": -9, "y": 135, "population": 573, "village": "ClayWolfrjj KĂ¶yĂŒ", "player": "ClayWolfrjj #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 10.454922799258629, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-9&y=135"}, {"x": -97, "y": 14, "population": 572, "village": "A", "player": "Nasi Lawar #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 10.446708182796531, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-97&y=14"}, {"x": -73, "y": 65, "population": 564, "village": "Alex1", "player": "Alex1 #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 10.380704947075479, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-73&y=65"}, {"x": -76, "y": 31, "population": 563, "village": "Turania", "player": "NemoHoo #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.372418427578411, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-76&y=31"}, {"x": -63, "y": 51, "population": 562, "village": "Osada: MokreMajtyNocÄ", "player": "MokreMajtyNocÄ #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.364123808941592, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-63&y=51"}, {"x": -25, "y": 86, "population": 559, "village": "Đ§Đ°ŃĐ»ŃĐč ĐĐŸĐžĐœ`s village", "player": "Đ§Đ°ŃĐ»ŃĐč ĐĐŸĐžĐœ #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 10.339191134199375, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-25&y=86"}, {"x": -11, "y": 88, "population": 555, "village": "01-SHAWNEE", "player": "Energy #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 10.30583281241407, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-11&y=88"}, {"x": -92, "y": 3, "population": 555, "village": "Atomy I", "player": "Atomy #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.30583281241407, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-92&y=3"}, {"x": -16, "y": -35, "population": 553, "village": "Leon", "player": "LeonTurta #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.289104058588904, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-16&y=-35"}, {"x": -62, "y": 47, "population": 553, "village": "01", "player": "Dimon #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.289104058588904, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-62&y=47"}, {"x": -19, "y": 22, "population": 551, "village": "JanÄa 02", "player": "JanÄa #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.272341995551441, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-19&y=22"}, {"x": -67, "y": -16, "population": 551, "village": "01. Valanchia", "player": "Avalanche #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.272341995551441, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-67&y=-16"}, {"x": -43, "y": 81, "population": 551, "village": "aquB", "player": "aqu #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.272341995551441, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-43&y=81"}, {"x": -99, "y": 15, "population": 548, "village": "pegasus", "player": "pegasus #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 10.247136035392455, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-99&y=15"}, {"x": -93, "y": -50, "population": 547, "village": "02.", "player": "TURGUT.REISSS #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.23871718973478, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-93&y=-50"}, {"x": -84, "y": 72, "population": 544, "village": "iiban", "player": "iiban #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.213409740739346, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-84&y=72"}, {"x": -89, "y": -48, "population": 540, "village": "2-SABAH BASTI GECEYÄ°", "player": "CONTAAAAAAA #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.179546775242416, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-89&y=-48"}, {"x": -19, "y": 27, "population": 540, "village": "tiuktiuka", "player": "tiuktiuka #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.179546775242416, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-19&y=27"}, {"x": -92, "y": 5, "population": 537, "village": "weroN I", "player": "wĂȘroN #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.154058916093502, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-92&y=5"}, {"x": -22, "y": 92, "population": 530, "village": "SzĂĄlka a szemedben", "player": "Gabika30 #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.094281033607889, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-22&y=92"}, {"x": -26, "y": 26, "population": 528, "village": "ĐąĐĐ„ĐĐŻ ĐĐĐĐĐĐŹ", "player": "Serom #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 10.077121978828343, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-26&y=26"}, {"x": -24, "y": 76, "population": 525, "village": "zurnaaa KĂ¶yĂŒ", "player": "zurnaaa #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 10.051316233131306, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-24&y=76"}, {"x": -164, "y": 173, "population": 523, "village": "01 - Leopard", "player": "Leopard #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.034067318343492, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-164&y=173"}, {"x": -8, "y": 83, "population": 521, "village": "Z.1.", "player": "Zamoxis #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 10.016782086475981, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-8&y=83"}, {"x": 44, "y": 87, "population": 521, "village": "01.Einna.", "player": "Tommy.230758. #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 10.016782086475981, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=44&y=87"}, {"x": -102, "y": -1, "population": 520, "village": "Buzzard", "player": "Kingfisher #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 10.008125784120292, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-102&y=-1"}, {"x": -35, "y": 29, "population": 518, "village": "ĐĐ”ŃĐ”ĐČĐœŃ gobo", "player": "gobo #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 9.990785670370414, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-35&y=29"}, {"x": -92, "y": 16, "population": 517, "village": "Howyouwant", "player": "JKloser #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 9.982101804096107, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-92&y=16"}, {"x": -95, "y": 0, "population": 514, "village": "LAZ ZÄ°YA", "player": "DalaksÄ±z #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.955994635544252, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-95&y=0"}, {"x": -72, "y": 64, "population": 511, "village": "vankobg13", "player": "vankobg13 #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 9.929803524665909, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-72&y=64"}, {"x": -94, "y": 13, "population": 509, "village": "Albatross", "player": "Kingfisher #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.912295772098604, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-94&y=13"}, {"x": 4, "y": 94, "population": 505, "village": "Villa", "player": "Necro #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.877166403980771, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=4&y=94"}, {"x": -141, "y": 53, "population": 503, "village": "Stevler90 II", "player": "Stevler90 #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.859544322390313, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-141&y=53"}, {"x": 56, "y": 38, "population": 503, "village": "A", "player": "baron777 #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 9.859544322390313, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=56&y=38"}, {"x": -181, "y": 197, "population": 502, "village": "Ă01", "player": "Gfdtk001 #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.850718829104132, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-181&y=197"}, {"x": -36, "y": -1, "population": 500, "village": "Dressrosa", "player": "JoyBoy #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 9.833038788567032, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-36&y=-1"}, {"x": -14, "y": 39, "population": 500, "village": "1", "player": "ĐĐ°ŃĐœĐŸ #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.833038788567032, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-14&y=39"}, {"x": -76, "y": 73, "population": 498, "village": "BHORN", "player": "NAVGAR #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.815319808991118, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-76&y=73"}, {"x": -21, "y": 97, "population": 493, "village": "FALKA", "player": "Gabika30 #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.770850403138994, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-21&y=97"}, {"x": -60, "y": 59, "population": 490, "village": "ĐšĐ°Đ»ĐŽĐ°ĐŒĐ°", "player": "ĐĐžŃŃĐ° #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 9.744049609398521, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-60&y=59"}, {"x": 4, "y": 107, "population": 485, "village": "koĂ§ak09", "player": "koĂ§ak09 #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.699180303607518, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=4&y=107"}, {"x": -15, "y": 66, "population": 481, "village": "M1", "player": "mxm #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.663101353462226, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-15&y=66"}, {"x": -45, "y": 95, "population": 481, "village": "Osada: ShipAxe", "player": "ShipAxe #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.663101353462226, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-45&y=95"}, {"x": -117, "y": 48, "population": 481, "village": "Tiesto nÂș00", "player": "Maceta #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.663101353462226, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-117&y=48"}, {"x": 14, "y": 93, "population": 480, "village": "0Vit.ru", "player": "Captain Vit #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 9.654055855807334, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=14&y=93"}, {"x": -78, "y": 70, "population": 480, "village": "Something Nice", "player": "Linkpylot #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.654055855807334, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-78&y=70"}, {"x": -45, "y": 35, "population": 474, "village": "HÄ° GÄ°RLS", "player": "blue #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.599563906126228, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-45&y=35"}, {"x": -60, "y": 112, "population": 473, "village": "RED LÄ°GHT", "player": "blue #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.590445102943725, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-60&y=112"}, {"x": -54, "y": 36, "population": 472, "village": "01.", "player": "TURGUT.REISSS #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.581315690324548, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-54&y=36"}, {"x": -28, "y": 11, "population": 469, "village": "ALI BABA", "player": "ALI BABA #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.553863446294617, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-28&y=11"}, {"x": -88, "y": 64, "population": 467, "village": "ilhan KĂ¶yĂŒ", "player": "ilhan #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 9.53550825891541, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-88&y=64"}, {"x": -60, "y": -9, "population": 466, "village": "1-YERLÄ° PLAKA", "player": "CONTAAAAAAA #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.526314450942243, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-60&y=-9"}, {"x": -193, "y": 188, "population": 466, "village": "Baldurs Gate", "player": "Shadowheart #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.526314450942243, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-193&y=188"}, {"x": 4, "y": 96, "population": 465, "village": "Ott", "player": "Ottiandi #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 9.517109785491488, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=4&y=96"}, {"x": -24, "y": 32, "population": 464, "village": "0.N.E", "player": "OskeLO #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 9.507894226350087, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-24&y=32"}, {"x": -8, "y": 93, "population": 462, "village": "HMS Ystad", "player": "Hillstar #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 9.489430281145907, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-8&y=93"}, {"x": -50, "y": 57, "population": 461, "village": "ĐĐ”ŃĐ”ĐČĐœŃ KS_EMMURE", "player": "KS_EMMURE #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 9.480181821655213, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-50&y=57"}, {"x": -81, "y": 62, "population": 459, "village": "01", "player": "T-81 #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.461651743800923, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-81&y=62"}, {"x": -19, "y": 144, "population": 459, "village": "GoldDruid`s village", "player": "GoldDruid #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 9.461651743800923, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-19&y=144"}, {"x": -21, "y": 96, "population": 457, "village": "LHK", "player": "Gabika30 #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.443077204918804, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-21&y=96"}, {"x": -69, "y": 52, "population": 455, "village": "alkoc55", "player": "alkoc55 #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.424457903048076, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-69&y=52"}, {"x": 18, "y": 97, "population": 455, "village": "Satul lui aL30z0r", "player": "aL30z0r #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 9.424457903048076, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=18&y=97"}, {"x": -112, "y": 49, "population": 455, "village": "Boloto", "player": "InsideSky #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.424457903048076, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-112&y=49"}, {"x": -106, "y": 58, "population": 454, "village": "01 One", "player": "Saphyre #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.415131370704076, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-106&y=58"}, {"x": -74, "y": 21, "population": 452, "village": "Azeroth", "player": "Squiffy #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.396444350746586, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-74&y=21"}, {"x": 5, "y": 89, "population": 449, "village": "Karupee", "player": "KĂ€bi #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 9.368328348745171, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=5&y=89"}, {"x": -32, "y": 115, "population": 447, "village": "crocodile", "player": "crocodile #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.34952690673325, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-32&y=115"}, {"x": -182, "y": 41, "population": 446, "village": "sokakĆairi 2", "player": "sokakĆairi #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.340108834071447, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-182&y=41"}, {"x": -120, "y": 10, "population": 441, "village": "Terminat55 KĂ¶yĂŒ", "player": "Terminat55 #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 9.29284333630124, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-120&y=10"}, {"x": -7, "y": 82, "population": 439, "village": "Po", "player": "Pomp #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 9.273854641840979, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-7&y=82"}, {"x": -60, "y": 35, "population": 437, "village": "Osada: Raf", "player": "Raf #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 9.254818307637974, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-60&y=35"}, {"x": -33, "y": 108, "population": 437, "village": "SARILAR KĂYĂ", "player": "MEHMETCAN #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 9.254818307637974, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-33&y=108"}, {"x": -69, "y": 98, "population": 437, "village": "Bogdan82us", "player": "Bogdan82us #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.254818307637974, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-69&y=98"}, {"x": -71, "y": 26, "population": 436, "village": "ĐĐŒĐżĐžŃ", "player": "ĐĐ°Đ»ŃŃ #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 9.245282170044886, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-71&y=26"}, {"x": -15, "y": 87, "population": 436, "village": "Albatros35", "player": "Albatros35__ #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 9.245282170044886, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-15&y=87"}, {"x": -78, "y": 57, "population": 436, "village": "Aldeia do Poeta", "player": "Poeta #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.245282170044886, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-78&y=57"}, {"x": -38, "y": 133, "population": 435, "village": "Villaggio di AntoniodiOstuni", "player": "AntoniodiOstuni #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 9.235733995316343, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-38&y=133"}, {"x": -14, "y": 86, "population": 433, "village": "1 LUTHOR CORP", "player": "LEX LUTHOR #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 9.216601362527978, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-14&y=86"}, {"x": 85, "y": 83, "population": 430, "village": "xGeneralx KĂ¶yĂŒ", "player": "xGeneralx #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 9.187811053631565, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=85&y=83"}, {"x": -10, "y": 89, "population": 429, "village": "111", "player": "Necro #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.17818974590481, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-10&y=89"}, {"x": -36, "y": 89, "population": 426, "village": "Gurayay", "player": "SaldÄ±ray #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.149251585934852, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-36&y=89"}, {"x": -7, "y": 91, "population": 422, "village": "Timtim", "player": "Timtim #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 9.110492466006066, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-7&y=91"}, {"x": -83, "y": 63, "population": 419, "village": "A1", "player": "Invisible #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.081290337753554, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-83&y=63"}, {"x": 22, "y": 133, "population": 419, "village": "ĐĐ”ŃĐ”Đ±ĐœĐ°Ń", "player": "ĐĐ°ŃŃŃŃŃ #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 9.081290337753554, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=22&y=133"}, {"x": -77, "y": 52, "population": 413, "village": "sokakĆairi", "player": "sokakĆairi #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 9.022539117419267, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-77&y=52"}, {"x": 126, "y": -7, "population": 412, "village": "ErumĂ©", "player": "Yegozatath #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 9.012701709489642, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=126&y=-7"}, {"x": -10, "y": 52, "population": 409, "village": "ĐąŃĐŸĐżĐžĐșĐž", "player": "Bagira #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 8.983110439533181, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-10&y=52"}, {"x": -5, "y": 87, "population": 405, "village": "CROW", "player": "ANATOLY #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 8.943469100089061, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-5&y=87"}, {"x": -53, "y": 127, "population": 405, "village": "Novi Grad", "player": "potop #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 8.943469100089061, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-53&y=127"}, {"x": -1, "y": 101, "population": 404, "village": "Dumnonia", "player": "StrontyDog #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 8.933525156105356, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-1&y=101"}, {"x": -33, "y": 42, "population": 403, "village": "Last Light", "player": "Shadowheart #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.923567665337398, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-33&y=42"}, {"x": -114, "y": 82, "population": 403, "village": "DarkStorm KĂ¶yĂŒ", "player": "DarkStorm #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 8.923567665337398, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-114&y=82"}, {"x": 2, "y": -45, "population": 402, "village": "Đ00", "player": "Gfdtk001 #1", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.9135965756465, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=2&y=-45"}, {"x": -29, "y": 73, "population": 401, "village": "BATTAL", "player": "Yahyabey #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.903611834563003, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-29&y=73"}, {"x": -31, "y": 83, "population": 389, "village": "Roxy_Bar", "player": "Diamond_JL #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 8.782710569148726, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-31&y=83"}, {"x": 0, "y": 136, "population": 387, "village": "bold KĂ¶yĂŒ", "player": "bold #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 8.762361866731645, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=0&y=136"}, {"x": 61, "y": 134, "population": 386, "village": "Delirium", "player": "Benedylbert #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 8.752165824083173, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=61&y=134"}, {"x": -101, "y": 135, "population": 385, "village": "GĂ¶Ă§ebe", "player": "Yamyam #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.741955243018703, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-101&y=135"}, {"x": -124, "y": 61, "population": 382, "village": "1", "player": "Volter #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 8.711235681647029, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-124&y=61"}, {"x": -152, "y": 91, "population": 379, "village": "Uusi kylĂ€", "player": "ClayBuilder #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.680383142343812, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-152&y=91"}, {"x": 126, "y": -6, "population": 379, "village": "2", "player": "ĐšĐșĐ”ĐŽ #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.680383142343812, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=126&y=-6"}, {"x": -59, "y": 62, "population": 378, "village": "ĐĐ”ŃĐ”ĐČĐœŃ Spbline", "player": "Spbline #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 8.67006913026374, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-59&y=62"}, {"x": -6, "y": 109, "population": 377, "village": "FairGuardian`s village", "player": "FairGuardian #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 8.659740100077679, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-6&y=109"}, {"x": -163, "y": 192, "population": 374, "village": "Turta", "player": "LeonTurta #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.628662280875385, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-163&y=192"}, {"x": -112, "y": 92, "population": 369, "village": "Hunor112 faluja", "player": "Hunor112 #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 8.576559702806698, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-112&y=92"}, {"x": -83, "y": -7, "population": 368, "village": "Bubble Bath", "player": "MrBubbles #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.566092677912879, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-83&y=-7"}, {"x": -52, "y": 105, "population": 363, "village": "GREEN WÄ°NDOW", "player": "blue #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.513521392533695, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-52&y=105"}, {"x": -18, "y": 92, "population": 361, "village": "Rain4ever`s village", "player": "Rain4ever #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 8.492381415219933, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-18&y=92"}, {"x": -37, "y": 59, "population": 360, "village": "Yeni KĂ¶y", "player": "alkoc55 #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.481787268460254, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-37&y=59"}, {"x": -52, "y": 90, "population": 358, "village": "aquA", "player": "aqu #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.460550311255504, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-52&y=90"}, {"x": -57, "y": 24, "population": 357, "village": "Akira", "player": "Hyunckel #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 8.449907360333532, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-57&y=24"}, {"x": -15, "y": 127, "population": 357, "village": "Vesnice: jony11", "player": "jony11 #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 8.449907360333532, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-15&y=127"}, {"x": -65, "y": 53, "population": 356, "village": "zlibat`s village", "player": "zlibat #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 8.43924800004407, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-65&y=53"}, {"x": 30, "y": 99, "population": 352, "village": "oslavia", "player": "RaidHorseman #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 8.396445027456716, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=30&y=99"}, {"x": -62, "y": -14, "population": 347, "village": "Roma", "player": "Pachi #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.34256336625588, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-62&y=-14"}, {"x": -22, "y": 139, "population": 347, "village": "yahyabey1 KĂ¶yĂŒ", "player": "yahyabey1 #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 8.34256336625588, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-22&y=139"}, {"x": -32, "y": 144, "population": 345, "village": "ĐŠĐ°ŃŃĐłŃĐ°ĐŽ", "player": "Ezycall #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 8.32089119514752, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-32&y=144"}, {"x": -4, "y": 142, "population": 341, "village": "Winterfell", "player": "Jonesy15 #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 8.2773385950611, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-4&y=142"}, {"x": -53, "y": 65, "population": 340, "village": "B", "player": "baron777 #2", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 8.266406598578683, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-53&y=65"}, {"x": -77, "y": 31, "population": 340, "village": "Uusi kylĂ€", "player": "NemoHoo #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.266406598578683, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-77&y=31"}, {"x": -33, "y": 132, "population": 340, "village": "Caere Vetus", "player": "Il_MĂšllo #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 8.266406598578683, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-33&y=132"}, {"x": -149, "y": 128, "population": 337, "village": "Whayat", "player": "iiban #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.233504093834352, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-149&y=128"}, {"x": -40, "y": 103, "population": 336, "village": "Yorkshire", "player": "Pugnator #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 8.222500815148894, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-40&y=103"}, {"x": -108, "y": 5, "population": 335, "village": "KARAHANLI", "player": "DalaksÄ±z #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.211479510360748, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-108&y=5"}, {"x": -109, "y": 46, "population": 335, "village": "ĐĐŸĐČĐ°Ń ĐŽĐ”ŃĐ”ĐČĐœŃ", "player": "InsideSky #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.211479510360748, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-109&y=46"}, {"x": -156, "y": 51, "population": 334, "village": "A2", "player": "Invisible #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.200440095996807, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-156&y=51"}, {"x": -101, "y": 53, "population": 333, "village": "ĂzgĂŒr", "player": "ĂzgĂŒr #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 8.18938248794614, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-101&y=53"}, {"x": -4, "y": 73, "population": 332, "village": "P.1", "player": "Paladin #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 8.178306601453192, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-4&y=73"}, {"x": -69, "y": 54, "population": 332, "village": "Village de Jerem", "player": "Jerem #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 8.178306601453192, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-69&y=54"}, {"x": -7, "y": 113, "population": 332, "village": "komar75", "player": "komar75 #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 8.178306601453192, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-7&y=113"}, {"x": -108, "y": 106, "population": 332, "village": "10-Đč ĐŒ-Ń", "player": "ĐĐ”ĐœŃĐžĐș #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 8.178306601453192, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-108&y=106"}, {"x": -27, "y": 17, "population": 331, "village": "RĂUBER", "player": "ALI BABA #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.167212351110878, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-27&y=17"}, {"x": -156, "y": 176, "population": 330, "village": "02 - Lion", "player": "Leopard #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.156099650853596, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-156&y=176"}, {"x": -120, "y": 77, "population": 330, "village": "Villaggio di alive71", "player": "alive71 #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 8.156099650853596, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-120&y=77"}, {"x": -8, "y": 89, "population": 327, "village": "KOOLA 1", "player": "Amirkool #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 8.122649979908534, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-8&y=89"}, {"x": -85, "y": 30, "population": 323, "village": "Beograd", "player": "romul081 #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.07778678031225, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-85&y=30"}, {"x": -14, "y": 38, "population": 322, "village": "2", "player": "ĐĐ°ŃĐœĐŸ #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.066523300965333, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-14&y=38"}, {"x": -40, "y": 63, "population": 322, "village": "A CASA DA TUA PRIMA", "player": "CoelhoPT #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 8.066523300965333, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-40&y=63"}, {"x": -31, "y": 53, "population": 320, "village": "kanki", "player": "kanki #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.043938483188592, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-31&y=53"}, {"x": -14, "y": 85, "population": 320, "village": "LALITPUR", "player": "danny #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.043938483188592, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-14&y=85"}, {"x": -5, "y": 143, "population": 319, "village": "Frajerov", "player": "FNF #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 8.03261695790156, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-5&y=143"}, {"x": -99, "y": 88, "population": 318, "village": "c1", "player": "Poeta #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.021275895865362, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-99&y=88"}, {"x": -41, "y": 112, "population": 317, "village": "crocodile 1", "player": "crocodile #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 8.00991520177099, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-41&y=112"}, {"x": -105, "y": 17, "population": 317, "village": "B", "player": "Nasi Lawar #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 8.00991520177099, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-105&y=17"}, {"x": 14, "y": 163, "population": 313, "village": "efeler", "player": "koĂ§ak09 #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 7.964274171592381, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=14&y=163"}, {"x": -41, "y": 141, "population": 312, "village": "chickenlegs`s village", "player": "chickenlegs #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 7.95281386041021, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-41&y=141"}, {"x": -27, "y": 146, "population": 311, "village": "Aldea de Treborf", "player": "Treborf #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 7.941333328895091, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-27&y=146"}, {"x": -28, "y": 69, "population": 309, "village": "ĐĐ°Đ»ŃĐŒĐŸĐœŃ", "player": "inxatep #2", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 7.9183112005712015, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-28&y=69"}, {"x": -73, "y": -18, "population": 305, "village": "02. Lanvia", "player": "Avalanche #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 7.872019805641507, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-73&y=-18"}, {"x": -113, "y": 49, "population": 305, "village": "ÂżGenario o Geranio?", "player": "Maceta #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 7.872019805641507, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-113&y=49"}, {"x": -119, "y": 76, "population": 297, "village": "Clap01", "player": "clapaucius #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 7.7784247134310585, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-119&y=76"}, {"x": -89, "y": -50, "population": 296, "village": "3-KÄ°M BÄ°LÄ°R", "player": "CONTAAAAAAA #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 7.76662828992401, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-89&y=-50"}, {"x": -80, "y": 82, "population": 295, "village": "Wunder Kropland", "player": "Linkpylot #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 7.754809926956954, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-80&y=82"}, {"x": 3, "y": 36, "population": 294, "village": "ĐźĐŒĐ°ĐœĐ°ĐœĐŒĐ°", "player": "BURBON #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 7.742969509146791, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=3&y=36"}, {"x": -22, "y": 146, "population": 292, "village": "ĐĐ”ŃĐ”ĐČĐœŃ DIZELSAURON", "player": "DIZELSAURON #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 7.719222042444044, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-22&y=146"}, {"x": 6, "y": 113, "population": 291, "village": "Ka033ÂŽs Dorp", "player": "Ka033 #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 7.7073147577279135, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=6&y=113"}, {"x": -123, "y": 70, "population": 290, "village": "Fire", "player": "Edreuss #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 7.69538494649672, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-123&y=70"}, {"x": -25, "y": 64, "population": 288, "village": "ĐĐŁĐąĐĐ«Đ ĐĐĐąĐĐ ĐĐ", "player": "Serom #2", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 7.671457261364502, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-25&y=64"}, {"x": -78, "y": 147, "population": 288, "village": "KENNEDY", "player": "Paladin #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 7.671457261364502, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-78&y=147"}, {"x": -43, "y": 118, "population": 285, "village": "Dorf von Aesop", "player": "Aesop #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 7.635393737056843, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-43&y=118"}, {"x": -40, "y": 131, "population": 285, "village": "Orgrimar", "player": "Sognal #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 7.635393737056843, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-40&y=131"}, {"x": -101, "y": 2, "population": 280, "village": "Cormorant", "player": "Kingfisher #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 7.574820825074483, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-101&y=2"}, {"x": -128, "y": 68, "population": 279, "village": "Villaggio di GoldShield", "player": "GoldShield #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 7.562635027348954, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-128&y=68"}, {"x": -193, "y": 189, "population": 277, "village": "Menzoberranzan", "player": "Shadowheart #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 7.538191159872666, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-193&y=189"}, {"x": -180, "y": 91, "population": 277, "village": "Mx", "player": "mxm #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 7.538191159872666, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-180&y=91"}, {"x": -62, "y": 48, "population": 276, "village": "02", "player": "Dimon #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 7.525932820480467, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-62&y=48"}, {"x": 1, "y": 78, "population": 276, "village": "000", "player": "ShokySVK #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 7.525932820480467, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=1&y=78"}, {"x": -64, "y": 71, "population": 275, "village": "KAPH", "player": "NAVGAR #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 7.513650028814232, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-64&y=71"}, {"x": -93, "y": -51, "population": 264, "village": "03.", "player": "TURGUT.REISSS #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 7.376885072750925, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-93&y=-51"}, {"x": -25, "y": 87, "population": 263, "village": "New village", "player": "Đ§Đ°ŃĐ»ŃĐč ĐĐŸĐžĐœ #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 7.3642977129729505, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-25&y=87"}, {"x": -18, "y": 27, "population": 259, "village": "Nauja gyvenvietÄ", "player": "tiuktiuka #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 7.313683195623925, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-18&y=27"}, {"x": -71, "y": 66, "population": 259, "village": "ĐĐŸĐČĐ°Ń ĐŽĐ”ŃĐ”ĐČĐœŃ", "player": "Alex1 #2", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 7.313683195623925, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-71&y=66"}, {"x": -108, "y": 68, "population": 256, "village": "ĐĐ”ŃĐ”ĐČĐœŃ White", "player": "White #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 7.275439519249911, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-108&y=68"}, {"x": -10, "y": 140, "population": 256, "village": "SHARON", "player": "SilverHorseman #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 7.275439519249911, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-10&y=140"}, {"x": -82, "y": 134, "population": 255, "village": "Ezyland02", "player": "Ezy #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 7.262636894892622, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-82&y=134"}, {"x": -36, "y": 28, "population": 253, "village": "ĐĐ°ŃŃ", "player": "gobo #2", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 7.2369485471204715, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-36&y=28"}, {"x": -59, "y": 109, "population": 253, "village": "Nowa osada", "player": "Billy Kid #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 7.2369485471204715, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-59&y=109"}, {"x": -148, "y": 128, "population": 251, "village": "Me", "player": "iiban #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 7.211148266236799, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-148&y=128"}, {"x": -15, "y": 88, "population": 249, "village": "alba 001", "player": "Albatros35__ #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 7.185234666737823, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-15&y=88"}, {"x": -99, "y": 14, "population": 247, "village": "weroN II", "player": "wĂȘroN #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 7.159206334678366, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-99&y=14"}, {"x": -100, "y": 109, "population": 247, "village": "02", "player": "T-81 #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 7.159206334678366, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-100&y=109"}, {"x": -115, "y": 77, "population": 247, "village": "Dorf von Thujen", "player": "Thujen #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 7.159206334678366, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-115&y=77"}, {"x": -98, "y": 15, "population": 245, "village": "brother", "player": "pegasus #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 7.133061826852465, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-98&y=15"}, {"x": -118, "y": 65, "population": 245, "village": "00 Zero", "player": "Saphyre #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 7.133061826852465, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-118&y=65"}, {"x": -38, "y": 141, "population": 245, "village": "Aldeia do Chevyand", "player": "Chevyand #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 7.133061826852465, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-38&y=141"}, {"x": -166, "y": 157, "population": 240, "village": "Yeni KĂ¶y", "player": "zurnaaa #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 7.06718254317381, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-166&y=157"}, {"x": -56, "y": 56, "population": 238, "village": "ĐĐ°ŃĐŽĐ°ŃĐžĐșĐ°", "player": "ĐĐžŃŃĐ° #2", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 7.040619612147593, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-56&y=56"}, {"x": -178, "y": 200, "population": 235, "village": "Đ02", "player": "Gfdtk001 #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 7.000543980940683, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-178&y=200"}, {"x": -20, "y": 121, "population": 235, "village": "00-CROW", "player": "Energy #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 7.000543980940683, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-20&y=121"}, {"x": -126, "y": 71, "population": 235, "village": "BiaĆobrzegi", "player": "Koksik #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 7.000543980940683, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-126&y=71"}, {"x": -74, "y": 22, "population": 233, "village": "Boronia", "player": "Squiffy #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 6.97367036135232, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-74&y=22"}, {"x": 7, "y": 99, "population": 232, "village": "15Vit.ru", "player": "Captain Vit #2", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 6.96018596768158, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=7&y=99"}, {"x": -46, "y": 96, "population": 231, "village": "Nowa osada", "player": "ShipAxe #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 6.946669568649498, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-46&y=96"}, {"x": -6, "y": 69, "population": 230, "village": "Madman (2)", "player": "Madman #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 6.933120949244283, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-6&y=69"}, {"x": -37, "y": 78, "population": 230, "village": "Linggo I", "player": "Linggo #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 6.933120949244283, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-37&y=78"}, {"x": 26, "y": 123, "population": 224, "village": "AA", "player": "Ashara #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 6.851140258862175, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=26&y=123"}, {"x": -35, "y": 59, "population": 223, "village": "Yeni KĂ¶y", "player": "Terminat55 #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 6.83735987126969, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-35&y=59"}, {"x": -2, "y": 139, "population": 223, "village": "SKY M0UNT41N", "player": "SKY M0UNT41N #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 6.83735987126969, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-2&y=139"}, {"x": -30, "y": 54, "population": 222, "village": "korabeka", "player": "kanki #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 6.823545454081261, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-30&y=54"}, {"x": -135, "y": 111, "population": 222, "village": "Neues Dorf", "player": "Rafo #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 6.823545454081261, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-135&y=111"}, {"x": -103, "y": 145, "population": 222, "village": "HMS LuleĂ„", "player": "Hillstar #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 6.823545454081261, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-103&y=145"}, {"x": -85, "y": -54, "population": 222, "village": "#2", "player": "tlaques #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 6.823545454081261, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-85&y=-54"}, {"x": -7, "y": 84, "population": 219, "village": "Z.2.", "player": "Zamoxis #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 6.781895632252316, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-7&y=84"}, {"x": -137, "y": 176, "population": 218, "village": "OE KK", "player": "LeonTurta #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 6.767942690071925, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-137&y=176"}, {"x": -83, "y": 76, "population": 215, "village": "GĂŒneĆ", "player": "byz900 #1", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 6.72587137033654, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-83&y=76"}, {"x": 24, "y": 98, "population": 211, "village": "02.Sna.", "player": "Tommy.230758. #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 6.669270851249935, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=24&y=98"}, {"x": -32, "y": 91, "population": 201, "village": "Gurayay 02", "player": "SaldÄ±ray #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 6.5251346229169735, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-32&y=91"}, {"x": -2, "y": 162, "population": 200, "village": "Yeni KĂ¶y", "player": "ClayWolfrjj #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 6.51050607426014, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-2&y=162"}, {"x": -26, "y": 16, "population": 191, "village": "ROCKER 1", "player": "ALI BABA #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 6.376997777755277, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-26&y=16"}, {"x": -64, "y": 51, "population": 188, "village": "Nowa osada", "player": "MokreMajtyNocÄ #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 6.331728473760484, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-64&y=51"}, {"x": -59, "y": 25, "population": 186, "village": "Broly", "player": "Hyunckel #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 6.301327839760566, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-59&y=25"}, {"x": -62, "y": 30, "population": 186, "village": "kh", "player": "alexander50 #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 6.301327839760566, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-62&y=30"}, {"x": -125, "y": 73, "population": 185, "village": "GHOST KING", "player": "ANATOLY #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 6.286060089065627, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-125&y=73"}, {"x": -86, "y": 19, "population": 183, "village": "Atomy II", "player": "Atomy #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 6.2553878288643405, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-86&y=19"}, {"x": -121, "y": 72, "population": 182, "village": "Yeni KĂ¶y", "player": "Edreuss #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 6.239982546976729, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-121&y=72"}, {"x": 11, "y": 162, "population": 182, "village": "sĂ¶ke", "player": "koĂ§ak09 #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 6.239982546976729, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=11&y=162"}, {"x": -86, "y": 107, "population": 182, "village": "bogdan1", "player": "Bogdan82us #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 6.239982546976729, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-86&y=107"}, {"x": -58, "y": 62, "population": 165, "village": "ĐĐŸĐČĐ°Ń ĐŽĐ”ŃĐ”ĐČĐœŃ", "player": "Spbline #2", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 5.97061441676093, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-58&y=62"}, {"x": -9, "y": 87, "population": 160, "village": "Main village", "player": "FairGuardian #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 5.888507636151485, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-9&y=87"}, {"x": -118, "y": 58, "population": 159, "village": "Aldeia do Gold_dark", "player": "Gold_dark #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 5.871917651184954, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-118&y=58"}, {"x": -86, "y": -55, "population": 157, "village": "#3", "player": "tlaques #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 5.8385646565324, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-86&y=-55"}, {"x": -64, "y": -13, "population": 147, "village": "Nuovo villaggio", "player": "Pachi #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 5.6681854512424685, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-64&y=-13"}, {"x": -12, "y": 96, "population": 147, "village": "00", "player": "Necro #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 5.6681854512424685, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-12&y=96"}, {"x": -104, "y": -32, "population": 145, "village": "LaughTale", "player": "JoyBoy #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 5.633351512480569, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-104&y=-32"}, {"x": -69, "y": 26, "population": 135, "village": "ĐĐ°Đ»Đž", "player": "ĐĐ°Đ»ŃŃ #2", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 5.455084047175861, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-69&y=26"}, {"x": 23, "y": 100, "population": 133, "village": "Sat nou", "player": "aL30z0r #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 5.418567512507898, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=23&y=100"}, {"x": 5, "y": 148, "population": 131, "village": "Vicus Xortar", "player": "Xortar #1", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 5.381747694362506, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=5&y=148"}, {"x": -7, "y": 89, "population": 128, "village": "Timtim2", "player": "Timtim #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 5.325933465925656, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-7&y=89"}, {"x": -24, "y": 31, "population": 124, "village": "San Frankivsko", "player": "OskeLO #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 5.25038328579246, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-24&y=31"}, {"x": -109, "y": 47, "population": 122, "village": "ĐĐŸĐČĐ°Ń ĐŽĐ”ŃĐ”ĐČĐœŃ", "player": "InsideSky #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 5.212105216234374, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-109&y=47"}, {"x": 27, "y": 123, "population": 122, "village": "ĐĐ°ŃŃĐžĐŸŃĐžĐ·ĐŒ", "player": "ĐĐ°ŃŃŃŃŃ #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 5.212105216234374, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=27&y=123"}, {"x": -20, "y": 22, "population": 121, "village": "JanÄa 03", "player": "JanÄa #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 5.192836718498698, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-20&y=22"}, {"x": -151, "y": 128, "population": 120, "village": "Medellin Cartel", "player": "Pablo Emilio #2", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 5.173480436048702, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-151&y=128"}, {"x": -156, "y": 53, "population": 120, "village": "A3", "player": "Invisible #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 5.173480436048702, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-156&y=53"}, {"x": -16, "y": 86, "population": 119, "village": "2 SMALLVILLE", "player": "LEX LUTHOR #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 5.154035232369764, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-16&y=86"}, {"x": -4, "y": 68, "population": 117, "village": "Pom", "player": "Pomp #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 5.114873392475265, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-4&y=68"}, {"x": 23, "y": 99, "population": 115, "village": "black 1", "player": "RaidHorseman #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 5.075341605024755, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=23&y=99"}, {"x": -159, "y": 173, "population": 114, "village": "03 - Cheetah", "player": "Leopard #4", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 5.055433866718294, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-159&y=173"}, {"x": -75, "y": 63, "population": 114, "village": "2", "player": "Jerem #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 5.055433866718294, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-75&y=63"}, {"x": -13, "y": 48, "population": 107, "village": "ĐĄŃĐ±ŃŃĐŸĐżĐžĐșĐž", "player": "Bagira #2", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 4.913307556328654, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-13&y=48"}, {"x": -92, "y": 19, "population": 106, "village": "Dowhatyouneed", "player": "JKloser #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 4.892590748381481, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-92&y=19"}, {"x": -36, "y": 116, "population": 106, "village": "ĐłŃĐ°ĐŽ 1", "player": "vankobg13 #2", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 4.892590748381481, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-36&y=116"}, {"x": -8, "y": 90, "population": 101, "village": "Koola2", "player": "Amirkool #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 4.787357594607058, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-8&y=90"}, {"x": -17, "y": 158, "population": 101, "village": "Kings Landing", "player": "Jonesy15 #2", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 4.787357594607058, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-17&y=158"}, {"x": -125, "y": 165, "population": 100, "village": "Yeni KĂ¶y", "player": "Yamyam #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 4.765969408345689, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-125&y=165"}, {"x": -51, "y": 57, "population": 94, "village": "ĐĐŸĐČĐ°Ń ĐŽĐ”ŃĐ”ĐČĐœŃ", "player": "KS_EMMURE #2", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 4.635096544522177, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-51&y=57"}, {"x": -46, "y": 105, "population": 94, "village": "Hannibal 002", "player": "Hannibal123 #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 4.635096544522177, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-46&y=105"}, {"x": 128, "y": -2, "population": 91, "village": "3", "player": "ĐšĐșĐ”ĐŽ #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 4.567934594989491, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=128&y=-2"}, {"x": -69, "y": 49, "population": 87, "village": "ĐĐŸĐČĐŸ ŃĐ”Đ»ĐŸ", "player": "zlibat #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 4.476462122418885, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-69&y=49"}, {"x": -78, "y": 32, "population": 86, "village": "Uusi kylĂ€", "player": "NemoHoo #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 4.453234381845631, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-78&y=32"}, {"x": -150, "y": 90, "population": 84, "village": "Uusi kylĂ€", "player": "ClayBuilder #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 4.406329084679812, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-150&y=90"}, {"x": -101, "y": 52, "population": 82, "village": "ĂzgĂŒr 02", "player": "ĂzgĂŒr #2", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 4.358805437093488, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-101&y=52"}, {"x": 145, "y": -4, "population": 79, "village": "Dwokhans", "player": "Yegozatath #2", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 4.2863086579433975, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=145&y=-4"}, {"x": -40, "y": 104, "population": 76, "village": "Leeds", "player": "Pugnator #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 4.212281308197328, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-40&y=104"}, {"x": -31, "y": 144, "population": 75, "village": "ĐĐžĐŽĐ»ĐłŃĐ°ĐŽ", "player": "Ezycall #2", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 4.187249302608992, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-31&y=144"}, {"x": -119, "y": 72, "population": 74, "village": "Nuovo villaggio", "player": "alive71 #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 4.162033047262092, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-119&y=72"}, {"x": -87, "y": -52, "population": 71, "village": "4-FEYZ AL", "player": "CONTAAAAAAA #4", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 4.085239357744971, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-87&y=-52"}, {"x": -119, "y": 106, "population": 71, "village": "Hunor113", "player": "Hunor112 #2", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 4.085239357744971, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-119&y=106"}, {"x": -99, "y": 16, "population": 70, "village": "juki", "player": "pegasus #3", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 4.059245971891049, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-99&y=16"}, {"x": -76, "y": 145, "population": 70, "village": "ĐĐŸĐČĐŸ ŃĐ”Đ»ĐŸ", "player": "potop #2", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 4.059245971891049, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-76&y=145"}, {"x": -162, "y": 89, "population": 69, "village": "2", "player": "Volter #2", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 4.033047538910941, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-162&y=89"}, {"x": -3, "y": 68, "population": 67, "village": "Madman (3)", "player": "Madman #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 3.980016857976821, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-3&y=68"}, {"x": 1, "y": 37, "population": 64, "village": "ĐĐœŃĐžĐœĐŒĐ°", "player": "BURBON #2", "alliance": "FirĐ”Âź", "uid": 0, "color": "#ef4444", "radius": 3.898811502509931, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=1&y=37"}, {"x": -121, "y": 64, "population": 55, "village": "Aldea nueva", "player": "Stevler90 #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 3.6417863238758663, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-121&y=64"}, {"x": -98, "y": 164, "population": 40, "village": "Sat nou", "player": "Rain4ever #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 3.1555731091847394, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-98&y=164"}, {"x": -45, "y": 105, "population": 34, "village": "SARILAR KĂ¶y", "player": "MEHMETCAN #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 2.933031742024495, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-45&y=105"}, {"x": -21, "y": 148, "population": 32, "village": "yahyabey 2 KĂ¶yĂŒ", "player": "yahyabey1 #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 2.8540970760065303, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-21&y=148"}, {"x": 86, "y": 83, "population": 19, "village": "KardeĆlikKazanacak", "player": "xGeneralx #2", "alliance": "FireÂ°", "uid": 0, "color": "#ef4444", "radius": 2.257305661431779, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=86&y=83"}, {"x": -30, "y": 75, "population": 11, "village": "Yeni KĂ¶y", "player": "Yahyabey #3", "alliance": "Fireâą", "uid": 0, "color": "#ef4444", "radius": 1.7651351311158072, "karte": "https://ts4.x1.europe.travian.com/karte.php?x=-30&y=75"}];
+        const CENTERS = [{"x": -137, "y": 49, "label": "Bord #1"}, {"x": -137, "y": 47, "label": "Bord #2"}, {"x": -112, "y": 81, "label": "Panic #1"}, {"x": -108, "y": 72, "label": "Panic #2"}, {"x": -111, "y": 82, "label": "lupo78 #1"}, {"x": -110, "y": 72, "label": "ZEL0T #1"}, {"x": -111, "y": 72, "label": "ZEL0T #2"}, {"x": -148, "y": 10, "label": "Lamorna #1", "label_wx": -149, "label_wy": 17}, {"x": -133, "y": 48, "label": "Captainbikk #1"}, {"x": -144, "y": 46, "label": "alexandros87 #1"}, {"x": -128, "y": 60, "label": "fredfredd #1"}, {"x": -121, "y": 68, "label": "ImranK #1"}, {"x": -147, "y": 50, "label": "William #1"}];
+        const ARROWS = [{"from_x": -112, "from_y": 81, "to_x": -114, "to_y": 82, "label": "darkstorm", "color": "#facc15"}, {"from_x": -112, "from_y": 81, "to_x": -115, "to_y": 77, "label": "thujen", "color": "#facc15"}, {"from_x": -112, "from_y": 81, "to_x": -120, "to_y": 77, "label": "alive71", "color": "#facc15"}, {"from_x": -112, "from_y": 81, "to_x": -119, "to_y": 76, "label": "Clap01", "color": "#facc15"}, {"from_x": -112, "from_y": 81, "to_x": -123, "to_y": 70, "label": "edreuss", "color": "#facc15"}, {"from_x": -128, "from_y": 60, "to_x": -118, "to_y": 65, "label": "saphyre", "color": "#facc15"}, {"from_x": -128, "from_y": 60, "to_x": -123, "to_y": 70, "label": "edreuss", "color": "#facc15"}, {"from_x": -133, "from_y": 48, "to_x": -141, "to_y": 53, "label": "stevler90", "color": "#facc15"}, {"from_x": -133, "from_y": 48, "to_x": -123, "to_y": 70, "label": "edreuss", "color": "#facc15"}];
+        const HIGHLIGHTS = [];
+        const TERRITORY = [[-137, 49], [-112, 81], [-111, 82], [-110, 72], [-148, 10], [-133, 48], [-144, 46], [-128, 60], [-121, 68], [-108, 72], [-147, 50], [-111, 72], [-137, 47]];
+        const FIRE_TERRITORY = [[-68, 99], [-33, 90], [-27, 29], [-21, 23], [-23, 69], [-27, 75], [-78, 1], [-84, 33], [-30, 53], [-28, -20], [127, -4], [-83, -6], [-87, -54], [-59, 34], [-18, 86], [-56, 107], [-61, 30], [-5, 69], [-66, -13], [-46, 107], [-14, 84], [-17, 77], [-37, 77], [-13, 104], [-37, 50], [-82, 133], [-9, 135], [-97, 14], [-73, 65], [-76, 31], [-63, 51], [-25, 86], [-11, 88], [-92, 3], [-16, -35], [-62, 47], [-19, 22], [-67, -16], [-43, 81], [-99, 15], [-93, -50], [-84, 72], [-89, -48], [-19, 27], [-92, 5], [-22, 92], [-26, 26], [-24, 76], [-164, 173], [-8, 83], [44, 87], [-102, -1], [-35, 29], [-92, 16], [-95, 0], [-72, 64], [-94, 13], [4, 94], [-141, 53], [56, 38], [-181, 197], [-36, -1], [-14, 39], [-76, 73], [-21, 97], [-60, 59], [4, 107], [-15, 66], [-45, 95], [-117, 48], [14, 93], [-78, 70], [-45, 35], [-60, 112], [-54, 36], [-28, 11], [-88, 64], [-60, -9], [-193, 188], [4, 96], [-24, 32], [-8, 93], [-50, 57], [-81, 62], [-19, 144], [-21, 96], [-69, 52], [18, 97], [-112, 49], [-106, 58], [-74, 21], [5, 89], [-32, 115], [-182, 41], [-120, 10], [-7, 82], [-60, 35], [-33, 108], [-69, 98], [-71, 26], [-15, 87], [-78, 57], [-38, 133], [-14, 86], [85, 83], [-10, 89], [-36, 89], [-7, 91], [-83, 63], [22, 133], [-77, 52], [126, -7], [-10, 52], [-5, 87], [-53, 127], [-1, 101], [-33, 42], [-114, 82], [2, -45], [-29, 73], [-31, 83], [0, 136], [61, 134], [-101, 135], [-124, 61], [-152, 91], [126, -6], [-59, 62], [-6, 109], [-163, 192], [-112, 92], [-83, -7], [-52, 105], [-18, 92], [-37, 59], [-52, 90], [-57, 24], [-15, 127], [-65, 53], [30, 99], [-62, -14], [-22, 139], [-32, 144], [-4, 142], [-53, 65], [-77, 31], [-33, 132], [-149, 128], [-40, 103], [-108, 5], [-109, 46], [-156, 51], [-101, 53], [-4, 73], [-69, 54], [-7, 113], [-108, 106], [-27, 17], [-156, 176], [-120, 77], [-8, 89], [-85, 30], [-14, 38], [-40, 63], [-31, 53], [-14, 85], [-5, 143], [-99, 88], [-41, 112], [-105, 17], [14, 163], [-41, 141], [-27, 146], [-28, 69], [-73, -18], [-113, 49], [-119, 76], [-89, -50], [-80, 82], [3, 36], [-22, 146], [6, 113], [-123, 70], [-25, 64], [-78, 147], [-43, 118], [-40, 131], [-101, 2], [-128, 68], [-193, 189], [-180, 91], [-62, 48], [1, 78], [-64, 71], [-93, -51], [-25, 87], [-18, 27], [-71, 66], [-108, 68], [-10, 140], [-82, 134], [-36, 28], [-59, 109], [-148, 128], [-15, 88], [-99, 14], [-100, 109], [-115, 77], [-98, 15], [-118, 65], [-38, 141], [-166, 157], [-56, 56], [-178, 200], [-20, 121], [-126, 71], [-74, 22], [7, 99], [-46, 96], [-6, 69], [-37, 78], [26, 123], [-35, 59], [-2, 139], [-30, 54], [-135, 111], [-103, 145], [-85, -54], [-7, 84], [-137, 176], [-83, 76], [24, 98], [-32, 91], [-2, 162], [-26, 16], [-64, 51], [-59, 25], [-62, 30], [-125, 73], [-86, 19], [-121, 72], [11, 162], [-86, 107], [-58, 62], [-9, 87], [-118, 58], [-86, -55], [-64, -13], [-12, 96], [-104, -32], [-69, 26], [23, 100], [5, 148], [-7, 89], [-24, 31], [-109, 47], [27, 123], [-20, 22], [-151, 128], [-156, 53], [-16, 86], [-4, 68], [23, 99], [-159, 173], [-75, 63], [-13, 48], [-92, 19], [-36, 116], [-8, 90], [-17, 158], [-125, 165], [-51, 57], [-46, 105], [128, -2], [-69, 49], [-78, 32], [-150, 90], [-101, 52], [145, -4], [-40, 104], [-31, 144], [-119, 72], [-87, -52], [-119, 106], [-99, 16], [-76, 145], [-162, 89], [-3, 68], [1, 37], [-121, 64], [-98, 164], [-45, 105], [-21, 148], [86, 83], [-30, 75]];
+        const TERRITORY_RADIUS = 20;
+        const FIRE_TERRITORY_RADIUS = 20;
+        const Y_FLIP = true;
+        const SERVER = "https://ts4.x1.europe.travian.com";
+
+        let canvas = document.getElementById('map');
+        let ctx = canvas.getContext('2d', { alpha: true });
+        let offsetX = -(-137) * 3.2 + 600.0;
+        let offsetY = (49) * 3.2 + 430.0;
+        let zoom = 3.2;
+        let isDragging = false;
+        let lastX = 0, lastY = 0;
+
+        function worldToScreen(wx, wy) {
+            const y = Y_FLIP ? (-wy * zoom) : (wy * zoom);
+            return [
+                (wx * zoom) + offsetX,
+                y + offsetY
+            ];
+        }
+
+        function screenToWorld(sx, sy) {
+            const wy = Y_FLIP ? -((sy - offsetY) / zoom) : ((sy - offsetY) / zoom);
+            return [
+                (sx - offsetX) / zoom,
+                wy
+            ];
+        }
+
+        function computeCentroid(points) {
+            if (!points || !points.length) return {x: 0, y: 0};
+            let sx = 0, sy = 0;
+            for (const p of points) {
+                sx += p.x;
+                sy += p.y;
+            }
+            return {x: sx / points.length, y: sy / points.length};
+        }
+
+        function setZoom(newZoom) {
+            const oldZoom = zoom;
+            zoom = Math.max(0.3, Math.min(20, newZoom));
+            // Keep the center of the view stable when zooming
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            const [wx, wy] = screenToWorld(cx, cy);
+            offsetX = cx - wx * zoom;
+            offsetY = Y_FLIP ? (cy + wy * zoom) : (cy - wy * zoom);
+            document.getElementById('zoom-slider').value = zoom;
+            document.getElementById('zoom-value').textContent = zoom.toFixed(1) + 'x';
+            render();
+        }
+
+        function resetView() {
+            zoom = 3.2;
+            offsetX = -(-137) * 3.2 + 600.0;
+            offsetY = (49) * 3.2 + 430.0;
+            document.getElementById('zoom-slider').value = zoom;
+            document.getElementById('zoom-value').textContent = zoom.toFixed(1) + 'x';
+            render();
+        }
+
+        function getFilteredVillages() {
+            const minPop = parseInt(document.getElementById('min-pop').value) || 0;
+            const showNoAlliance = document.getElementById('show-no-alliance').checked;
+            const showNatars = document.getElementById('show-natars').checked;
+            const search = (document.getElementById('search').value || '').toLowerCase().trim();
+            const showWaterVillages = document.getElementById('show-water-villages') ? document.getElementById('show-water-villages').checked : true;
+            const showFireVillages = document.getElementById('show-fire-villages') ? document.getElementById('show-fire-villages').checked : true;
+
+            return VILLAGES.filter(v => {
+                if (v.population < minPop) return false;
+                if (!showNoAlliance && !v.alliance) return false;
+                if (!showNatars && v.alliance.toLowerCase() === 'natars') return false;
+                if (!showWaterVillages && v.color === '#10b981') return false;
+                if (!showFireVillages && v.color === '#ef4444') return false;
+                if (search) {
+                    const hay = (v.village + ' ' + v.player + ' ' + v.alliance).toLowerCase();
+                    if (!hay.includes(search)) return false;
+                }
+                return true;
+            });
+        }
+
+        function drawArrow(fromX, fromY, toX, toY, color, label, drawLine = true, drawLabel = true) {
+            const [sx1, sy1] = worldToScreen(fromX, fromY);
+            const [sx2, sy2] = worldToScreen(toX, toY);
+
+            if (drawLine) {
+                ctx.strokeStyle = color;
+                ctx.fillStyle = color;
+                ctx.lineWidth = 1.5;
+
+                // line
+                ctx.beginPath();
+                ctx.moveTo(sx1, sy1);
+                ctx.lineTo(sx2, sy2);
+                ctx.stroke();
+
+                // arrow head
+                const angle = Math.atan2(sy2 - sy1, sx2 - sx1);
+                const headLen = 7;
+                ctx.beginPath();
+                ctx.moveTo(sx2, sy2);
+                ctx.lineTo(
+                    sx2 - headLen * Math.cos(angle - 0.4),
+                    sy2 - headLen * Math.sin(angle - 0.4)
+                );
+                ctx.lineTo(
+                    sx2 - headLen * Math.cos(angle + 0.4),
+                    sy2 - headLen * Math.sin(angle + 0.4)
+                );
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            if (drawLabel && label) {
+                const mx = (sx1 + sx2) / 2;
+                const my = (sy1 + sy2) / 2 - 4;
+                ctx.fillStyle = '#e2e8f0';
+                ctx.font = '10px system-ui';
+                ctx.fillText(label, mx + 3, my);
+            }
+        }
+
+        function render() {
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const filtered = getFilteredVillages();
+            const search = (document.getElementById('search').value || '').toLowerCase().trim();
+            const showPlayerLabels = document.getElementById('show-labels') ? document.getElementById('show-labels').checked : true;
+            const showStrikeLabels = document.getElementById('show-strike-labels') ? document.getElementById('show-strike-labels').checked : true;
+            const showStrikeLines = document.getElementById('show-strike-lines') ? document.getElementById('show-strike-lines').checked : true;
+            const showWaterTerritory = document.getElementById('show-water-territory') ? document.getElementById('show-water-territory').checked : true;
+            const showFireTerritory = document.getElementById('show-fire-territory') ? document.getElementById('show-fire-territory').checked : true;
+
+            // Draw grid (light)
+            ctx.strokeStyle = '#1e2937';
+            ctx.lineWidth = 1;
+            const step = 20 * zoom;
+            const startX = (( - offsetX ) % step) - step;
+            const startY = (( - offsetY ) % step) - step;
+            for (let x = startX; x < canvas.width + step; x += step) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = startY; y < canvas.height + step; y += step) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+
+            // Draw territory shading as blended circles (world radius, overlaps combine into one organic area)
+            // Fire (red) and Water (emerald) drawn independently based on their toggles
+            if (showFireTerritory) {
+                ctx.save();
+                ctx.fillStyle = 'rgba(239, 68, 68, 0.08)';
+                const fireRadius = (typeof FIRE_TERRITORY_RADIUS !== 'undefined' ? FIRE_TERRITORY_RADIUS : TERRITORY_RADIUS) * zoom;
+                for (const t of FIRE_TERRITORY) {
+                    const tx = Array.isArray(t) ? t[0] : (t.x || t[0] || 0);
+                    const ty = Array.isArray(t) ? t[1] : (t.y || t[1] || 0);
+                    const [sx, sy] = worldToScreen(tx, ty);
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, fireRadius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+
+            if (showWaterTerritory) {
+                ctx.save();
+                ctx.fillStyle = 'rgba(16, 185, 129, 0.09)';
+                const waterRadius = TERRITORY_RADIUS * zoom;
+                for (const t of TERRITORY) {
+                    const tx = Array.isArray(t) ? t[0] : (t.x || t[0] || 0);
+                    const ty = Array.isArray(t) ? t[1] : (t.y || t[1] || 0);
+                    const [sx, sy] = worldToScreen(tx, ty);
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, waterRadius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+
+            // Draw arrows first (behind dots)
+            ctx.lineWidth = 1.5;
+            for (const a of ARROWS) {
+                drawArrow(a.from_x, a.from_y, a.to_x, a.to_y, a.color || '#e11d48', a.label, showStrikeLines, showStrikeLabels);
+            }
+
+            // Draw normal villages
+            for (const v of filtered) {
+                const [sx, sy] = worldToScreen(v.x, v.y);
+                if (sx < -20 || sx > canvas.width + 20 || sy < -20 || sy > canvas.height + 20) continue;
+
+                const isMatch = search && (v.village.toLowerCase().includes(search) || v.player.toLowerCase().includes(search));
+
+                ctx.fillStyle = v.color;
+                ctx.beginPath();
+                ctx.arc(sx, sy, v.radius * (isMatch ? 1.6 : 1), 0, Math.PI * 2);
+                ctx.fill();
+
+                if (isMatch) {
+                    ctx.strokeStyle = '#f1f5f9';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, v.radius * 1.6 + 2, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.lineWidth = 1.5;
+                }
+            }
+
+            // Draw leader lines + labels for highlights (ops key points etc.)
+            // Supports custom label_wx/label_wy (world coords) for precise placement (e.g. target2 left of target1 under, zelot right shorter stem).
+            // Line stops short + side offset so line does not intersect label text.
+            for (let i = 0; i < HIGHLIGHTS.length; i++) {
+                const h = HIGHLIGHTS[i];
+                const [vx, vy] = worldToScreen(h.x, h.y);
+                if (h.label) {
+                    let lx, ly;
+                    if (h.label_wx != null && h.label_wy != null) {
+                        [lx, ly] = worldToScreen(h.label_wx, h.label_wy);
+                    } else {
+                        const dir = (i % 2 === 0) ? 1 : -1;
+                        const stagger = ((i % 3) - 1) * 8;
+                        lx = vx + 130 * dir;
+                        ly = vy - 4 + stagger;
+                    }
+
+                    // direction from point to label pos
+                    const dx = lx - vx;
+                    const dy = ly - vy;
+                    const llen = Math.hypot(dx, dy) || 1;
+                    const lux = dx / llen;
+                    const luy = dy / llen;
+
+                    // stop line short before text
+                    const lineStop = 9;
+                    const ex = lx - lux * lineStop;
+                    const ey = ly - luy * lineStop;
+
+                    ctx.strokeStyle = '#f1f5f9';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(vx, vy);
+                    ctx.lineTo(ex, ey);
+                    ctx.stroke();
+
+                    // text further out + small side offset
+                    const textLead = 3;
+                    const tx = ex + lux * textLead;
+                    const ty = ey + luy * textLead;
+
+                    const px = -luy;
+                    const py = lux;
+                    const side = (i % 2 === 0) ? 1 : -1;
+                    const perp = side * 2.5;
+
+                    ctx.fillStyle = '#f1f5f9';
+                    ctx.font = 'bold 11px system-ui';
+                    ctx.textAlign = (lux > 0.2) ? 'left' : (lux < -0.2 ? 'right' : 'center');
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(h.label, tx + px * perp, ty + py * perp);
+                }
+            }
+
+            if (showPlayerLabels) {
+                // Draw Water alliance labels close to their villages (short leaders, not a distant ring).
+                // Labels placed a small distance outward from the group centroid direction for readability.
+                // Reduced min separation + short leaders so text sits much nearer the green dots.
+                // Individual centers can override with label_wx / label_wy (e.g. to force "above" accounting for y_flip).
+                const waterCentroid = computeCentroid(CENTERS);
+                let waterLabels = [];
+                for (let i = 0; i < CENTERS.length; i++) {
+                    const c = CENTERS[i];
+                    let labelWx, labelWy;
+                    if (c.label_wx != null && c.label_wy != null) {
+                        // Custom placement (e.g. Lamorna "above" her village)
+                        labelWx = c.label_wx;
+                        labelWy = c.label_wy;
+                    } else {
+                        const dx = c.x - waterCentroid.x;
+                        const dy = c.y - waterCentroid.y;
+                        const len = Math.hypot(dx, dy) || 1;
+                        const ux = dx / len;
+                        const uy = dy / len;
+
+                        // Much closer: small offset so labels sit right by the villages (was ~35 for distant ring).
+                        const radial = 7;
+                        labelWx = c.x + ux * radial;
+                        labelWy = c.y + uy * radial;
+                    }
+
+                    waterLabels.push({
+                        wx: labelWx,
+                        wy: labelWy,
+                        vx: c.x,
+                        vy: c.y,
+                        label: c.label,
+                        i: i
+                    });
+                }
+
+                // Simple repulsion to enforce minimum distance between labels (in world units)
+                const minLabelDist = 8;  // tighter; labels are intentionally close to villages now
+                for (let iter = 0; iter < 12; iter++) {  // relaxation iterations
+                    let anyMove = false;
+                    for (let a = 0; a < waterLabels.length; a++) {
+                        for (let b = a + 1; b < waterLabels.length; b++) {
+                            const p1 = waterLabels[a];
+                            const p2 = waterLabels[b];
+                            let dx = p2.wx - p1.wx;
+                            let dy = p2.wy - p1.wy;
+                            let dist = Math.hypot(dx, dy);
+                            if (dist > 0.0001 && dist < minLabelDist) {
+                                const push = (minLabelDist - dist) / 2;
+                                const ux = dx / dist;
+                                const uy = dy / dist;
+                                p1.wx -= ux * push;
+                                p1.wy -= uy * push;
+                                p2.wx += ux * push;
+                                p2.wy += uy * push;
+                                anyMove = true;
+                            }
+                        }
+                    }
+                    if (!anyMove) break;
+                }
+
+                ctx.strokeStyle = '#f1f5f9';
+                ctx.fillStyle = '#f1f5f9';
+                ctx.lineWidth = 2;
+                for (let k = 0; k < waterLabels.length; k++) {
+                    const p = waterLabels[k];
+                    const [vx, vy] = worldToScreen(p.vx, p.vy);
+                    const [lx, ly] = worldToScreen(p.wx, p.wy);
+
+                    // Direction from village to (adjusted) label
+                    const ldx = lx - vx;
+                    const ldy = ly - vy;
+                    const llen = Math.hypot(ldx, ldy) || 1;
+                    const lux = ldx / llen;
+                    const luy = ldy / llen;
+
+                    // Short leader because labels are now placed close to the villages
+                    const lineStop = 4;
+                    const ex = lx - lux * lineStop;
+                    const ey = ly - luy * lineStop;
+
+                    ctx.beginPath();
+                    ctx.moveTo(vx, vy);
+                    ctx.lineTo(ex, ey);
+                    ctx.stroke();
+
+                    // Text placed outward from line end + small perpendicular side offset
+                    const textLead = 2;
+                    const tx = ex + lux * textLead;
+                    const ty = ey + luy * textLead;
+
+                    const px = -luy;
+                    const py = lux;
+                    const side = (p.i % 2 === 0) ? 1 : -1;
+                    const perp = side * 2;
+
+                    ctx.font = 'bold 11px system-ui';
+                    ctx.textAlign = (lux > 0.2) ? 'left' : (lux < -0.2 ? 'right' : 'center');
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(p.label, tx + px * perp, ty + py * perp);
+                }
+            }  // end if (showPlayerLabels)
+
+            // Update min pop label
+            const minPopEl = document.getElementById('min-pop-val');
+            if (minPopEl) minPopEl.textContent = document.getElementById('min-pop').value;
+
+            // Build simple legend (top 8 alliances in current view)
+            updateLegend(filtered);
+        }
+
+        function updateLegend(villages) {
+            const counts = {};
+            for (const v of villages) {
+                const key = v.alliance || '(none)';
+                counts[key] = (counts[key] || 0) + 1;
+            }
+
+            // Force all Fire/fir wings (3 wings) to the top of the legend
+            const entries = Object.entries(counts);
+            const fireEntries = [];
+            const otherEntries = [];
+            for (const e of entries) {
+                const k = e[0];
+                const l = k.toLowerCase();
+                if (l.indexOf('fire') === 0 || l.indexOf('fir') === 0) {
+                    fireEntries.push(e);
+                } else {
+                    otherEntries.push(e);
+                }
+            }
+            fireEntries.sort((a,b) => b[1]-a[1]);
+            otherEntries.sort((a,b) => b[1]-a[1]);
+            const finalList = fireEntries.concat(otherEntries).slice(0, 8);
+
+            const container = document.getElementById('legend');
+            container.innerHTML = '';
+            for (const [ally, cnt] of finalList) {
+                const color = ally === '(none)' ? '#64748b' : (villages.find(v => (v.alliance||'(none)')===ally)?.color || '#64748b');
+                const div = document.createElement('div');
+                div.className = 'legend-item';
+                div.innerHTML = `
+                    <span class="legend-dot" style="background:${color}"></span>
+                    <span class="flex-1 truncate">${ally}</span>
+                    <span class="text-slate-500">${cnt}</span>
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        function findNearestVillage(sx, sy) {
+            const filtered = getFilteredVillages();
+            let best = null;
+            let bestDist = Infinity;
+            for (const v of filtered) {
+                const [vx, vy] = worldToScreen(v.x, v.y);
+                const d = Math.hypot(sx - vx, sy - vy);
+                if (d < bestDist && d < 18) {   // generous hit radius
+                    bestDist = d;
+                    best = v;
+                }
+            }
+            return best;
+        }
+
+        function setupInteractions() {
+            const canvasEl = document.getElementById('map');
+            const tooltip = document.getElementById('tooltip');
+
+            // Mouse wheel zoom
+            canvasEl.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const rect = canvasEl.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+                const [wx, wy] = screenToWorld(mouseX, mouseY);
+
+                const factor = e.deltaY < 0 ? 1.15 : 1/1.15;
+                zoom = Math.max(0.3, Math.min(20, zoom * factor));
+
+                offsetX = mouseX - wx * zoom;
+                offsetY = Y_FLIP ? (mouseY + wy * zoom) : (mouseY - wy * zoom);
+
+                document.getElementById('zoom-slider').value = zoom;
+                document.getElementById('zoom-value').textContent = zoom.toFixed(1) + 'x';
+                render();
+            }, { passive: false });
+
+            // Pan
+            canvasEl.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                lastX = e.clientX;
+                lastY = e.clientY;
+                canvasEl.style.cursor = 'grabbing';
+            });
+
+            window.addEventListener('mouseup', () => {
+                isDragging = false;
+                canvasEl.style.cursor = 'grab';
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) {
+                    // Hover tooltip
+                    const rect = canvasEl.getBoundingClientRect();
+                    const sx = e.clientX - rect.left;
+                    const sy = e.clientY - rect.top;
+                    const v = findNearestVillage(sx, sy);
+                    if (v) {
+                        tooltip.style.left = (e.clientX - rect.left + 12) + 'px';
+                        tooltip.style.top = (e.clientY - rect.top + 12) + 'px';
+                        tooltip.innerHTML = `
+                            <strong>${v.village}</strong><br>
+                            ${v.player} • pop ${v.population}<br>
+                            <span style="color:${v.color}">${v.alliance || 'no alliance'}</span><br>
+                            <span class="text-sky-400">(${v.x}|${v.y})</span>
+                        `;
+                        tooltip.classList.remove('hidden');
+                    } else {
+                        tooltip.classList.add('hidden');
+                    }
+                    return;
+                }
+                offsetX += e.clientX - lastX;
+                offsetY += e.clientY - lastY;
+                lastX = e.clientX;
+                lastY = e.clientY;
+                render();
+            });
+
+            // Click to open karte
+            canvasEl.addEventListener('click', (e) => {
+                const rect = canvasEl.getBoundingClientRect();
+                const sx = e.clientX - rect.left;
+                const sy = e.clientY - rect.top;
+                const v = findNearestVillage(sx, sy);
+                if (v && v.karte) {
+                    window.open(v.karte, '_blank');
+                }
+            });
+
+            // Sliders
+            const minPop = document.getElementById('min-pop');
+            minPop.addEventListener('input', () => {
+                document.getElementById('min-pop-val').textContent = minPop.value;
+                render();
+            });
+
+            // Search
+            document.getElementById('search').addEventListener('input', render);
+
+            // Zoom slider
+            document.getElementById('zoom-slider').addEventListener('input', (e) => {
+                setZoom(parseFloat(e.target.value));
+            });
+
+            // Initial cursor
+            canvasEl.style.cursor = 'grab';
+        }
+
+        function downloadPNG() {
+            const link = document.createElement('a');
+            link.download = 'Water_Alliance_+_Fire_Wings_—_Territory_Map_•_2026-06-12_(with_current_strikes).png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function init() {
+            // Set initial slider values
+            document.getElementById('zoom-slider').value = zoom;
+            document.getElementById('zoom-value').textContent = zoom.toFixed(1) + 'x';
+            document.getElementById('min-pop-val').textContent = document.getElementById('min-pop').value;
+
+            setupInteractions();
+            render();
+
+            // Optional: show a few top alliances immediately
+            setTimeout(() => {
+                const filtered = getFilteredVillages();
+                // legend is updated during render
+            }, 50);
+        }
+
+        window.onload = init;
+        // Expose a couple things for debugging / future scripting
+        window.TRAVHELPER_MAP = { render, resetView, setZoom };
+    </script>
+</body>
+</html>
