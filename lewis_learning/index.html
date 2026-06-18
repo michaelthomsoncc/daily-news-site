@@ -624,9 +624,21 @@
     // Cloudflare R2:     https://pub-xxxxxxxx.r2.dev/brain-os
     const AUDIO_BASE_URL = "";
 
+    function pageBaseUrl() {
+      const { origin, pathname } = window.location;
+      if (pathname.endsWith("/")) return origin + pathname;
+      const last = pathname.split("/").pop() || "";
+      if (/\.[a-z0-9]+$/i.test(last)) return origin + pathname.replace(/[^/]+$/, "");
+      return origin + pathname + "/";
+    }
+
+    function pageAssetUrl(relativePath) {
+      return new URL(relativePath.replace(/^\//, ""), pageBaseUrl()).href;
+    }
+
     function audioUrl(filename) {
       const base = AUDIO_BASE_URL.trim().replace(/\/$/, "");
-      return base ? base + "/" + filename : "audio/" + filename;
+      return base ? base + "/" + filename : pageAssetUrl("audio/" + filename);
     }
 
     const STORAGE_KEY = "brain-os-quiz-answers";
@@ -1182,7 +1194,7 @@
       body.textContent = "Loading script…";
 
       try {
-        const res = await fetch(ep.script);
+        const res = await fetch(pageAssetUrl(ep.script));
         if (!res.ok) throw new Error("Could not load script");
         const text = await res.text();
         body.innerHTML = formatScript(text);
