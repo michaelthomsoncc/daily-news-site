@@ -621,7 +621,7 @@
     </div>
 
     <div class="quiz-toolbar">
-      <p><strong>Recall check:</strong> Answer each quiz, lock in to see results, then the next episode unlocks. Progress saves in this browser tab.</p>
+      <p><strong>Recall check:</strong> Answer each quiz, lock in to see results, then the next episode unlocks. Progress saves in this browser — even across tabs.</p>
       <div class="quiz-toolbar-actions">
         <button type="button" class="btn-copy" id="copy-all">Copy all Q&amp;A</button>
         <button type="button" class="btn-reset" id="clear-session">Reset progress</button>
@@ -940,7 +940,7 @@
 
     function loadAnswers() {
       try {
-        const raw = sessionStorage.getItem(STORAGE_KEY);
+        const raw = localStorage.getItem(STORAGE_KEY);
         return raw ? JSON.parse(raw) : {};
       } catch {
         return {};
@@ -948,12 +948,12 @@
     }
 
     function saveAnswers() {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(quizAnswers));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(quizAnswers));
     }
 
     function loadLocked() {
       try {
-        const raw = sessionStorage.getItem(LOCKED_KEY);
+        const raw = localStorage.getItem(LOCKED_KEY);
         return raw ? JSON.parse(raw) : {};
       } catch {
         return {};
@@ -961,7 +961,7 @@
     }
 
     function saveLocked() {
-      sessionStorage.setItem(LOCKED_KEY, JSON.stringify(lockedState));
+      localStorage.setItem(LOCKED_KEY, JSON.stringify(lockedState));
     }
 
     function sorted(values) {
@@ -1374,11 +1374,11 @@
 
     function clearSessionData() {
       const ok = confirm(
-        "Clear all quiz answers, scores, unlocks, and script access?\n\nThis resets the walk to the beginning. It only affects this browser tab."
+        "Clear all quiz answers, scores, unlocks, and script access?\n\nThis resets the walk to the beginning on this device and browser."
       );
       if (!ok) return;
-      sessionStorage.removeItem(STORAGE_KEY);
-      sessionStorage.removeItem(LOCKED_KEY);
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(LOCKED_KEY);
       location.reload();
     }
 
