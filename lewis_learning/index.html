@@ -544,6 +544,26 @@
 
     .quiz-toolbar strong { color: var(--text); }
 
+    .quiz-toolbar-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .btn-reset {
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      padding: 0.45rem 0.8rem;
+    }
+
+    .btn-reset:hover {
+      background: #223040;
+      border-color: rgba(248, 113, 113, 0.35);
+      color: var(--danger);
+    }
+
     .copy-toast {
       position: fixed;
       bottom: 1.25rem;
@@ -602,7 +622,10 @@
 
     <div class="quiz-toolbar">
       <p><strong>Recall check:</strong> Answer each quiz, lock in to see results, then the next episode unlocks. Progress saves in this browser tab.</p>
-      <button type="button" class="btn-copy" id="copy-all">Copy all Q&amp;A</button>
+      <div class="quiz-toolbar-actions">
+        <button type="button" class="btn-copy" id="copy-all">Copy all Q&amp;A</button>
+        <button type="button" class="btn-reset" id="clear-session">Reset progress</button>
+      </div>
     </div>
 
     <div class="episode-list" id="episodes"></div>
@@ -1349,9 +1372,21 @@
       card.appendChild(section);
     }
 
+    function clearSessionData() {
+      const ok = confirm(
+        "Clear all quiz answers, scores, unlocks, and script access?\n\nThis resets the walk to the beginning. It only affects this browser tab."
+      );
+      if (!ok) return;
+      sessionStorage.removeItem(STORAGE_KEY);
+      sessionStorage.removeItem(LOCKED_KEY);
+      location.reload();
+    }
+
     document.getElementById("copy-all").addEventListener("click", (e) => {
       copyText(formatCopyText(), e.currentTarget);
     });
+
+    document.getElementById("clear-session").addEventListener("click", clearSessionData);
 
     episodes.forEach((ep, index) => {
       const card = document.createElement("article");
