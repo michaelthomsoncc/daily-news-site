@@ -564,6 +564,45 @@
       color: var(--danger);
     }
 
+    .progress-transfer {
+      display: none;
+      margin-bottom: 1.5rem;
+      padding: 1rem 1.1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .progress-transfer.open { display: block; }
+
+    .progress-transfer label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-transfer textarea {
+      width: 100%;
+      min-height: 5.5rem;
+      resize: vertical;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      padding: 0.65rem 0.75rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .progress-transfer-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
     .copy-toast {
       position: fixed;
       bottom: 1.25rem;
@@ -621,10 +660,21 @@
     </div>
 
     <div class="quiz-toolbar">
-      <p><strong>Recall check:</strong> Answer each quiz, lock in to see results, then the next episode unlocks. Progress saves in this browser — even across tabs.</p>
+      <p><strong>Recall check:</strong> Answer each quiz, lock in to see results, then the next episode unlocks. Progress saves on this device. To continue on another phone or computer, use <strong>Export</strong> here and <strong>Import</strong> there.</p>
       <div class="quiz-toolbar-actions">
         <button type="button" class="btn-copy" id="copy-all">Copy all Q&amp;A</button>
+        <button type="button" class="btn-copy" id="export-progress">Export progress</button>
+        <button type="button" class="btn-copy" id="import-progress">Import progress</button>
         <button type="button" class="btn-reset" id="clear-session">Reset progress</button>
+      </div>
+    </div>
+
+    <div class="progress-transfer" id="import-panel">
+      <label for="import-code">Paste your progress code</label>
+      <textarea id="import-code" placeholder="Paste the code from Export progress…"></textarea>
+      <div class="progress-transfer-actions">
+        <button type="button" class="btn-lock" id="import-confirm">Restore progress</button>
+        <button type="button" class="btn-reset" id="import-cancel">Cancel</button>
       </div>
     </div>
 
@@ -666,6 +716,7 @@
 
     const STORAGE_KEY = "brain-os-quiz-answers";
     const LOCKED_KEY = "brain-os-quiz-locked";
+    const PROGRESS_PREFIX = "brainos1:";
 
     const SCRIPTS = {
       "intro": "Optional — record this in your own voice before Episode 1.\n\nHey. Before you start the Brain OS walk, this is me.\n\nYou are about to listen to ten episodes over roughly a hundred minutes. You do not need to remember everything. There is no test. Just walk, listen, and at each pause between episodes take a minute to think before you load the next one.\n\nIf one idea clicks — especially predict, surprise, update — that is already a win.\n\nWhen you get home, come find me and tell me one thing that landed. I am genuinely interested.\n\nAll right. Start Episode 1 when you are ready. Enjoy the walk.",
@@ -1386,9 +1437,38 @@
       card.appendChild(section);
     }
 
+    function encodeProgress() {
+      const payload = { v: 1, answers: quizAnswers, locked: lockedState };
+      return PROGRESS_PREFIX + btoa(encodeURIComponent(JSON.stringify(payload)));
+    }
+
+    function decodeProgress(code) {
+      const trimmed = code.trim();
+      if (!trimmed.startsWith(PROGRESS_PREFIX)) {
+        throw new Error("That does not look like a Brain OS progress code.");
+      }
+      const payload = JSON.parse(decodeURIComponent(atob(trimmed.slice(PROGRESS_PREFIX.length))));
+      if (!payload || payload.v !== 1 || typeof payload.answers !== "object" || typeof payload.locked !== "object") {
+        throw new Error("This progress code is invalid or from an older version.");
+      }
+      return payload;
+    }
+
+    function exportProgress(button) {
+      copyText(encodeProgress(), button);
+      showCopyToast("Progress code copied — paste it on another device");
+    }
+
+    function importProgress(code) {
+      const payload = decodeProgress(code);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload.answers));
+      localStorage.setItem(LOCKED_KEY, JSON.stringify(payload.locked));
+      location.reload();
+    }
+
     function clearSessionData() {
       const ok = confirm(
-        "Clear all quiz answers, scores, unlocks, and script access?\n\nThis resets the walk to the beginning on this device and browser."
+        "Clear all quiz answers, scores, unlocks, and script access?\n\nThis resets the walk on this device."
       );
       if (!ok) return;
       localStorage.removeItem(STORAGE_KEY);
@@ -1398,6 +1478,33 @@
 
     document.getElementById("copy-all").addEventListener("click", (e) => {
       copyText(formatCopyText(), e.currentTarget);
+    });
+
+    document.getElementById("export-progress").addEventListener("click", (e) => {
+      exportProgress(e.currentTarget);
+    });
+
+    document.getElementById("import-progress").addEventListener("click", () => {
+      document.getElementById("import-panel").classList.add("open");
+      document.getElementById("import-code").focus();
+    });
+
+    document.getElementById("import-cancel").addEventListener("click", () => {
+      document.getElementById("import-panel").classList.remove("open");
+      document.getElementById("import-code").value = "";
+    });
+
+    document.getElementById("import-confirm").addEventListener("click", () => {
+      const code = document.getElementById("import-code").value;
+      if (!code.trim()) {
+        alert("Paste a progress code first.");
+        return;
+      }
+      try {
+        importProgress(code);
+      } catch (err) {
+        alert(err.message || "Could not import that progress code.");
+      }
     });
 
     document.getElementById("clear-session").addEventListener("click", clearSessionData);
