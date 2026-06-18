@@ -261,6 +261,54 @@
       border-color: rgba(61, 158, 255, 0.3);
     }
 
+    .btn-script {
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-script:hover:not(:disabled) {
+      background: #223040;
+      color: var(--text);
+      border-color: rgba(61, 158, 255, 0.3);
+    }
+
+    .btn-script.open {
+      color: var(--accent);
+      border-color: rgba(61, 158, 255, 0.35);
+      background: var(--accent-soft);
+    }
+
+    .script-panel {
+      display: none;
+      margin-top: 0.85rem;
+      padding: 1rem 1.1rem;
+      border-radius: 10px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      max-height: 22rem;
+      overflow-y: auto;
+    }
+
+    .script-panel.open { display: block; }
+
+    .script-panel.loading {
+      display: block;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .script-body {
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .script-body p { margin-bottom: 0.85rem; }
+    .script-body p:last-child { margin-bottom: 0; }
+
+    .episode.locked .script-panel { display: none !important; }
+
     audio {
       display: none;
     }
@@ -647,6 +695,7 @@
         num: "Intro",
         intro: true,
         file: "00-intro.mp3",
+        script: "0-intro.txt",
         title: "Before You Start",
         desc: "A short note before the walk. Listen first if it is here — then begin Episode 1.",
         quiz: [
@@ -661,6 +710,7 @@
         id: "ep1",
         num: 1,
         file: "01-episode-1.mp3",
+        script: "1.txt",
         title: "The Engineer",
         desc: "Stop pushing harder. Start understanding the machine. Your new identity — and why your brain is a high-performance configuration, not a broken one.",
         quiz: [
@@ -675,6 +725,7 @@
         id: "ep2",
         num: 2,
         file: "02-episode-2.mp3",
+        script: "2.txt",
         title: "Brain Hardware",
         desc: "Neurons, neuroplasticity, and why your autistic ADHD wiring is a different kind of supercar — with its own instruction manual.",
         quiz: [
@@ -689,6 +740,7 @@
         id: "ep3",
         num: 3,
         file: "03-episode-3.mp3",
+        script: "3.txt",
         title: "The Universal Learning Rule",
         desc: "The one idea to remember: predict, surprise, update. How games teach you fast — and how to run the same loop on boring schoolwork.",
         quiz: [
@@ -703,6 +755,7 @@
         id: "ep4",
         num: 4,
         file: "04-episode-4.mp3",
+        script: "4.txt",
         title: "Fuel — Prediction Error & Dopamine",
         desc: "Why some learning feels electric and some feels dead. How to hack the fuel system so your brain actually wants to store what you study.",
         quiz: [
@@ -717,6 +770,7 @@
         id: "ep5",
         num: 5,
         file: "05-episode-5.mp3",
+        script: "5.txt",
         title: "Attention Engineering",
         desc: "Your ADHD attention is a laser, not a weakness. How to point it at the right targets and design environments that help it lock on.",
         quiz: [
@@ -731,6 +785,7 @@
         id: "ep6",
         num: 6,
         file: "06-episode-6.mp3",
+        script: "6.txt",
         title: "Memory Engineering",
         desc: "Stop re-reading. Start installing. Active recall and spaced repetition — the two techniques that remember more in less time.",
         quiz: [
@@ -745,6 +800,7 @@
         id: "ep7",
         num: 7,
         file: "07-episode-7.mp3",
+        script: "7.txt",
         title: "Reward & Motivation Hacking",
         desc: "Task initiation, five-minute starts, and designing rewards so the engine wants to run — without relying on willpower alone.",
         quiz: [
@@ -759,6 +815,7 @@
         id: "ep8",
         num: 8,
         file: "08-episode-8.mp3",
+        script: "8.txt",
         title: "Practice Loops",
         desc: "Turn knowledge into real skill. Deliberate practice, fast feedback, and smart variation — how pros and AI systems actually train.",
         quiz: [
@@ -773,6 +830,7 @@
         id: "ep9",
         num: 9,
         file: "09-episode-9.mp3",
+        script: "9.txt",
         title: "The Dashboard — Meta-Learning",
         desc: "Learning how to learn. Read your own energy, focus, and strategy — and tune the system like a pilot checking instruments.",
         quiz: [
@@ -787,6 +845,7 @@
         id: "ep10",
         num: 10,
         file: "10-episode-10.mp3",
+        script: "10.txt",
         title: "Your Personal Brain OS",
         desc: "The grand assembly. Daily habits, the five things to remember, and your custom operating system — ready to run.",
         quiz: [
@@ -1085,6 +1144,48 @@
       }
     }
 
+    function formatScript(text) {
+      return text
+        .trim()
+        .split(/\n\s*\n/)
+        .map((para) => "<p>" + para.replace(/\n/g, " ").trim() + "</p>")
+        .join("");
+    }
+
+    async function toggleScript(card, ep, scriptBtn) {
+      const panel = card.querySelector(".script-panel");
+      const body = card.querySelector(".script-body");
+      const isOpen = panel.classList.contains("open");
+
+      if (isOpen) {
+        panel.classList.remove("open", "loading");
+        scriptBtn.classList.remove("open");
+        scriptBtn.textContent = "Read script";
+        return;
+      }
+
+      scriptBtn.classList.add("open");
+      scriptBtn.textContent = "Hide script";
+      panel.classList.add("open");
+
+      if (body.dataset.loaded === "true") return;
+
+      panel.classList.add("loading");
+      body.textContent = "Loading script…";
+
+      try {
+        const res = await fetch(ep.script);
+        if (!res.ok) throw new Error("Could not load script");
+        const text = await res.text();
+        body.innerHTML = formatScript(text);
+        body.dataset.loaded = "true";
+        panel.classList.remove("loading");
+      } catch {
+        panel.classList.remove("loading");
+        body.textContent = "Could not load the script. Try refreshing the page.";
+      }
+    }
+
     function refreshEpisodeLocks() {
       episodes.forEach((ep, index) => {
         const card = episodeCards.get(ep.id);
@@ -1093,18 +1194,28 @@
         const unlocked = isEpisodeUnlocked(index);
         const playBtn = card.querySelector(".btn-play");
         const downloadBtn = card.querySelector(".btn-download");
+        const scriptBtn = card.querySelector(".btn-script");
+        const scriptPanel = card.querySelector(".script-panel");
         const banner = card.querySelector(".ep-locked-banner");
         const prev = episodes[index - 1];
 
         card.classList.toggle("locked", !unlocked);
         playBtn.disabled = !unlocked;
         downloadBtn.classList.toggle("disabled", !unlocked);
+        if (scriptBtn) scriptBtn.disabled = !unlocked;
 
         if (!unlocked) {
           playBtn.textContent = "Locked";
           banner.textContent = "Complete the recall check on " +
             (prev.intro ? "the intro" : "Episode " + prev.num) +
             " and press Lock in answers to unlock this episode.";
+          if (scriptPanel) {
+            scriptPanel.classList.remove("open", "loading");
+          }
+          if (scriptBtn) {
+            scriptBtn.classList.remove("open");
+            scriptBtn.textContent = "Read script";
+          }
           if (currentCard === card) {
             stopCurrent();
           }
@@ -1229,7 +1340,9 @@
         <div class="ep-actions">
           <button type="button" class="btn-play">▶ Play</button>
           <a class="btn btn-download" href="${audioUrl(ep.file)}" download="${ep.file}">↓ Download</a>
+          <button type="button" class="btn-script">Read script</button>
         </div>
+        <div class="script-panel"><div class="script-body"></div></div>
         <div class="ep-locked-banner"></div>
         <div class="progress-wrap">
           <div class="progress-bar"><div class="progress-fill"></div></div>
@@ -1240,6 +1353,7 @@
       const audio = card.querySelector("audio");
       const playBtn = card.querySelector(".btn-play");
       const downloadBtn = card.querySelector(".btn-download");
+      const scriptBtn = card.querySelector(".btn-script");
       const fill = card.querySelector(".progress-fill");
       const bar = card.querySelector(".progress-bar");
       const cur = card.querySelector(".cur");
@@ -1286,6 +1400,11 @@
 
       downloadBtn.addEventListener("click", (e) => {
         if (!isEpisodeUnlocked(index)) e.preventDefault();
+      });
+
+      scriptBtn.addEventListener("click", () => {
+        if (!isEpisodeUnlocked(index)) return;
+        toggleScript(card, ep, scriptBtn);
       });
 
       bar.addEventListener("click", (e) => {
