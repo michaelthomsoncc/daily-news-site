@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brain OS — Learning Walk</title>
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --surface: #141b24;
+      --surface-2: #1a2430;
+      --border: #2a3644;
+      --text: #e8edf2;
+      --muted: #8fa3b8;
+      --accent: #3d9eff;
+      --accent-soft: rgba(61, 158, 255, 0.12);
+      --accent-glow: rgba(61, 158, 255, 0.35);
+      --success: #34d399;
+      --danger: #f87171;
+      --warn: #fbbf24;
+      --radius: 14px;
+      --shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(61, 158, 255, 0.15), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(52, 211, 153, 0.06), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 3rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid rgba(61, 158, 255, 0.25);
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: clamp(1.9rem, 5vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.6rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 32rem;
+      margin: 0 auto 1.25rem;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .meta span {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+    }
+
+    .instructions {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .instructions strong { color: var(--text); }
+
+    .episode-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .episode {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.35rem;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .episode:hover {
+      border-color: rgba(61, 158, 255, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .episode.playing {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-glow), var(--shadow);
+    }
+
+    .episode.locked {
+      opacity: 0.72;
+    }
+
+    .episode.locked:hover {
+      transform: none;
+      border-color: var(--border);
+    }
+
+    .ep-locked-banner {
+      display: none;
+      margin-top: 0.85rem;
+      padding: 0.7rem 0.85rem;
+      border-radius: 9px;
+      background: rgba(251, 191, 36, 0.08);
+      border: 1px solid rgba(251, 191, 36, 0.25);
+      color: var(--warn);
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .episode.locked .ep-locked-banner { display: block; }
+
+    .episode.locked .quiz-section { display: none; }
+
+    button:disabled, .btn.disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .btn-play:disabled {
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .episode-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .ep-num {
+      flex-shrink: 0;
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 10px;
+      border: 1px solid rgba(61, 158, 255, 0.2);
+    }
+
+    .ep-num.intro { background: rgba(52, 211, 153, 0.12); color: var(--success); border-color: rgba(52, 211, 153, 0.25); }
+
+    .ep-info { flex: 1; min-width: 0; }
+
+    .ep-title {
+      font-size: 1.1rem;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .ep-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .ep-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-top: 1rem;
+    }
+
+    button, .btn {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      border-radius: 9px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    button:active, .btn:active { transform: scale(0.97); }
+
+    .btn-play {
+      background: var(--accent);
+      color: #061018;
+    }
+
+    .btn-play:hover { background: #5aafff; }
+
+    .btn-play.playing {
+      background: var(--surface-2);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    .btn-download {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-download:hover {
+      background: #223040;
+      border-color: rgba(61, 158, 255, 0.3);
+    }
+
+    audio {
+      display: none;
+    }
+
+    .progress-wrap {
+      margin-top: 0.75rem;
+      display: none;
+    }
+
+    .episode.playing .progress-wrap { display: block; }
+
+    .progress-bar {
+      height: 4px;
+      background: var(--surface-2);
+      border-radius: 2px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      border-radius: 2px;
+      transition: width 0.1s linear;
+    }
+
+    .time {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.35rem;
+    }
+
+    .quiz-section {
+      margin-top: 1.25rem;
+      padding-top: 1.15rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .quiz-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .quiz-title {
+      font-size: 0.82rem;
+      font-weight: 650;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .quiz-hint {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+
+    .quiz-question {
+      margin-bottom: 1rem;
+    }
+
+    .quiz-question:last-child { margin-bottom: 0; }
+
+    .quiz-q-text {
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 0.45rem;
+      line-height: 1.4;
+    }
+
+    .quiz-q-type {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-left: 0.35rem;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .quiz-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 0.88rem;
+      color: var(--muted);
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+
+    .quiz-option:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .quiz-option:has(input:checked) {
+      background: var(--accent-soft);
+      border-color: rgba(61, 158, 255, 0.3);
+      color: var(--text);
+    }
+
+    .quiz-option input {
+      margin-top: 0.15rem;
+      flex-shrink: 0;
+      accent-color: var(--accent);
+    }
+
+    .quiz-option.correct-pick {
+      background: rgba(52, 211, 153, 0.1);
+      border-color: rgba(52, 211, 153, 0.35);
+      color: var(--text);
+    }
+
+    .quiz-option.wrong-pick {
+      background: rgba(248, 113, 113, 0.1);
+      border-color: rgba(248, 113, 113, 0.35);
+      color: var(--text);
+    }
+
+    .quiz-option.missed-pick {
+      border-color: rgba(52, 211, 153, 0.25);
+      border-style: dashed;
+    }
+
+    .quiz-question.locked .quiz-option {
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .quiz-question.locked .quiz-option:hover {
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .quiz-question.locked .quiz-option.correct-pick:hover,
+    .quiz-question.locked .quiz-option.wrong-pick:hover,
+    .quiz-question.locked .quiz-option.missed-pick:hover {
+      color: var(--text);
+    }
+
+    .quiz-feedback {
+      margin-top: 0.4rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .quiz-feedback.correct { color: var(--success); }
+    .quiz-feedback.incorrect { color: var(--danger); }
+
+    .quiz-footer {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-lock {
+      background: var(--success);
+      color: #042f1e;
+    }
+
+    .btn-lock:hover:not(:disabled) { background: #4ade80; }
+
+    .btn-lock:disabled {
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      opacity: 1;
+    }
+
+    .quiz-results {
+      flex: 1;
+      min-width: 12rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .quiz-results strong { color: var(--text); }
+
+    .quiz-results .score-pass { color: var(--success); }
+    .quiz-results .score-miss { color: var(--warn); }
+
+    .btn-copy {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      padding: 0.45rem 0.8rem;
+    }
+
+    .btn-copy:hover {
+      background: #223040;
+      border-color: rgba(61, 158, 255, 0.3);
+    }
+
+    .btn-copy.copied {
+      border-color: rgba(52, 211, 153, 0.4);
+      color: var(--success);
+    }
+
+    .quiz-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .quiz-toolbar p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      max-width: 26rem;
+    }
+
+    .quiz-toolbar strong { color: var(--text); }
+
+    .copy-toast {
+      position: fixed;
+      bottom: 1.25rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: var(--surface-2);
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      color: var(--success);
+      padding: 0.65rem 1.1rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      z-index: 100;
+      transition: transform 0.25s ease;
+      pointer-events: none;
+    }
+
+    .copy-toast.show { transform: translateX(-50%) translateY(0); }
+
+    footer {
+      text-align: center;
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    footer strong { color: var(--text); }
+
+    @media (max-width: 480px) {
+      .wrap { padding: 1.5rem 1rem 2.5rem; }
+      .episode { padding: 1.1rem; }
+      .ep-actions { flex-direction: column; }
+      .ep-actions button, .ep-actions .btn { justify-content: center; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="badge">100-minute learning walk</div>
+      <h1>Brain OS</h1>
+      <p class="subtitle">Ten episodes to understand how your learning machine works — and how to upgrade it.</p>
+      <div class="meta">
+        <span>~100 minutes total</span>
+        <span>10 episodes + intro</span>
+        <span>Best with headphones on a walk</span>
+      </div>
+    </header>
+
+    <div class="instructions">
+      <strong>How to use this:</strong> Listen in order. After each episode, answer the recall check and press <strong>Lock in answers</strong> to see your score. The next episode stays locked until you do. You do not need to get everything right — just lock in and learn from the feedback.
+    </div>
+
+    <div class="quiz-toolbar">
+      <p><strong>Recall check:</strong> Answer each quiz, lock in to see results, then the next episode unlocks. Progress saves in this browser tab.</p>
+      <button type="button" class="btn-copy" id="copy-all">Copy all Q&amp;A</button>
+    </div>
+
+    <div class="episode-list" id="episodes"></div>
+
+    <footer>
+      You are the <strong>engineer</strong> of your learning machine.<br>
+      Predict → surprise → update.
+    </footer>
+  </div>
+
+  <div class="copy-toast" id="copy-toast" aria-live="polite">Copied to clipboard</div>
+
+  <script>
+    // Upload MP3s to a public host, then paste the URL prefix here (no trailing slash).
+    // Leave "" to use the local audio/ folder while testing on your machine.
+    //
+    // Internet Archive:  https://archive.org/download/YOUR-ITEM-ID
+    // GitHub Release:    https://github.com/YOUR_USER/brain-os-audio/releases/download/v1
+    // Cloudflare R2:     https://pub-xxxxxxxx.r2.dev/brain-os
+    const AUDIO_BASE_URL = "https://github.com/michaelthomsoncc/daily-news-site/releases/download/lewis-learning-audio-v1";
+
+    function audioUrl(filename) {
+      const base = AUDIO_BASE_URL.trim().replace(/\/$/, "");
+      return base ? base + "/" + filename : "audio/" + filename;
+    }
+
+    const STORAGE_KEY = "brain-os-quiz-answers";
+    const LOCKED_KEY = "brain-os-quiz-locked";
+
+    const CORRECT = {
+      "intro-1": "About 100 minutes",
+      "intro-2": "Take about a minute to think",
+      "intro-3": "Predict, surprise, update",
+      "intro-4": ["There is no test in the walk itself", "Listen and walk — catch what clicks", "Tell Michael one thing that landed when you get home"],
+      "intro-5": "After listening to this intro, when you are ready",
+      "ep1-1": "The engineer of your learning machine",
+      "ep1-2": "Brute-force studying without understanding the system",
+      "ep1-3": ["Your biological brain", "Artificial intelligence", "You as the engineer who designs the system"],
+      "ep1-4": "A high-performance configuration with its own manual",
+      "ep1-5": "Tests himself, reviews surprises, and spends less total time",
+      "ep2-1": "A tiny tree with roots and branches",
+      "ep2-2": "Your brain physically rewiring connections when you learn",
+      "ep2-3": "A muddy track → dirt road → paved road → motorway",
+      "ep2-4": ["Sleep", "Movement", "Food and hydration"],
+      "ep2-5": "Your hardware working as designed when conditions are right",
+      "ep3-1": "Predict, surprise, update",
+      "ep3-2": "They are surprise machines that keep the predict-update loop running",
+      "ep3-3": "Guess before learning, notice surprises, then repair your model in one sentence",
+      "ep3-4": ["You rarely make strong predictions", "Reality does not disagree with you meaningfully", "The update step barely runs"],
+      "ep3-5": "Gaps in your explanation reveal where your predictions failed",
+      "ep4-1": "Prediction error",
+      "ep4-2": "A usefulness detector that tags important information",
+      "ep4-3": "Loved topics get stronger dopamine signals for useful surprises",
+      "ep4-4": ["Turn work into guess-and-check games", "Attach topics you love to topics you need", "Make feedback fast"],
+      "ep4-5": "Your brain is not offering much launch fuel yet",
+      "ep5-1": "The gatekeeper that decides what gets into the learning engine",
+      "ep5-2": "A powerful, selective laser beam",
+      "ep5-3": ["Interest stacking", "Short high-intensity bursts with timers", "Environment engineering"],
+      "ep5-4": "Telemetry — data about what dial to adjust",
+      "ep5-5": "A designed sprint, not endless punishment",
+      "ep6-1": "Small fast RAM that holds a few things briefly",
+      "ep6-2": "Testing yourself by retrieving information from memory",
+      "ep6-3": "Reviewing just before you forget, on a smart schedule",
+      "ep6-4": ["Words look familiar on the page", "Your brain never has to search for the answer", "Familiarity feels like memory"],
+      "ep6-5": "Gaps in your memory by explaining simply",
+      "ep7-1": "A small battery that drains fast",
+      "ep7-2": "Starting feels like a wall even when you can do the work",
+      "ep7-3": ["Shrink tasks until your brain will start", "Interest bridges from something you love", "Visible progress and small celebrations"],
+      "ep7-4": "Breaking big goals into frequent small feedback wins",
+      "ep7-5": "What is missing from my system design?",
+      "ep8-1": ["Deliberate focus on weak points", "Immediate or fast feedback", "Smart variation (interleaving)"],
+      "ep8-2": "Uncomfortable — you are at the edge of your ability",
+      "ep8-3": "Busy repetition without feedback does not upgrade skill",
+      "ep8-4": "One small weak point with immediate checking",
+      "ep8-5": "Automatic skill you can use under pressure",
+      "ep9-1": "Learning how to learn by monitoring your own system",
+      "ep9-2": "What was I trying to do? What happened? What one thing will I change?",
+      "ep9-3": ["Energy level", "Whether attention is locked", "Whether memory is sticking", "Whether your strategy still fits current conditions"],
+      "ep9-4": "A method that worked before may stop working as conditions change",
+      "ep9-5": "Tighten the target — one task, one timer, one prediction game",
+      "ep10-1": "You are the engineer of your learning machine",
+      "ep10-2": ["Predict, surprise, update", "Install knowledge by testing yourself", "Start small — five minutes is a real win", "Check the dashboard and fix system design"],
+      "ep10-3": "One five-minute win and calling it maintenance",
+      "ep10-4": "Maintenance required for the machine",
+      "ep10-5": "Thousands of small engineered loops over time"
+    };
+
+    const episodes = [
+      {
+        id: "intro",
+        num: "Intro",
+        intro: true,
+        file: "00-intro.mp3",
+        title: "Before You Start",
+        desc: "A short note before the walk. Listen first if it is here — then begin Episode 1.",
+        quiz: [
+          { id: "intro-1", type: "single", text: "Roughly how long is the full Brain OS walk?", options: ["About 100 minutes", "About 30 minutes", "About 5 hours", "One episode only"] },
+          { id: "intro-2", type: "single", text: "What should you do at each pause between episodes?", options: ["Rush to the next one", "Take about a minute to think", "Take a written test", "Skip episodes you already know"] },
+          { id: "intro-3", type: "single", text: "Which idea is called out as especially worth catching?", options: ["Predict, surprise, update", "Highlight everything twice", "Study until you are exhausted", "Memorise every detail"] },
+          { id: "intro-4", type: "multiple", text: "Which statements match the intro? (Select all that apply)", options: ["There is no test in the walk itself", "You need to remember everything perfectly", "Listen and walk — catch what clicks", "Tell Michael one thing that landed when you get home"] },
+          { id: "intro-5", type: "single", text: "When should you start Episode 1?", options: ["After listening to this intro, when you are ready", "Before listening to this intro", "Only after answering every quiz", "Never — intro is optional forever"] }
+        ]
+      },
+      {
+        id: "ep1",
+        num: 1,
+        file: "01-episode-1.mp3",
+        title: "The Engineer",
+        desc: "Stop pushing harder. Start understanding the machine. Your new identity — and why your brain is a high-performance configuration, not a broken one.",
+        quiz: [
+          { id: "ep1-1", type: "single", text: "What is your new identity in Brain OS?", options: ["The engineer of your learning machine", "A kid who must try harder", "Someone with a broken brain", "A passive student"] },
+          { id: "ep1-2", type: "single", text: "What does the broken-car-on-a-hill metaphor represent?", options: ["Brute-force studying without understanding the system", "Taking breaks too often", "Using flashcards", "Hyperfocus on games"] },
+          { id: "ep1-3", type: "multiple", text: "Which are described as learning machines in Episode 1? (Select all that apply)", options: ["Your biological brain", "Artificial intelligence", "You as the engineer who designs the system", "Only teachers and textbooks"] },
+          { id: "ep1-4", type: "single", text: "How is an autistic ADHD brain described?", options: ["A high-performance configuration with its own manual", "A defective brain that needs fixing", "Identical to everyone else's", "Too slow for serious learning"] },
+          { id: "ep1-5", type: "single", text: "What is the engineer kid's advantage with spelling words?", options: ["Tests himself, reviews surprises, and spends less total time", "Reads the list ten times the night before", "Crams for two hours once", "Highlights until the page glows"] }
+        ]
+      },
+      {
+        id: "ep2",
+        num: 2,
+        file: "02-episode-2.mp3",
+        title: "Brain Hardware",
+        desc: "Neurons, neuroplasticity, and why your autistic ADHD wiring is a different kind of supercar — with its own instruction manual.",
+        quiz: [
+          { id: "ep2-1", type: "single", text: "What is a neuron compared to in the episode?", options: ["A tiny tree with roots and branches", "A computer chip", "A battery", "A single file on a hard drive"] },
+          { id: "ep2-2", type: "single", text: "What is neuroplasticity?", options: ["Your brain physically rewiring connections when you learn", "A fixed brain that cannot change", "Only something AI has", "Forgetting on purpose"] },
+          { id: "ep2-3", type: "single", text: "The bike-riding pathway metaphor shows skills becoming...", options: ["A muddy track → dirt road → paved road → motorway", "Instant and effortless on day one", "Weaker the more you practise", "Stored only in working memory"] },
+          { id: "ep2-4", type: "multiple", text: "Which are listed as hardware maintenance? (Select all that apply)", options: ["Sleep", "Movement", "Food and hydration", "Cramming all night before every test"] },
+          { id: "ep2-5", type: "single", text: "Hyperfocus is described as...", options: ["Your hardware working as designed when conditions are right", "A glitch you should destroy", "Proof you cannot focus on anything", "The same as steady average attention"] }
+        ]
+      },
+      {
+        id: "ep3",
+        num: 3,
+        file: "03-episode-3.mp3",
+        title: "The Universal Learning Rule",
+        desc: "The one idea to remember: predict, surprise, update. How games teach you fast — and how to run the same loop on boring schoolwork.",
+        quiz: [
+          { id: "ep3-1", type: "single", text: "What are the three words of the universal learning rule?", options: ["Predict, surprise, update", "Read, highlight, repeat", "Listen, walk, forget", "Cram, panic, pass"] },
+          { id: "ep3-2", type: "single", text: "Why do games teach you fast?", options: ["They are surprise machines that keep the predict-update loop running", "They have no mistakes", "They remove all challenge", "They avoid feedback"] },
+          { id: "ep3-3", type: "single", text: "What is the predict-check-repair method?", options: ["Guess before learning, notice surprises, then repair your model in one sentence", "Read the same page ten times", "Skip anything confusing", "Wait for the teacher to tell you the answer"] },
+          { id: "ep3-4", type: "multiple", text: "Why is passive re-reading weak for learning? (Select all that apply)", options: ["You rarely make strong predictions", "Reality does not disagree with you meaningfully", "The update step barely runs", "It always creates bigger surprises than testing yourself"] },
+          { id: "ep3-5", type: "single", text: "Teaching material badly to a confused robot helps because...", options: ["Gaps in your explanation reveal where your predictions failed", "Robots already know the answers", "It removes all surprises", "It replaces active recall"] }
+        ]
+      },
+      {
+        id: "ep4",
+        num: 4,
+        file: "04-episode-4.mp3",
+        title: "Fuel — Prediction Error & Dopamine",
+        desc: "Why some learning feels electric and some feels dead. How to hack the fuel system so your brain actually wants to store what you study.",
+        quiz: [
+          { id: "ep4-1", type: "single", text: "What is the fuel for the learning engine called?", options: ["Prediction error", "Willpower alone", "Highlighting ink", "Background noise"] },
+          { id: "ep4-2", type: "single", text: "For learning, dopamine is best thought of as...", options: ["A usefulness detector that tags important information", "Only the chemical for eating sweets", "Something broken in ADHD brains", "Unrelated to memory"] },
+          { id: "ep4-3", type: "single", text: "Why can you remember game details but forget breakfast?", options: ["Loved topics get stronger dopamine signals for useful surprises", "Breakfast has more prediction error", "Working memory is unlimited", "Games have no surprises"] },
+          { id: "ep4-4", type: "multiple", text: "Which are practical fuel hacks from Episode 4? (Select all that apply)", options: ["Turn work into guess-and-check games", "Attach topics you love to topics you need", "Make feedback fast", "Delay all checking until exam week"] },
+          { id: "ep4-5", type: "single", text: "Starting a boring task can feel hard because...", options: ["Your brain is not offering much launch fuel yet", "Dopamine is always too high", "Prediction error is strongest when bored", "Attention is permanently broken"] }
+        ]
+      },
+      {
+        id: "ep5",
+        num: 5,
+        file: "05-episode-5.mp3",
+        title: "Attention Engineering",
+        desc: "Your ADHD attention is a laser, not a weakness. How to point it at the right targets and design environments that help it lock on.",
+        quiz: [
+          { id: "ep5-1", type: "single", text: "Attention is described as...", options: ["The gatekeeper that decides what gets into the learning engine", "The same as long-term memory", "Unimportant if you have willpower", "Only about motivation to start"] },
+          { id: "ep5-2", type: "single", text: "ADHD attention is compared to...", options: ["A powerful, selective laser beam", "A weak broken spotlight", "A steady dim lamp that never moves", "Something you cannot engineer"] },
+          { id: "ep5-3", type: "multiple", text: "Which are attention engineering tactics? (Select all that apply)", options: ["Interest stacking", "Short high-intensity bursts with timers", "Environment engineering", "Keeping every distraction on your desk"] },
+          { id: "ep5-4", type: "single", text: "When attention wanders, you should treat it as...", options: ["Telemetry — data about what dial to adjust", "Moral failure", "Proof school is impossible", "A reason to give up on engineering"] },
+          { id: "ep5-5", type: "single", text: "A twelve-minute timer mission trains your brain that focus is...", options: ["A designed sprint, not endless punishment", "Something that must last all evening", "Only for subjects you already love", "Impossible on a walk"] }
+        ]
+      },
+      {
+        id: "ep6",
+        num: 6,
+        file: "06-episode-6.mp3",
+        title: "Memory Engineering",
+        desc: "Stop re-reading. Start installing. Active recall and spaced repetition — the two techniques that remember more in less time.",
+        quiz: [
+          { id: "ep6-1", type: "single", text: "Working memory is like...", options: ["Small fast RAM that holds a few things briefly", "Permanent storage for life", "The same as muscle memory", "Unlimited storage"] },
+          { id: "ep6-2", type: "single", text: "What is active recall?", options: ["Testing yourself by retrieving information from memory", "Rereading notes until they look familiar", "Highlighting every paragraph", "Listening while doing something else"] },
+          { id: "ep6-3", type: "single", text: "Spaced repetition means...", options: ["Reviewing just before you forget, on a smart schedule", "Cramming everything the night before", "Reading once and never returning", "Studying one subject for ten hours straight"] },
+          { id: "ep6-4", type: "multiple", text: "Why does rereading create a fluency illusion? (Select all that apply)", options: ["Words look familiar on the page", "Your brain never has to search for the answer", "Familiarity feels like memory", "It always proves you can generate answers from scratch"] },
+          { id: "ep6-5", type: "single", text: "The Feynman technique helps you find...", options: ["Gaps in your memory by explaining simply", "More highlighter colours", "Reasons to skip sleep", "Ways to avoid all testing"] }
+        ]
+      },
+      {
+        id: "ep7",
+        num: 7,
+        file: "07-episode-7.mp3",
+        title: "Reward & Motivation Hacking",
+        desc: "Task initiation, five-minute starts, and designing rewards so the engine wants to run — without relying on willpower alone.",
+        quiz: [
+          { id: "ep7-1", type: "single", text: "Willpower is compared to...", options: ["A small battery that drains fast", "An unlimited power source", "The same as intrinsic motivation", "Something only adults have"] },
+          { id: "ep7-2", type: "single", text: "Task initiation problems mean...", options: ["Starting feels like a wall even when you can do the work", "You cannot complete any work ever", "You lack intelligence", "Motivation is a fixed personality trait"] },
+          { id: "ep7-3", type: "multiple", text: "Which are motivation hacks from Episode 7? (Select all that apply)", options: ["Shrink tasks until your brain will start", "Interest bridges from something you love", "Visible progress and small celebrations", "Waiting for perfect motivation before any action"] },
+          { id: "ep7-4", type: "single", text: "Reward shaping in AI is similar to...", options: ["Breaking big goals into frequent small feedback wins", "Giving one reward at the very end only", "Removing all feedback", "Training without any goals"] },
+          { id: "ep7-5", type: "single", text: "When motivation is low, the engineer asks...", options: ["What is missing from my system design?", "Why am I a lazy person?", "How do I force myself forever?", "Should I abandon all goals?"] }
+        ]
+      },
+      {
+        id: "ep8",
+        num: 8,
+        file: "08-episode-8.mp3",
+        title: "Practice Loops",
+        desc: "Turn knowledge into real skill. Deliberate practice, fast feedback, and smart variation — how pros and AI systems actually train.",
+        quiz: [
+          { id: "ep8-1", type: "multiple", text: "What are the three parts of effective practice? (Select all that apply)", options: ["Deliberate focus on weak points", "Immediate or fast feedback", "Smart variation (interleaving)", "Only repeating what already feels easy"] },
+          { id: "ep8-2", type: "single", text: "Deliberate practice should feel...", options: ["Uncomfortable — you are at the edge of your ability", "Effortless the entire time", "Like performing what you already mastered", "Pointless without instant perfection"] },
+          { id: "ep8-3", type: "single", text: "Autopilot practice is a mistake because...", options: ["Busy repetition without feedback does not upgrade skill", "It is always too short", "Feedback should come weeks later", "You should only practise strengths"] },
+          { id: "ep8-4", type: "single", text: "A good practice loop should target...", options: ["One small weak point with immediate checking", "Everything at once with no feedback", "Only topics you already ace", "Marathon sessions past useful focus"] },
+          { id: "ep8-5", type: "single", text: "Memory installs knowledge; practice turns it into...", options: ["Automatic skill you can use under pressure", "More highlighting habits", "Passive familiarity only", "Something you never need to test"] }
+        ]
+      },
+      {
+        id: "ep9",
+        num: 9,
+        file: "09-episode-9.mp3",
+        title: "The Dashboard — Meta-Learning",
+        desc: "Learning how to learn. Read your own energy, focus, and strategy — and tune the system like a pilot checking instruments.",
+        quiz: [
+          { id: "ep9-1", type: "single", text: "Meta-learning is...", options: ["Learning how to learn by monitoring your own system", "Memorising more facts per hour", "Ignoring how you feel while studying", "Only for advanced AI, not people"] },
+          { id: "ep9-2", type: "single", text: "The after-action review asks...", options: ["What was I trying to do? What happened? What one thing will I change?", "Why am I bad at school?", "How can I study for twelve hours straight?", "Which method works for everyone on Earth?"] },
+          { id: "ep9-3", type: "multiple", text: "Which are dashboard signals to watch? (Select all that apply)", options: ["Energy level", "Whether attention is locked", "Whether memory is sticking", "Whether your strategy still fits current conditions"] },
+          { id: "ep9-4", type: "single", text: "Strategy decay means...", options: ["A method that worked before may stop working as conditions change", "You failed permanently as a learner", "You should never change techniques", "All progress was imaginary"] },
+          { id: "ep9-5", type: "single", text: "High energy plus scattered attention suggests you should...", options: ["Tighten the target — one task, one timer, one prediction game", "Force a four-hour grind immediately", "Abandon engineering and rely on panic", "Ignore the dashboard completely"] }
+        ]
+      },
+      {
+        id: "ep10",
+        num: 10,
+        file: "10-episode-10.mp3",
+        title: "Your Personal Brain OS",
+        desc: "The grand assembly. Daily habits, the five things to remember, and your custom operating system — ready to run.",
+        quiz: [
+          { id: "ep10-1", type: "single", text: "The five things to remember start with...", options: ["You are the engineer of your learning machine", "You must memorise every episode word for word", "Willpower is the only fuel", "Never change your methods"] },
+          { id: "ep10-2", type: "multiple", text: "Which are among the five core ideas? (Select all that apply)", options: ["Predict, surprise, update", "Install knowledge by testing yourself", "Start small — five minutes is a real win", "Check the dashboard and fix system design"] },
+          { id: "ep10-3", type: "single", text: "On a low-energy day, valid engineering includes...", options: ["One five-minute win and calling it maintenance", "Forcing a guilt marathon", "Throwing away the whole system", "Skipping all recovery forever"] },
+          { id: "ep10-4", type: "single", text: "Recovery (sleep, movement, interests) is...", options: ["Maintenance required for the machine", "A prize only after suffering", "Optional if you want top performance", "The opposite of engineering"] },
+          { id: "ep10-5", type: "single", text: "Big goals are built from...", options: ["Thousands of small engineered loops over time", "One terrifying all-nighter", "Waiting for motivation to appear magically", "Copying generic study advice forever"] }
+        ]
+      }
+    ];
+
+    const list = document.getElementById("episodes");
+    const copyToast = document.getElementById("copy-toast");
+    const episodeCards = new Map();
+    let currentAudio = null;
+    let currentCard = null;
+    let quizAnswers = loadAnswers();
+    let lockedState = loadLocked();
+
+    function formatTime(s) {
+      if (!s || isNaN(s)) return "0:00";
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60).toString().padStart(2, "0");
+      return `${m}:${sec}`;
+    }
+
+    function stopCurrent() {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+      if (currentCard) {
+        currentCard.classList.remove("playing");
+        const btn = currentCard.querySelector(".btn-play");
+        btn.textContent = "▶ Play";
+        btn.classList.remove("playing");
+      }
+      currentAudio = null;
+      currentCard = null;
+    }
+
+    function loadAnswers() {
+      try {
+        const raw = sessionStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveAnswers() {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(quizAnswers));
+    }
+
+    function loadLocked() {
+      try {
+        const raw = sessionStorage.getItem(LOCKED_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveLocked() {
+      sessionStorage.setItem(LOCKED_KEY, JSON.stringify(lockedState));
+    }
+
+    function sorted(values) {
+      return [...values].sort();
+    }
+
+    function arraysEqual(a, b) {
+      const left = sorted(a);
+      const right = sorted(b);
+      return left.length === right.length && left.every((value, i) => value === right[i]);
+    }
+
+    function getCorrect(q) {
+      return CORRECT[q.id];
+    }
+
+    function isQuestionAnswered(q) {
+      const answer = getAnswer(q);
+      if (q.type === "multiple") return answer.length > 0;
+      return answer !== "";
+    }
+
+    function isQuestionCorrect(q) {
+      const answer = getAnswer(q);
+      const correct = getCorrect(q);
+      if (q.type === "multiple") {
+        return arraysEqual(answer, correct);
+      }
+      return answer === correct;
+    }
+
+    function isQuizComplete(ep) {
+      return ep.quiz.every(isQuestionAnswered);
+    }
+
+    function isEpisodeUnlocked(index) {
+      if (index === 0) return true;
+      return !!lockedState[episodes[index - 1].id];
+    }
+
+    function nextEpisodeLabel(index) {
+      if (index >= episodes.length - 1) return null;
+      const next = episodes[index + 1];
+      return next.intro ? "Intro" : "Episode " + next.num;
+    }
+
+    function getAnswer(q) {
+      const value = quizAnswers[q.id];
+      if (q.type === "multiple") {
+        return Array.isArray(value) ? value : [];
+      }
+      return typeof value === "string" ? value : "";
+    }
+
+    function setAnswer(q, value) {
+      quizAnswers[q.id] = value;
+      saveAnswers();
+    }
+
+    function episodeLabel(ep) {
+      return ep.intro ? "Intro — " + ep.title : "Episode " + ep.num + " — " + ep.title;
+    }
+
+    function formatCopyText(episodeFilter) {
+      const lines = ["Brain OS — Quiz Answers", ""];
+
+      episodes.forEach((ep) => {
+        if (episodeFilter && ep.id !== episodeFilter) return;
+        if (!ep.quiz || !ep.quiz.length) return;
+
+        lines.push(episodeLabel(ep));
+        lines.push("");
+
+        const locked = lockedState[ep.id];
+
+        ep.quiz.forEach((q, i) => {
+          const answer = getAnswer(q);
+          const typeLabel = q.type === "multiple" ? "select multiple" : "pick one";
+          lines.push((i + 1) + ". " + q.text + " (" + typeLabel + ")");
+
+          if (q.type === "multiple") {
+            lines.push("   Answer: " + (answer.length ? answer.join("; ") : "(not answered)"));
+          } else {
+            lines.push("   Answer: " + (answer || "(not answered)"));
+          }
+
+          if (locked) {
+            const mark = isQuestionCorrect(q) ? "Correct" : "Incorrect";
+            const correct = getCorrect(q);
+            lines.push("   Result: " + mark);
+            lines.push("   Correct answer: " + (Array.isArray(correct) ? correct.join("; ") : correct));
+          }
+
+          lines.push("");
+        });
+
+        if (locked) {
+          lines.push("Score: " + locked.score + " / " + locked.total);
+          lines.push("");
+        }
+      });
+
+      return lines.join("\n").trim();
+    }
+
+    function showCopyToast(message) {
+      copyToast.textContent = message;
+      copyToast.classList.add("show");
+      clearTimeout(showCopyToast._timer);
+      showCopyToast._timer = setTimeout(() => copyToast.classList.remove("show"), 2200);
+    }
+
+    async function copyText(text, button) {
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const area = document.createElement("textarea");
+        area.value = text;
+        area.style.position = "fixed";
+        area.style.left = "-9999px";
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        area.remove();
+      }
+
+      if (button) {
+        const original = button.textContent;
+        button.textContent = "Copied!";
+        button.classList.add("copied");
+        setTimeout(() => {
+          button.textContent = original;
+          button.classList.remove("copied");
+        }, 1800);
+      }
+
+      showCopyToast("Copied to clipboard");
+    }
+
+    function applyQuestionFeedback(block, q) {
+      const correct = getCorrect(q);
+      const correctSet = new Set(Array.isArray(correct) ? correct : [correct]);
+      const answer = getAnswer(q);
+      const answerSet = new Set(q.type === "multiple" ? answer : answer ? [answer] : []);
+      const ok = isQuestionCorrect(q);
+
+      block.classList.add("locked");
+
+      block.querySelectorAll(".quiz-option").forEach((label) => {
+        const value = label.querySelector("input").value;
+        label.classList.remove("correct-pick", "wrong-pick", "missed-pick");
+
+        if (correctSet.has(value) && answerSet.has(value)) {
+          label.classList.add("correct-pick");
+        } else if (answerSet.has(value) && !correctSet.has(value)) {
+          label.classList.add("wrong-pick");
+        } else if (correctSet.has(value) && !answerSet.has(value)) {
+          label.classList.add("missed-pick");
+        }
+      });
+
+      let feedback = block.querySelector(".quiz-feedback");
+      if (!feedback) {
+        feedback = document.createElement("div");
+        feedback.className = "quiz-feedback";
+        block.appendChild(feedback);
+      }
+
+      if (ok) {
+        feedback.className = "quiz-feedback correct";
+        feedback.textContent = "Correct";
+      } else {
+        const correctText = Array.isArray(correct) ? correct.join("; ") : correct;
+        feedback.className = "quiz-feedback incorrect";
+        feedback.textContent = "Not quite — correct answer: " + correctText;
+      }
+    }
+
+    function updateLockButton(section, ep) {
+      const lockBtn = section.querySelector("[data-lock-episode]");
+      const results = section.querySelector(".quiz-results");
+      const locked = lockedState[ep.id];
+
+      if (locked) {
+        lockBtn.style.display = "none";
+        results.innerHTML = "<strong class=\"score-pass\">" + locked.score + " / " + locked.total + " correct</strong>" +
+          (nextEpisodeLabel(episodes.indexOf(ep)) ? " — next episode unlocked." : " — walk complete.");
+        return;
+      }
+
+      lockBtn.style.display = "";
+      const complete = isQuizComplete(ep);
+      lockBtn.disabled = !complete;
+      lockBtn.textContent = complete ? "Lock in answers" : "Answer all questions to lock in";
+      results.textContent = complete
+        ? "Ready to lock in and see your score."
+        : "Answer every question, then lock in to unlock the next episode.";
+    }
+
+    function lockInQuiz(ep, section) {
+      if (!isQuizComplete(ep) || lockedState[ep.id]) return;
+
+      const score = ep.quiz.filter(isQuestionCorrect).length;
+      lockedState[ep.id] = {
+        score,
+        total: ep.quiz.length,
+        lockedAt: Date.now()
+      };
+      saveLocked();
+
+      section.querySelectorAll(".quiz-question").forEach((block, index) => {
+        applyQuestionFeedback(block, ep.quiz[index]);
+        block.querySelectorAll("input").forEach((input) => {
+          input.disabled = true;
+        });
+      });
+
+      updateLockButton(section, ep);
+      refreshEpisodeLocks();
+
+      const epIndex = episodes.indexOf(ep);
+      const nextLabel = nextEpisodeLabel(epIndex);
+      showCopyToast(score + " / " + ep.quiz.length + " correct" + (nextLabel ? " — " + nextLabel + " unlocked" : ""));
+
+      if (epIndex < episodes.length - 1) {
+        const nextCard = episodeCards.get(episodes[epIndex + 1].id);
+        if (nextCard) {
+          nextCard.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    }
+
+    function refreshEpisodeLocks() {
+      episodes.forEach((ep, index) => {
+        const card = episodeCards.get(ep.id);
+        if (!card) return;
+
+        const unlocked = isEpisodeUnlocked(index);
+        const playBtn = card.querySelector(".btn-play");
+        const downloadBtn = card.querySelector(".btn-download");
+        const banner = card.querySelector(".ep-locked-banner");
+        const prev = episodes[index - 1];
+
+        card.classList.toggle("locked", !unlocked);
+        playBtn.disabled = !unlocked;
+        downloadBtn.classList.toggle("disabled", !unlocked);
+
+        if (!unlocked) {
+          playBtn.textContent = "Locked";
+          banner.textContent = "Complete the recall check on " +
+            (prev.intro ? "the intro" : "Episode " + prev.num) +
+            " and press Lock in answers to unlock this episode.";
+          if (currentCard === card) {
+            stopCurrent();
+          }
+        } else if (!currentAudio || currentCard !== card) {
+          playBtn.textContent = "▶ Play";
+        }
+      });
+    }
+
+    function renderQuiz(ep, card) {
+      if (!ep.quiz || !ep.quiz.length) return;
+
+      const section = document.createElement("div");
+      section.className = "quiz-section";
+      section.innerHTML = `
+        <div class="quiz-header">
+          <div class="quiz-title">Recall check</div>
+          <button type="button" class="btn-copy" data-copy-episode="${ep.id}">Copy this section</button>
+        </div>
+        <p class="quiz-hint">Answer from memory after listening. When you are ready, lock in to see your score and unlock the next episode.</p>
+        <div class="quiz-footer">
+          <button type="button" class="btn-lock" data-lock-episode="${ep.id}">Answer all questions to lock in</button>
+          <div class="quiz-results"></div>
+        </div>
+      `;
+
+      const questionsWrap = document.createElement("div");
+      questionsWrap.className = "quiz-questions";
+      section.insertBefore(questionsWrap, section.querySelector(".quiz-footer"));
+
+      ep.quiz.forEach((q, index) => {
+        const block = document.createElement("div");
+        block.className = "quiz-question";
+        const typeHint = q.type === "multiple" ? "select multiple" : "pick one";
+        const inputType = q.type === "multiple" ? "checkbox" : "radio";
+        const saved = getAnswer(q);
+
+        block.innerHTML = `
+          <div class="quiz-q-text">
+            ${index + 1}. ${q.text}
+            <span class="quiz-q-type">(${typeHint})</span>
+          </div>
+          <div class="quiz-options" data-question="${q.id}"></div>
+        `;
+
+        const optionsWrap = block.querySelector(".quiz-options");
+
+        q.options.forEach((option) => {
+          const label = document.createElement("label");
+          label.className = "quiz-option";
+          const input = document.createElement("input");
+          input.type = inputType;
+          input.name = q.id;
+          input.value = option;
+
+          if (q.type === "multiple") {
+            input.checked = saved.includes(option);
+          } else {
+            input.checked = saved === option;
+          }
+
+          input.addEventListener("change", () => {
+            if (lockedState[ep.id]) return;
+            if (q.type === "multiple") {
+              const checked = [...optionsWrap.querySelectorAll("input:checked")].map((el) => el.value);
+              setAnswer(q, checked);
+            } else {
+              setAnswer(q, option);
+            }
+            updateLockButton(section, ep);
+          });
+
+          label.appendChild(input);
+          label.appendChild(document.createTextNode(option));
+          optionsWrap.appendChild(label);
+        });
+
+        questionsWrap.appendChild(block);
+      });
+
+      section.querySelector("[data-copy-episode]").addEventListener("click", (e) => {
+        copyText(formatCopyText(ep.id), e.currentTarget);
+      });
+
+      section.querySelector("[data-lock-episode]").addEventListener("click", () => {
+        lockInQuiz(ep, section);
+      });
+
+      if (lockedState[ep.id]) {
+        section.querySelectorAll(".quiz-question").forEach((block, index) => {
+          applyQuestionFeedback(block, ep.quiz[index]);
+          block.querySelectorAll("input").forEach((input) => {
+            input.disabled = true;
+          });
+        });
+      }
+
+      updateLockButton(section, ep);
+      card.appendChild(section);
+    }
+
+    document.getElementById("copy-all").addEventListener("click", (e) => {
+      copyText(formatCopyText(), e.currentTarget);
+    });
+
+    episodes.forEach((ep, index) => {
+      const card = document.createElement("article");
+      card.className = "episode";
+      card.dataset.episodeId = ep.id;
+      const numClass = ep.intro ? "ep-num intro" : "ep-num";
+      const label = ep.intro ? "★" : ep.num;
+
+      card.innerHTML = `
+        <div class="episode-top">
+          <div class="${numClass}">${label}</div>
+          <div class="ep-info">
+            <div class="ep-title">${ep.title}</div>
+            <div class="ep-desc">${ep.desc}</div>
+          </div>
+        </div>
+        <audio preload="metadata" src="${audioUrl(ep.file)}"></audio>
+        <div class="ep-actions">
+          <button type="button" class="btn-play">▶ Play</button>
+          <a class="btn btn-download" href="${audioUrl(ep.file)}" download="${ep.file}">↓ Download</a>
+        </div>
+        <div class="ep-locked-banner"></div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+          <div class="time"><span class="cur">0:00</span> / <span class="dur">0:00</span></div>
+        </div>
+      `;
+
+      const audio = card.querySelector("audio");
+      const playBtn = card.querySelector(".btn-play");
+      const downloadBtn = card.querySelector(".btn-download");
+      const fill = card.querySelector(".progress-fill");
+      const bar = card.querySelector(".progress-bar");
+      const cur = card.querySelector(".cur");
+      const dur = card.querySelector(".dur");
+
+      audio.addEventListener("loadedmetadata", () => {
+        dur.textContent = formatTime(audio.duration);
+      });
+
+      audio.addEventListener("timeupdate", () => {
+        const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+        fill.style.width = pct + "%";
+        cur.textContent = formatTime(audio.currentTime);
+      });
+
+      audio.addEventListener("ended", () => {
+        playBtn.textContent = "▶ Play";
+        playBtn.classList.remove("playing");
+        card.classList.remove("playing");
+        if (currentAudio === audio) {
+          currentAudio = null;
+          currentCard = null;
+        }
+      });
+
+      playBtn.addEventListener("click", () => {
+        if (!isEpisodeUnlocked(index)) return;
+
+        if (currentAudio === audio && !audio.paused) {
+          audio.pause();
+          playBtn.textContent = "▶ Play";
+          playBtn.classList.remove("playing");
+          card.classList.remove("playing");
+          return;
+        }
+        stopCurrent();
+        currentAudio = audio;
+        currentCard = card;
+        audio.play();
+        playBtn.textContent = "⏸ Pause";
+        playBtn.classList.add("playing");
+        card.classList.add("playing");
+      });
+
+      downloadBtn.addEventListener("click", (e) => {
+        if (!isEpisodeUnlocked(index)) e.preventDefault();
+      });
+
+      bar.addEventListener("click", (e) => {
+        if (!isEpisodeUnlocked(index) || !audio.duration) return;
+        const rect = bar.getBoundingClientRect();
+        const ratio = (e.clientX - rect.left) / rect.width;
+        audio.currentTime = ratio * audio.duration;
+      });
+
+      renderQuiz(ep, card);
+      episodeCards.set(ep.id, card);
+      list.appendChild(card);
+    });
+
+    refreshEpisodeLocks();
+  </script>
+</body>
+</html>
