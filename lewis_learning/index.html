@@ -940,7 +940,14 @@
 
     function loadAnswers() {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY);
+        let raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          raw = sessionStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            localStorage.setItem(STORAGE_KEY, raw);
+            sessionStorage.removeItem(STORAGE_KEY);
+          }
+        }
         return raw ? JSON.parse(raw) : {};
       } catch {
         return {};
@@ -953,7 +960,14 @@
 
     function loadLocked() {
       try {
-        const raw = localStorage.getItem(LOCKED_KEY);
+        let raw = localStorage.getItem(LOCKED_KEY);
+        if (!raw) {
+          raw = sessionStorage.getItem(LOCKED_KEY);
+          if (raw) {
+            localStorage.setItem(LOCKED_KEY, raw);
+            sessionStorage.removeItem(LOCKED_KEY);
+          }
+        }
         return raw ? JSON.parse(raw) : {};
       } catch {
         return {};
