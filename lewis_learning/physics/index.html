@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GCSE Physics Benchmark — Lewis</title>
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --surface: #141b24;
+      --surface-2: #1a2430;
+      --border: #2a3644;
+      --text: #e8edf2;
+      --muted: #8fa3b8;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.12);
+      --accent-glow: rgba(56, 189, 248, 0.35);
+      --success: #34d399;
+      --danger: #f87171;
+      --warn: #fbbf24;
+      --radius: 14px;
+      --shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(56, 189, 248, 0.14), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(52, 211, 153, 0.06), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 3rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid rgba(61, 158, 255, 0.25);
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: clamp(1.9rem, 5vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.6rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 32rem;
+      margin: 0 auto 1.25rem;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .meta span {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+    }
+
+    .instructions {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .instructions strong { color: var(--text); }
+
+    .episode-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .episode {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.35rem;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .episode:hover {
+      border-color: rgba(61, 158, 255, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .episode.playing {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-glow), var(--shadow);
+    }
+
+    .episode.locked {
+      opacity: 0.72;
+    }
+
+    .episode.locked:hover {
+      transform: none;
+      border-color: var(--border);
+    }
+
+    .ep-locked-banner {
+      display: none;
+      margin-top: 0.85rem;
+      padding: 0.7rem 0.85rem;
+      border-radius: 9px;
+      background: rgba(251, 191, 36, 0.08);
+      border: 1px solid rgba(251, 191, 36, 0.25);
+      color: var(--warn);
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .episode.locked .ep-locked-banner { display: block; }
+
+    .episode.locked .quiz-section { display: none; }
+
+    button:disabled, .btn.disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .btn-play:disabled {
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .episode-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .ep-num {
+      flex-shrink: 0;
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 10px;
+      border: 1px solid rgba(61, 158, 255, 0.2);
+    }
+
+    .ep-num.intro { background: rgba(52, 211, 153, 0.12); color: var(--success); border-color: rgba(52, 211, 153, 0.25); }
+
+    .ep-info { flex: 1; min-width: 0; }
+
+    .ep-title {
+      font-size: 1.1rem;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .ep-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .ep-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-top: 1rem;
+    }
+
+    button, .btn {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      border-radius: 9px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    button:active, .btn:active { transform: scale(0.97); }
+
+    .btn-play {
+      background: var(--accent);
+      color: #061018;
+    }
+
+    .btn-play:hover { background: #5aafff; }
+
+    .btn-play.playing {
+      background: var(--surface-2);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    .btn-download {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-download:hover {
+      background: #223040;
+      border-color: rgba(61, 158, 255, 0.3);
+    }
+
+    .btn-script {
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-script:hover:not(:disabled) {
+      background: #223040;
+      color: var(--text);
+      border-color: rgba(61, 158, 255, 0.3);
+    }
+
+    .btn-script.open {
+      color: var(--accent);
+      border-color: rgba(61, 158, 255, 0.35);
+      background: var(--accent-soft);
+    }
+
+    .script-panel {
+      display: none;
+      margin-top: 0.85rem;
+      padding: 1rem 1.1rem;
+      border-radius: 10px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      max-height: 22rem;
+      overflow-y: auto;
+    }
+
+    .script-panel.open { display: block; }
+
+    .script-panel.loading {
+      display: block;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .script-body {
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .script-body p { margin-bottom: 0.85rem; }
+    .script-body p:last-child { margin-bottom: 0; }
+
+    .episode.locked .script-panel,
+    .episode .script-panel:not(.open) { display: none; }
+
+    audio {
+      display: none;
+    }
+
+    .progress-wrap {
+      margin-top: 0.75rem;
+      display: none;
+    }
+
+    .episode.playing .progress-wrap { display: block; }
+
+    .progress-bar {
+      height: 4px;
+      background: var(--surface-2);
+      border-radius: 2px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      border-radius: 2px;
+      transition: width 0.1s linear;
+    }
+
+    .time {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.35rem;
+    }
+
+    .quiz-section {
+      margin-top: 1.25rem;
+      padding-top: 1.15rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .quiz-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .quiz-title {
+      font-size: 0.82rem;
+      font-weight: 650;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .quiz-hint {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+
+    .quiz-question {
+      margin-bottom: 1rem;
+    }
+
+    .quiz-question:last-child { margin-bottom: 0; }
+
+    .quiz-q-text {
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 0.45rem;
+      line-height: 1.4;
+    }
+
+    .quiz-q-type {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-left: 0.35rem;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .quiz-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 0.88rem;
+      color: var(--muted);
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+
+    .quiz-option:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .quiz-option:has(input:checked) {
+      background: var(--accent-soft);
+      border-color: rgba(61, 158, 255, 0.3);
+      color: var(--text);
+    }
+
+    .quiz-option input {
+      margin-top: 0.15rem;
+      flex-shrink: 0;
+      accent-color: var(--accent);
+    }
+
+    .quiz-option.correct-pick {
+      background: rgba(52, 211, 153, 0.1);
+      border-color: rgba(52, 211, 153, 0.35);
+      color: var(--text);
+    }
+
+    .quiz-option.wrong-pick {
+      background: rgba(248, 113, 113, 0.1);
+      border-color: rgba(248, 113, 113, 0.35);
+      color: var(--text);
+    }
+
+    .quiz-option.missed-pick {
+      border-color: rgba(52, 211, 153, 0.25);
+      border-style: dashed;
+    }
+
+    .quiz-question.locked .quiz-option {
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .quiz-question.locked .quiz-option:hover {
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .quiz-question.locked .quiz-option.correct-pick:hover,
+    .quiz-question.locked .quiz-option.wrong-pick:hover,
+    .quiz-question.locked .quiz-option.missed-pick:hover {
+      color: var(--text);
+    }
+
+    .quiz-feedback {
+      margin-top: 0.4rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .quiz-feedback.correct { color: var(--success); }
+    .quiz-feedback.incorrect { color: var(--danger); }
+
+    .quiz-footer {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-lock {
+      background: var(--success);
+      color: #042f1e;
+    }
+
+    .btn-lock:hover:not(:disabled) { background: #4ade80; }
+
+    .btn-lock:disabled {
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      opacity: 1;
+    }
+
+    .quiz-results {
+      flex: 1;
+      min-width: 12rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .quiz-results strong { color: var(--text); }
+
+    .quiz-results .score-pass { color: var(--success); }
+    .quiz-results .score-miss { color: var(--warn); }
+
+    .btn-copy {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      padding: 0.45rem 0.8rem;
+    }
+
+    .btn-copy:hover {
+      background: #223040;
+      border-color: rgba(61, 158, 255, 0.3);
+    }
+
+    .btn-copy.copied {
+      border-color: rgba(52, 211, 153, 0.4);
+      color: var(--success);
+    }
+
+    .quiz-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .quiz-toolbar p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      max-width: 26rem;
+    }
+
+    .quiz-toolbar strong { color: var(--text); }
+
+    .quiz-toolbar-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .btn-reset {
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      padding: 0.45rem 0.8rem;
+    }
+
+    .btn-reset:hover {
+      background: #223040;
+      border-color: rgba(248, 113, 113, 0.35);
+      color: var(--danger);
+    }
+
+    .progress-transfer {
+      display: none;
+      margin-bottom: 1.5rem;
+      padding: 1rem 1.1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .progress-transfer.open { display: block; }
+
+    .progress-transfer label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-transfer textarea {
+      width: 100%;
+      min-height: 5.5rem;
+      resize: vertical;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      padding: 0.65rem 0.75rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .progress-transfer-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .copy-toast {
+      position: fixed;
+      bottom: 1.25rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: var(--surface-2);
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      color: var(--success);
+      padding: 0.65rem 1.1rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      z-index: 100;
+      transition: transform 0.25s ease;
+      pointer-events: none;
+    }
+
+    .copy-toast.show { transform: translateX(-50%) translateY(0); }
+
+    footer {
+      text-align: center;
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    footer strong { color: var(--text); }
+
+    @media (max-width: 480px) {
+      .wrap { padding: 1.5rem 1rem 2.5rem; }
+      .episode { padding: 1.1rem; }
+      .ep-actions { flex-direction: column; }
+      .ep-actions button, .ep-actions .btn { justify-content: center; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="badge">GCSE physics benchmark</div>
+      <h1>Physics Rapid Recall</h1>
+      <p class="subtitle">Ten ninety-second bursts across the full GCSE physics syllabus — listen, lock in, benchmark where you are today.</p>
+      <div class="meta">
+        <span>~15 minutes total</span>
+        <span>10 rapid episodes</span>
+        <span>60 multiple-choice questions</span>
+      </div>
+    </header>
+
+    <div class="instructions">
+      <strong>How to use this:</strong> Rapid refresher and test. Listen to each ~90-second burst, answer the multiple-choice recall check, and press <strong>Lock in answers</strong>. The next episode unlocks when you lock in. Script unlocks after lock-in. This benchmarks your GCSE physics recall so we can design the next lesson.
+    </div>
+
+    <div class="quiz-toolbar">
+      <p><strong>Recall check:</strong> Answer each quiz, lock in to see results, then the next episode unlocks. Progress saves on this device. To continue on another phone or computer, use <strong>Export</strong> here and <strong>Import</strong> there.</p>
+      <div class="quiz-toolbar-actions">
+        <button type="button" class="btn-copy" id="copy-all">Copy all Q&amp;A</button>
+        <button type="button" class="btn-copy" id="export-progress">Export progress</button>
+        <button type="button" class="btn-copy" id="import-progress">Import progress</button>
+        <button type="button" class="btn-reset" id="clear-session">Reset progress</button>
+      </div>
+    </div>
+
+    <div class="progress-transfer" id="import-panel">
+      <label for="import-code">Paste your progress code</label>
+      <textarea id="import-code" placeholder="Paste the code from Export progress…"></textarea>
+      <div class="progress-transfer-actions">
+        <button type="button" class="btn-lock" id="import-confirm">Restore progress</button>
+        <button type="button" class="btn-reset" id="import-cancel">Cancel</button>
+      </div>
+    </div>
+
+    <div class="episode-list" id="episodes"></div>
+
+    <footer>
+      GCSE physics benchmark for <strong>Lewis</strong>.<br>
+      Lock in, copy your scores, tell Michael how you did.
+    </footer>
+  </div>
+
+  <div class="copy-toast" id="copy-toast" aria-live="polite">Copied to clipboard</div>
+
+  <script>
+    // Upload MP3s to a public host, then paste the URL prefix here (no trailing slash).
+    // Leave "" to use the local audio/ folder while testing on your machine.
+    //
+    // Internet Archive:  https://archive.org/download/YOUR-ITEM-ID
+    // GitHub Release:    https://github.com/YOUR_USER/brain-os-audio/releases/download/v1
+    // Cloudflare R2:     https://pub-xxxxxxxx.r2.dev/brain-os
+    const AUDIO_BASE_URL = "";
+
+    function pageBaseUrl() {
+      const { origin, pathname } = window.location;
+      if (pathname.endsWith("/")) return origin + pathname;
+      const last = pathname.split("/").pop() || "";
+      if (/\.[a-z0-9]+$/i.test(last)) return origin + pathname.replace(/[^/]+$/, "");
+      return origin + pathname + "/";
+    }
+
+    function pageAssetUrl(relativePath) {
+      return new URL(relativePath.replace(/^\//, ""), pageBaseUrl()).href;
+    }
+
+    function audioUrl(filename) {
+      const base = AUDIO_BASE_URL.trim().replace(/\/$/, "");
+      return base ? base + "/" + filename : pageAssetUrl("audio/" + filename);
+    }
+
+    const STORAGE_KEY = "lewis-physics-benchmark-answers";
+    const LOCKED_KEY = "lewis-physics-benchmark-locked";
+    const PROGRESS_PREFIX = "lewisphys1:";
+
+    const SCRIPTS = {
+      "ep1": "Physics benchmark, episode one: energy. Rapid fire.\n\nEnergy is stored in different ways: kinetic, gravitational, elastic, thermal, chemical, magnetic, electrostatic, and nuclear. Name the store before the transfer happens.\n\nEnergy is conserved. It is never created or destroyed — only shifted between stores or dissipated to the surroundings, often as wasted thermal energy.\n\nEfficiency equals useful energy output divided by total energy input. Multiply by a hundred for a percentage. Higher efficiency means less wasted energy.\n\nPower is the rate of energy transfer. Power equals energy divided by time. In electricity, power also equals current times potential difference: P equals I V.\n\nWhen you heat a substance, the energy needed depends on mass, specific heat capacity, and temperature change: E equals m c delta theta.\n\nRenewable resources replenish quickly: solar, wind, hydro, waves, tides, geothermal, and bio-fuel. Non-renewable resources run out: coal, oil, natural gas, and nuclear fuel rods.\n\nSankey diagrams show energy flow. The input bar is one hundred percent. Useful output and wasted energy must add up to the full input.\n\nFor your recall check: think efficiency formula, power equations, and one renewable versus one non-renewable source. Lock in when ready.",
+      "ep2": "Episode two: electricity. Rapid fire.\n\nElectric current is the rate of flow of charge. Charge is measured in coulombs. Current is measured in amperes. Convention: current flows from positive to negative.\n\nPotential difference, or voltage, is the energy transferred per coulomb of charge. Unit: the volt. V equals E divided by Q.\n\nResistance opposes current. Ohm's law: V equals I R. Resistance is measured in ohms.\n\nIn a series circuit: current is the same everywhere; potential differences add up; resistance adds up. One break stops the whole circuit.\n\nIn a parallel circuit: potential difference is the same across each branch; current splits; total current is the sum of branch currents. Resistance of parallel branches gives a smaller total resistance.\n\nElectrical power: P equals I V. Also P equals I squared R, and P equals V squared over R.\n\nUK mains supply is about two hundred thirty volts alternating current. Frequency fifty hertz. Live wire brown, neutral blue, earth green and yellow.\n\nStatic electricity: like charges repel, unlike attract. Electrons transfer to create charge imbalance.\n\nFor your recall check: series rules, parallel rules, and P equals I V. Lock in when ready.",
+      "ep3": "Episode three: particle model of matter. Rapid fire.\n\nDensity equals mass divided by volume. Unit kilograms per cubic metre. Same material, same density.\n\nSolids: particles close, fixed positions, vibrate. Liquids: close, move past each other. Gases: far apart, random rapid motion.\n\nHeating increases internal energy — the total kinetic and potential energy of all particles. Temperature measures average kinetic energy.\n\nSpecific heat capacity: the energy needed to raise one kilogram by one degree Celsius. E equals m c delta theta.\n\nChanging state at constant temperature uses latent heat, not temperature change. Energy breaks or makes bonds between particles.\n\nGas pressure is caused by particle collisions with walls. Increasing temperature at fixed volume increases pressure. Increasing volume at fixed temperature decreases pressure.\n\nWhen you compress a gas quickly, work is done on it — temperature can rise. When a gas expands, it does work — temperature can fall.\n\nFor your recall check: density formula, states of matter, and what internal energy means. Lock in when ready.",
+      "ep4": "Episode four: atomic structure and radioactivity. Rapid fire.\n\nAtoms: proton number defines the element; nucleon number is protons plus neutrons. Isotopes: same protons, different neutrons.\n\nRutherford scattering showed a tiny, dense, positively charged nucleus. Most of the atom is empty space.\n\nAlpha radiation: helium nucleus, two protons two neutrons. Charge plus two. Heaviest, most ionising, least penetrating — stopped by paper or skin.\n\nBeta minus: neutron becomes proton and electron. Medium ionisation. Stopped by thin aluminium.\n\nGamma: electromagnetic wave. Least ionising, most penetrating — reduced by thick lead or concrete.\n\nRadioactive decay is random for individual nuclei. Half-life: time for half the nuclei in a sample to decay, or half the activity.\n\nNuclear equations must balance nucleon number and proton number on both sides.\n\nFission: large nucleus splits, releases energy, can trigger chain reactions. Fusion: small nuclei join — happens in stars, hard to achieve on Earth.\n\nUses: medicine, sterilisation, smoke alarms, power. Hazards: ionisation damage to living tissue.\n\nFor your recall check: alpha, beta, gamma differences, and half-life meaning. Lock in when ready.",
+      "ep5": "Episode five: forces and motion. Rapid fire.\n\nSpeed equals distance divided by time. Velocity is speed with direction. Acceleration is change of velocity per unit time. a equals delta v over t.\n\nDistance-time graphs: gradient equals speed. Velocity-time graphs: gradient equals acceleration; area under equals distance travelled.\n\nNewton's first law: balanced forces mean constant velocity, including zero — stay at rest or steady speed.\n\nNewton's second law: resultant force F equals m a. Unbalanced force changes velocity.\n\nNewton's third law: equal and opposite forces on different objects — they do not cancel on one object.\n\nFriction and air resistance oppose motion. Terminal velocity: accelerating object reaches speed where drag equals weight — no further acceleration.\n\nThinking distance plus braking distance equals stopping distance. Speed increases thinking distance. Poor conditions increase braking distance.\n\nResultant force on two forces at right angles: use Pythagoras. Vector quantities have magnitude and direction; scalars have magnitude only.\n\nFor your recall check: F equals m a, stopping distance parts, and what gradient on a velocity-time graph shows. Lock in when ready.",
+      "ep6": "Episode six: weight, pressure, and moments. Rapid fire.\n\nMass is kilograms — amount of matter. Weight is the force of gravity. W equals m g. Weight is newtons. On Earth, g is about nine point eight metres per second squared.\n\nA free-body diagram shows all forces on one object as arrows from a point.\n\nPressure equals force divided by area: p equals F over A. Unit pascal. Same force, smaller area, greater pressure.\n\nMoments turn objects. Moment equals force times perpendicular distance from pivot. Unit newton-metre.\n\nPrinciple of moments: clockwise moments equal anticlockwise moments when balanced.\n\nHooke's law: force proportional to extension up to the limit of proportionality. F equals k e. Beyond elastic limit, spring may not return.\n\nCentre of mass: point where entire weight appears to act. Stable objects: low centre of mass, wide base.\n\nHydraulics: pressure transmitted through liquid. Same pressure throughout — large force possible with bigger piston area.\n\nFor your recall check: W equals m g, moment formula, and pressure formula. Lock in when ready.",
+      "ep7": "Episode seven: waves. Rapid fire.\n\nWaves transfer energy without transferring matter. Transverse: oscillations perpendicular to direction — light, EM waves, water ripples on surface. Longitudinal: oscillations parallel — sound, seismic P-waves.\n\nWave speed equation: v equals f lambda. Frequency in hertz, wavelength in metres, speed in metres per second.\n\nAmplitude: maximum displacement — relates to loudness or brightness. Period T is time for one wave. f equals one over T.\n\nElectromagnetic spectrum order: radio, microwave, infrared, visible, ultraviolet, X-ray, gamma. All travel at same speed in vacuum: three times ten to the eight metres per second.\n\nUses and hazards: microwaves heat food; infrared thermal imaging; UV sterilisation but skin damage; X-rays and gamma for medical imaging and cancer treatment but ionising hazard.\n\nReflection: angle of incidence equals angle of reflection. Refraction: wave speed change at boundary — ray bends.\n\nSeismic waves: P-waves longitudinal, faster, through solids and liquids. S-waves transverse, slower, solids only. Helps infer Earth structure.\n\nFor your recall check: v equals f lambda, transverse versus longitudinal, and EM spectrum order. Lock in when ready.",
+      "ep8": "Episode eight: light and sound. Rapid fire.\n\nSpecular reflection: smooth surface, clear image. Diffuse reflection: rough surface, scatters light.\n\nConverging lens thicker in middle — can form real or virtual images depending on object distance. Diverging lens always gives virtual, upright, diminished image.\n\nRay diagrams: parallel ray through principal focus after lens; ray through centre undeviated.\n\nCritical angle: light from denser to less dense medium — total internal reflection when angle exceeds critical angle. Used in optical fibres.\n\nSound needs a medium — cannot travel in vacuum. Pitch linked to frequency. Loudness linked to amplitude.\n\nHuman hearing roughly twenty hertz to twenty kilohertz. Ultrasound above twenty kilohertz — sonar, foetal scanning, cleaning.\n\nEcho: reflected sound. Distance equals speed times time divided by two.\n\nColour: objects absorb some wavelengths, reflect others. White reflects all; black absorbs most.\n\nRed shift: light from distant galaxies shifted to longer wavelengths — suggests universe expansion.\n\nFor your recall check: lens image types, ultrasound uses, and why sound needs a medium. Lock in when ready.",
+      "ep9": "Episode nine: magnetism and electromagnetism. Rapid fire.\n\nMagnetic field lines go from north to south outside a magnet. Closer lines mean stronger field. Like poles repel; unlike attract.\n\nCurrent in a wire produces a magnetic field. Electromagnet: coil with iron core, current switched on and off — used in motors, relays, scrap yard cranes.\n\nMotor effect: force on current in magnetic field. Fleming's left-hand rule: thumb force, first finger field, second finger current.\n\nElectromagnetic induction: changing magnetic field through coil induces potential difference. Basis of generators and microphones.\n\nGenerator: coil rotates in field — induces alternating p.d. Dynamos and power stations use this.\n\nTransformer: two coils on shared core. Primary and secondary. Step-up increases voltage, decreases current; step-down the reverse.\n\nIdeal transformer: Vp over Vs equals Np over Ns. Power in equals power out for one hundred percent efficiency: Vp Ip equals Vs Is.\n\nNational grid: step up voltage for transmission to reduce current and reduce energy wasted as heat in cables; step down for homes.\n\nFor your recall check: motor effect, transformer equation, and why high voltage helps the grid. Lock in when ready.",
+      "ep10": "Episode ten: space physics and mixed recall. Rapid fire.\n\nSolar system: Sun at centre. Planets orbit due to gravitational force providing centripetal acceleration. Orbits are elliptical.\n\nGeostationary orbit: twenty-four hour period, above equator, used for communications satellites. Low Earth orbit: lower altitude, shorter period, used for imaging and ISS.\n\nWeightlessness in orbit: astronaut and spacecraft fall together — continuous free fall around Earth.\n\nLife cycle of star: nebula to main sequence; small stars end as white dwarf; massive stars become red supergiant, supernova, then neutron star or black hole.\n\nRed shift of distant galaxies supports expanding universe. Big Bang theory models origin.\n\nQuick mixed recall: Ohm's law V equals I R. Efficiency useful over total. Half-life halves activity. F equals m a. Density m over V. Alpha stopped by paper. Gamma needs thick lead.\n\nYou have now swept the GCSE physics syllabus in ten rapid bursts. Your quiz scores benchmark where you are today — use them to target the next lesson.\n\nLock in your final recall check. Tell Michael your total score when done.",
+    };
+
+
+const CORRECT = {
+      "ep1-1": "Useful energy output ÷ total energy input",
+      "ep1-2": "P = I × V",
+      "ep1-3": ["Solar", "Wind"],
+      "ep1-4": "Energy cannot be created or destroyed — only transferred",
+      "ep1-5": "Specific heat capacity (E = m c Δθ)",
+      "ep1-6": "Total energy input",
+      "ep2-1": "V = I × R",
+      "ep2-2": "The same everywhere",
+      "ep2-3": ["About 230 V", "Alternating current (AC)", "50 Hz"],
+      "ep2-4": "The same across each branch",
+      "ep2-5": "P = I × V",
+      "ep2-6": "They repel",
+      "ep3-1": "Mass ÷ volume",
+      "ep3-2": "Far apart with random rapid motion",
+      "ep3-3": ["Kinetic energy of particles", "Potential energy of particles"],
+      "ep3-4": "E = m c Δθ",
+      "ep3-5": "Energy changes state without temperature change (latent heat)",
+      "ep3-6": "Collisions of particles with the container walls",
+      "ep4-1": "Same number of protons, different number of neutrons",
+      "ep4-2": "Stopped by paper or skin",
+      "ep4-3": ["Most penetrating", "Least ionising"],
+      "ep4-4": "Time for half the radioactive nuclei (or activity) to decay",
+      "ep4-5": "A neutron changes into a proton and an electron",
+      "ep4-6": "A large nucleus splits into smaller nuclei",
+      "ep5-1": "F = m × a",
+      "ep5-2": "Acceleration",
+      "ep5-3": "Constant velocity (including zero) when forces are balanced",
+      "ep5-4": "Thinking distance + braking distance",
+      "ep5-5": "Equal in size, opposite in direction, on different objects",
+      "ep5-6": "Air resistance (drag) equals weight — no net force",
+      "ep6-1": "W = m × g",
+      "ep6-2": "p = F ÷ A",
+      "ep6-3": "Force × perpendicular distance from pivot",
+      "ep6-4": "Total clockwise moments = total anticlockwise moments",
+      "ep6-5": "F = k × e (up to the limit of proportionality)",
+      "ep6-6": "Lower centre of mass and wider base",
+      "ep7-1": "v = f × λ",
+      "ep7-2": "Oscillations perpendicular to wave travel direction",
+      "ep7-3": ["Microwaves", "Visible light", "Ultraviolet", "Gamma rays"],
+      "ep7-4": "Longitudinal",
+      "ep7-5": "3.0 × 10⁸ m/s",
+      "ep7-6": "Longitudinal",
+      "ep8-1": "Sound cannot travel in a vacuum — needs a medium",
+      "ep8-2": "Frequencies above 20 000 Hz",
+      "ep8-3": "Always virtual, upright, and diminished",
+      "ep8-4": "Angle of incidence exceeds the critical angle",
+      "ep8-5": "Distance = (speed × time) ÷ 2",
+      "ep8-6": "Wavelength increases / shifts towards red",
+      "ep9-1": "Fleming's left-hand rule (motor effect)",
+      "ep9-2": "Vₚ / Vₛ = Nₚ / Nₛ",
+      "ep9-3": "A changing magnetic field through a coil induces a p.d.",
+      "ep9-4": "Increases transmission voltage and reduces current — less energy wasted as heat",
+      "ep9-5": "Coil of wire around an iron core with current",
+      "ep9-6": "Step-up transformers at power stations; step-down near homes",
+      "ep10-1": "Orbital period of 24 hours above the equator",
+      "ep10-2": ["The astronaut and spacecraft fall together around Earth", "It is continuous free fall"],
+      "ep10-3": "The universe is expanding",
+      "ep10-4": "V = I × R",
+      "ep10-5": "Neutron star or black hole (after a supernova)",
+      "ep10-6": "Useful energy output ÷ total energy input"
+    };
+
+    const episodes = [
+      {
+        id: "ep1", num: 1, file: "01-energy.mp3", script: "1-energy.txt",
+        title: "Energy",
+        desc: "Stores, transfers, efficiency, power, and energy resources.",
+        quiz: [
+          { id: "ep1-1", type: "single", text: "Efficiency is defined as…", options: ["Useful energy output ÷ total energy input", "Total energy input ÷ useful output", "Useful output − wasted energy", "Useful output × total input"] },
+          { id: "ep1-2", type: "single", text: "Electrical power is also written as…", options: ["P = I × V", "P = I ÷ V", "P = V ÷ I", "P = I + V"] },
+          { id: "ep1-3", type: "multiple", text: "Which are renewable energy resources? (Select all that apply)", options: ["Solar", "Wind", "Coal", "Natural gas"] },
+          { id: "ep1-4", type: "single", text: "The law of conservation of energy means…", options: ["Energy cannot be created or destroyed — only transferred", "Energy is always lost completely", "Only thermal energy is conserved", "Energy is created in power stations"] },
+          { id: "ep1-5", type: "single", text: "E = m c Δθ involves…", options: ["Specific heat capacity (E = m c Δθ)", "Latent heat of fusion only", "Electrical power", "Density"] },
+          { id: "ep1-6", type: "single", text: "On a Sankey diagram, useful plus wasted energy equals…", options: ["Total energy input", "Useful output only", "Wasted energy only", "Zero"] }
+        ]
+      },
+      {
+        id: "ep2", num: 2, file: "02-electricity.mp3", script: "2-electricity.txt",
+        title: "Electricity",
+        desc: "Current, voltage, resistance, circuits, and mains electricity.",
+        quiz: [
+          { id: "ep2-1", type: "single", text: "Ohm's law is…", options: ["V = I × R", "V = I ÷ R", "V = I + R", "V = R ÷ I"] },
+          { id: "ep2-2", type: "single", text: "In a series circuit, the current is…", options: ["The same everywhere", "Split between components", "Zero at the battery", "Different in each wire colour"] },
+          { id: "ep2-3", type: "multiple", text: "UK mains electricity is… (Select all that apply)", options: ["About 230 V", "Alternating current (AC)", "50 Hz", "12 V direct current only"] },
+          { id: "ep2-4", type: "single", text: "In a parallel circuit, the potential difference across each branch is…", options: ["The same across each branch", "Shared equally as fractions", "Always zero", "Added to give supply voltage"] },
+          { id: "ep2-5", type: "single", text: "Power in an electrical circuit can be calculated with…", options: ["P = I × V", "P = I ÷ V", "P = V − I", "P = R × I only with no V"] },
+          { id: "ep2-6", type: "single", text: "Two like electric charges…", options: ["They repel", "They attract", "Have no effect", "Cancel to zero charge always"] }
+        ]
+      },
+      {
+        id: "ep3", num: 3, file: "03-particle-model.mp3", script: "3-particle-model.txt",
+        title: "Particle Model",
+        desc: "Density, states of matter, specific heat, and gas pressure.",
+        quiz: [
+          { id: "ep3-1", type: "single", text: "Density is calculated as…", options: ["Mass ÷ volume", "Volume ÷ mass", "Mass × volume", "Mass + volume"] },
+          { id: "ep3-2", type: "single", text: "Gas particles are best described as…", options: ["Far apart with random rapid motion", "Fixed in a lattice vibrating only", "Touching in rows sliding past", "Stationary with no kinetic energy"] },
+          { id: "ep3-3", type: "multiple", text: "Internal energy is the sum of… (Select all that apply)", options: ["Kinetic energy of particles", "Potential energy of particles", "Only chemical bond energy in fuels", "Only gravitational energy"] },
+          { id: "ep3-4", type: "single", text: "The equation E = m c Δθ is used for…", options: ["E = m c Δθ", "Latent heat with no temperature change", "Wave speed", "Electrical resistance"] },
+          { id: "ep3-5", type: "single", text: "During a change of state at constant temperature…", options: ["Energy changes state without temperature change (latent heat)", "Temperature always rises quickly", "No energy is transferred", "Density always halves"] },
+          { id: "ep3-6", type: "single", text: "Gas pressure is caused by…", options: ["Collisions of particles with the container walls", "Gravity pulling particles to the base only", "Magnetic fields in the gas", "Particles expanding in size"] }
+        ]
+      },
+      {
+        id: "ep4", num: 4, file: "04-atomic-radioactivity.mp3", script: "4-atomic-radioactivity.txt",
+        title: "Atomic Structure & Radioactivity",
+        desc: "Isotopes, radiation types, half-life, and nuclear changes.",
+        quiz: [
+          { id: "ep4-1", type: "single", text: "Isotopes of an element have…", options: ["Same number of protons, different number of neutrons", "Same number of neutrons, different protons", "No electrons", "Identical mass numbers always"] },
+          { id: "ep4-2", type: "single", text: "Alpha radiation is stopped by…", options: ["Stopped by paper or skin", "Stopped only by thick lead", "Stopped by air only — never solids", "Nothing — infinite penetration"] },
+          { id: "ep4-3", type: "multiple", text: "Gamma radiation is… (Select all that apply)", options: ["Most penetrating", "Least ionising", "A helium nucleus", "Stopped easily by paper"] },
+          { id: "ep4-4", type: "single", text: "Half-life is…", options: ["Time for half the radioactive nuclei (or activity) to decay", "Half the time for all nuclei to decay", "Twice the decay constant", "The age of a radioactive sample"] },
+          { id: "ep4-5", type: "single", text: "Beta-minus decay involves…", options: ["A neutron changes into a proton and an electron", "A proton becomes two neutrons", "Emission of a helium nucleus", "Only gamma emission"] },
+          { id: "ep4-6", type: "single", text: "Nuclear fission is when…", options: ["A large nucleus splits into smaller nuclei", "Small nuclei fuse into a larger nucleus", "Electrons are shared between atoms", "An atom gains one neutron only"] }
+        ]
+      },
+      {
+        id: "ep5", num: 5, file: "05-forces-motion.mp3", script: "5-forces-motion.txt",
+        title: "Forces & Motion",
+        desc: "Speed, acceleration, Newton's laws, graphs, and stopping.",
+        quiz: [
+          { id: "ep5-1", type: "single", text: "Newton's second law is…", options: ["F = m × a", "F = m ÷ a", "F = m + a", "F = a ÷ m only when at rest"] },
+          { id: "ep5-2", type: "single", text: "On a velocity–time graph, the gradient represents…", options: ["Acceleration", "Distance travelled", "Speed only with no direction", "Mass of the object"] },
+          { id: "ep5-3", type: "single", text: "Newton's first law says an object continues at…", options: ["Constant velocity (including zero) when forces are balanced", "Always accelerating", "Rest only — never steady motion", "Maximum speed always"] },
+          { id: "ep5-4", type: "single", text: "Stopping distance equals…", options: ["Thinking distance + braking distance", "Braking distance only", "Thinking distance only", "Reaction time × mass"] },
+          { id: "ep5-5", type: "single", text: "Newton's third law pairs are…", options: ["Equal in size, opposite in direction, on different objects", "Unequal forces on the same object", "Only for contact forces", "Only when objects are stationary"] },
+          { id: "ep5-6", type: "single", text: "Terminal velocity is reached when…", options: ["Air resistance (drag) equals weight — no net force", "Weight becomes zero", "Driving force is maximum", "Friction is removed completely"] }
+        ]
+      },
+      {
+        id: "ep6", num: 6, file: "06-forces-pressure.mp3", script: "6-forces-pressure.txt",
+        title: "Weight, Pressure & Moments",
+        desc: "Weight, pressure, moments, springs, and stability.",
+        quiz: [
+          { id: "ep6-1", type: "single", text: "Weight is calculated as…", options: ["W = m × g", "W = m ÷ g", "W = m + g", "W = g only"] },
+          { id: "ep6-2", type: "single", text: "Pressure is…", options: ["p = F ÷ A", "p = F × A", "p = A ÷ F", "p = F + A"] },
+          { id: "ep6-3", type: "single", text: "Moment of a force = …", options: ["Force × perpendicular distance from pivot", "Force ÷ distance", "Mass × acceleration only", "Pressure × area"] },
+          { id: "ep6-4", type: "single", text: "A body in equilibrium on a pivot has…", options: ["Total clockwise moments = total anticlockwise moments", "No forces acting", "Only weight acting", "Moments always zero without mass"] },
+          { id: "ep6-5", type: "single", text: "Hooke's law states (within elastic limit)…", options: ["F = k × e (up to the limit of proportionality)", "F is independent of extension", "Extension is always permanent", "k decreases as extension increases linearly forever"] },
+          { id: "ep6-6", type: "single", text: "An object is more stable when it has…", options: ["Lower centre of mass and wider base", "Higher centre of mass and narrow base", "No friction", "Maximum top-heavy mass"] }
+        ]
+      },
+      {
+        id: "ep7", num: 7, file: "07-waves.mp3", script: "7-waves.txt",
+        title: "Waves",
+        desc: "Wave properties, EM spectrum, and seismic waves.",
+        quiz: [
+          { id: "ep7-1", type: "single", text: "The wave equation is…", options: ["v = f × λ", "v = f ÷ λ", "v = λ ÷ f only", "v = f + λ"] },
+          { id: "ep7-2", type: "single", text: "A transverse wave has oscillations…", options: ["Oscillations perpendicular to wave travel direction", "Parallel to wave travel direction", "With no amplitude", "Only in solids never fluids"] },
+          { id: "ep7-3", type: "multiple", text: "Which are electromagnetic waves? (Select all that apply)", options: ["Microwaves", "Visible light", "Ultraviolet", "Sound waves", "Water ripples on a pond", "Gamma rays"] },
+          { id: "ep7-4", type: "single", text: "Sound waves are…", options: ["Longitudinal", "Transverse", "Electromagnetic", "Only visible light"] },
+          { id: "ep7-5", type: "single", text: "All EM waves travel in a vacuum at…", options: ["3.0 × 10⁸ m/s", "340 m/s", "3.0 × 10⁶ m/s", "Speed depends on frequency in vacuum"] },
+          { id: "ep7-6", type: "single", text: "P-waves (primary seismic waves) are…", options: ["Longitudinal", "Transverse only", "Surface waves only", "Electromagnetic"] }
+        ]
+      },
+      {
+        id: "ep8", num: 8, file: "08-light-sound.mp3", script: "8-light-sound.txt",
+        title: "Light & Sound",
+        desc: "Lenses, reflection, refraction, sound, and red shift.",
+        quiz: [
+          { id: "ep8-1", type: "single", text: "Sound cannot travel through…", options: ["Sound cannot travel in a vacuum — needs a medium", "Water only", "Solids only", "Air but travels in vacuum"] },
+          { id: "ep8-2", type: "single", text: "Ultrasound is defined as sound with…", options: ["Frequencies above 20 000 Hz", "Frequencies below 20 Hz", "No frequency — only amplitude", "Exactly 440 Hz"] },
+          { id: "ep8-3", type: "single", text: "A diverging lens always produces an image that is…", options: ["Always virtual, upright, and diminished", "Real and inverted", "Always magnified", "On the opposite side always real"] },
+          { id: "ep8-4", type: "single", text: "Total internal reflection happens when…", options: ["Angle of incidence exceeds the critical angle", "Light enters a denser medium at any angle", "Light is absorbed completely", "Angle equals zero only"] },
+          { id: "ep8-5", type: "single", text: "To find distance from an echo use…", options: ["Distance = (speed × time) ÷ 2", "Distance = speed × time with no division", "Distance = time ÷ speed", "Distance = speed + time"] },
+          { id: "ep8-6", type: "single", text: "Red shift from distant galaxies indicates…", options: ["Wavelength increases / shifts towards red", "Galaxies are moving closer", "Light slows below c in space", "Universe is contracting"] }
+        ]
+      },
+      {
+        id: "ep9", num: 9, file: "09-magnetism.mp3", script: "9-magnetism.txt",
+        title: "Magnetism & Electromagnetism",
+        desc: "Motors, generators, transformers, and the national grid.",
+        quiz: [
+          { id: "ep9-1", type: "single", text: "The force on a current-carrying wire in a magnetic field uses…", options: ["Fleming's left-hand rule (motor effect)", "Fleming's right-hand rule for motors", "Ohm's law only", "Hooke's law"] },
+          { id: "ep9-2", type: "single", text: "For an ideal transformer…", options: ["Vₚ / Vₛ = Nₚ / Nₛ", "Vₚ = Nₚ only with no secondary", "Power always doubles", "Current is the same in both coils"] },
+          { id: "ep9-3", type: "single", text: "Electromagnetic induction occurs when…", options: ["A changing magnetic field through a coil induces a p.d.", "A constant field always induces maximum current", "Only permanent magnets without coils", "Only when wire is stationary"] },
+          { id: "ep9-4", type: "single", text: "High-voltage transmission on the national grid helps because…", options: ["Increases transmission voltage and reduces current — less energy wasted as heat", "Increases current in cables", "Removes the need for transformers", "Makes resistance zero in cables"] },
+          { id: "ep9-5", type: "single", text: "An electromagnet is typically…", options: ["Coil of wire around an iron core with current", "A permanent bar magnet only", "A battery with no coil", "An uncharged metal rod"] },
+          { id: "ep9-6", type: "single", text: "On the national grid, step-up transformers are used…", options: ["Step-up transformers at power stations; step-down near homes", "Only in homes before appliances", "Only underground with no overhead lines", "To reduce voltage for long cables"] }
+        ]
+      },
+      {
+        id: "ep10", num: 10, file: "10-space-mixed.mp3", script: "10-space-mixed.txt",
+        title: "Space & Mixed Recall",
+        desc: "Orbits, stars, red shift, and rapid cross-topic recall.",
+        quiz: [
+          { id: "ep10-1", type: "single", text: "A geostationary satellite has…", options: ["Orbital period of 24 hours above the equator", "Period of one hour over the poles", "No orbit — fixed above London only", "Same speed as the Moon"] },
+          { id: "ep10-2", type: "multiple", text: "Weightlessness in orbit is because… (Select all that apply)", options: ["The astronaut and spacecraft fall together around Earth", "It is continuous free fall", "Gravity is zero everywhere in space", "There is no mass in orbit"] },
+          { id: "ep10-3", type: "single", text: "Red shift of light from distant galaxies supports…", options: ["The universe is expanding", "Stars are getting hotter only", "Earth is the centre of the universe", "Light travels slower over cosmic distances"] },
+          { id: "ep10-4", type: "single", text: "Ohm's law (mixed recall) is…", options: ["V = I × R", "V = I ÷ R", "P = m × a", "v = f × λ"] },
+          { id: "ep10-5", type: "single", text: "A very massive star may end as a…", options: ["Neutron star or black hole (after a supernova)", "White dwarf only always", "Planet", "Stable main-sequence star forever"] },
+          { id: "ep10-6", type: "single", text: "Efficiency (mixed recall) equals…", options: ["Useful energy output ÷ total energy input", "Total input × useful output", "Wasted energy only", "Useful output + wasted energy"] }
+        ]
+      }
+    ];
+
+    const list = document.getElementById("episodes");
+    const copyToast = document.getElementById("copy-toast");
+    const episodeCards = new Map();
+    let currentAudio = null;
+    let currentCard = null;
+    let quizAnswers = loadAnswers();
+    let lockedState = loadLocked();
+
+    function formatTime(s) {
+      if (!s || isNaN(s)) return "0:00";
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60).toString().padStart(2, "0");
+      return `${m}:${sec}`;
+    }
+
+    function stopCurrent() {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+      if (currentCard) {
+        currentCard.classList.remove("playing");
+        const btn = currentCard.querySelector(".btn-play");
+        btn.textContent = "▶ Play";
+        btn.classList.remove("playing");
+      }
+      currentAudio = null;
+      currentCard = null;
+    }
+
+    function loadAnswers() {
+      try {
+        let raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          raw = sessionStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            localStorage.setItem(STORAGE_KEY, raw);
+            sessionStorage.removeItem(STORAGE_KEY);
+          }
+        }
+        return raw ? JSON.parse(raw) : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveAnswers() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(quizAnswers));
+    }
+
+    function loadLocked() {
+      try {
+        let raw = localStorage.getItem(LOCKED_KEY);
+        if (!raw) {
+          raw = sessionStorage.getItem(LOCKED_KEY);
+          if (raw) {
+            localStorage.setItem(LOCKED_KEY, raw);
+            sessionStorage.removeItem(LOCKED_KEY);
+          }
+        }
+        return raw ? JSON.parse(raw) : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveLocked() {
+      localStorage.setItem(LOCKED_KEY, JSON.stringify(lockedState));
+    }
+
+    function sorted(values) {
+      return [...values].sort();
+    }
+
+    function arraysEqual(a, b) {
+      const left = sorted(a);
+      const right = sorted(b);
+      return left.length === right.length && left.every((value, i) => value === right[i]);
+    }
+
+    function getCorrect(q) {
+      return CORRECT[q.id];
+    }
+
+    function isQuestionAnswered(q) {
+      const answer = getAnswer(q);
+      if (q.type === "multiple") return answer.length > 0;
+      return answer !== "";
+    }
+
+    function isQuestionCorrect(q) {
+      const answer = getAnswer(q);
+      const correct = getCorrect(q);
+      if (q.type === "multiple") {
+        return arraysEqual(answer, correct);
+      }
+      return answer === correct;
+    }
+
+    function isQuizComplete(ep) {
+      return ep.quiz.every(isQuestionAnswered);
+    }
+
+    function isEpisodeUnlocked(index) {
+      if (index === 0) return true;
+      return !!lockedState[episodes[index - 1].id];
+    }
+
+    function isScriptUnlocked(ep) {
+      return !!lockedState[ep.id];
+    }
+
+    function nextEpisodeLabel(index) {
+      if (index >= episodes.length - 1) return null;
+      const next = episodes[index + 1];
+      return next.intro ? "Intro" : "Episode " + next.num;
+    }
+
+    function getAnswer(q) {
+      const value = quizAnswers[q.id];
+      if (q.type === "multiple") {
+        return Array.isArray(value) ? value : [];
+      }
+      return typeof value === "string" ? value : "";
+    }
+
+    function setAnswer(q, value) {
+      quizAnswers[q.id] = value;
+      saveAnswers();
+    }
+
+    function episodeLabel(ep) {
+      return ep.intro ? "Intro — " + ep.title : "Episode " + ep.num + " — " + ep.title;
+    }
+
+    function formatCopyText(episodeFilter) {
+      const lines = ["GCSE Physics Benchmark — Lewis — Quiz Answers", ""];
+
+      episodes.forEach((ep) => {
+        if (episodeFilter && ep.id !== episodeFilter) return;
+        if (!ep.quiz || !ep.quiz.length) return;
+
+        lines.push(episodeLabel(ep));
+        lines.push("");
+
+        const locked = lockedState[ep.id];
+
+        ep.quiz.forEach((q, i) => {
+          const answer = getAnswer(q);
+          const typeLabel = q.type === "multiple" ? "select multiple" : "pick one";
+          lines.push((i + 1) + ". " + q.text + " (" + typeLabel + ")");
+
+          if (q.type === "multiple") {
+            lines.push("   Answer: " + (answer.length ? answer.join("; ") : "(not answered)"));
+          } else {
+            lines.push("   Answer: " + (answer || "(not answered)"));
+          }
+
+          if (locked) {
+            const mark = isQuestionCorrect(q) ? "Correct" : "Incorrect";
+            const correct = getCorrect(q);
+            lines.push("   Result: " + mark);
+            lines.push("   Correct answer: " + (Array.isArray(correct) ? correct.join("; ") : correct));
+          }
+
+          lines.push("");
+        });
+
+        if (locked) {
+          lines.push("Score: " + locked.score + " / " + locked.total);
+          lines.push("");
+        }
+      });
+
+      return lines.join("\n").trim();
+    }
+
+    function showCopyToast(message) {
+      copyToast.textContent = message;
+      copyToast.classList.add("show");
+      clearTimeout(showCopyToast._timer);
+      showCopyToast._timer = setTimeout(() => copyToast.classList.remove("show"), 2200);
+    }
+
+    async function copyText(text, button) {
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const area = document.createElement("textarea");
+        area.value = text;
+        area.style.position = "fixed";
+        area.style.left = "-9999px";
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        area.remove();
+      }
+
+      if (button) {
+        const original = button.textContent;
+        button.textContent = "Copied!";
+        button.classList.add("copied");
+        setTimeout(() => {
+          button.textContent = original;
+          button.classList.remove("copied");
+        }, 1800);
+      }
+
+      showCopyToast("Copied to clipboard");
+    }
+
+    function applyQuestionFeedback(block, q) {
+      const correct = getCorrect(q);
+      const correctSet = new Set(Array.isArray(correct) ? correct : [correct]);
+      const answer = getAnswer(q);
+      const answerSet = new Set(q.type === "multiple" ? answer : answer ? [answer] : []);
+      const ok = isQuestionCorrect(q);
+
+      block.classList.add("locked");
+
+      block.querySelectorAll(".quiz-option").forEach((label) => {
+        const value = label.querySelector("input").value;
+        label.classList.remove("correct-pick", "wrong-pick", "missed-pick");
+
+        if (correctSet.has(value) && answerSet.has(value)) {
+          label.classList.add("correct-pick");
+        } else if (answerSet.has(value) && !correctSet.has(value)) {
+          label.classList.add("wrong-pick");
+        } else if (correctSet.has(value) && !answerSet.has(value)) {
+          label.classList.add("missed-pick");
+        }
+      });
+
+      let feedback = block.querySelector(".quiz-feedback");
+      if (!feedback) {
+        feedback = document.createElement("div");
+        feedback.className = "quiz-feedback";
+        block.appendChild(feedback);
+      }
+
+      if (ok) {
+        feedback.className = "quiz-feedback correct";
+        feedback.textContent = "Correct";
+      } else {
+        const correctText = Array.isArray(correct) ? correct.join("; ") : correct;
+        feedback.className = "quiz-feedback incorrect";
+        feedback.textContent = "Not quite — correct answer: " + correctText;
+      }
+    }
+
+    function updateLockButton(section, ep) {
+      const lockBtn = section.querySelector("[data-lock-episode]");
+      const results = section.querySelector(".quiz-results");
+      const locked = lockedState[ep.id];
+
+      if (locked) {
+        lockBtn.style.display = "none";
+        results.innerHTML = "<strong class=\"score-pass\">" + locked.score + " / " + locked.total + " correct</strong>" +
+          " — script unlocked." +
+          (nextEpisodeLabel(episodes.indexOf(ep)) ? " Next episode unlocked." : " Walk complete.");
+        return;
+      }
+
+      lockBtn.style.display = "";
+      const complete = isQuizComplete(ep);
+      lockBtn.disabled = !complete;
+      lockBtn.textContent = complete ? "Lock in answers" : "Answer all questions to lock in";
+      results.textContent = complete
+        ? "Ready to lock in. Script unlocks after you lock in."
+        : "Answer every question, then lock in to unlock the script and next episode.";
+    }
+
+    function lockInQuiz(ep, section) {
+      if (!isQuizComplete(ep) || lockedState[ep.id]) return;
+
+      const score = ep.quiz.filter(isQuestionCorrect).length;
+      lockedState[ep.id] = {
+        score,
+        total: ep.quiz.length,
+        lockedAt: Date.now()
+      };
+      saveLocked();
+
+      section.querySelectorAll(".quiz-question").forEach((block, index) => {
+        applyQuestionFeedback(block, ep.quiz[index]);
+        block.querySelectorAll("input").forEach((input) => {
+          input.disabled = true;
+        });
+      });
+
+      updateLockButton(section, ep);
+      refreshEpisodeLocks();
+
+      const epIndex = episodes.indexOf(ep);
+      const nextLabel = nextEpisodeLabel(epIndex);
+      showCopyToast(score + " / " + ep.quiz.length + " correct" + (nextLabel ? " — " + nextLabel + " unlocked" : ""));
+
+      if (epIndex < episodes.length - 1) {
+        const nextCard = episodeCards.get(episodes[epIndex + 1].id);
+        if (nextCard) {
+          nextCard.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    }
+
+    function formatScript(text) {
+      return text
+        .trim()
+        .split(/\n\s*\n/)
+        .map((para) => "<p>" + para.replace(/\n/g, " ").trim() + "</p>")
+        .join("");
+    }
+
+    function toggleScript(card, ep, scriptBtn) {
+      if (!isScriptUnlocked(ep)) return;
+
+      const panel = card.querySelector(".script-panel");
+      const body = card.querySelector(".script-body");
+      const isOpen = panel.classList.contains("open");
+
+      if (isOpen) {
+        panel.classList.remove("open");
+        scriptBtn.classList.remove("open");
+        scriptBtn.textContent = "Read script";
+        return;
+      }
+
+      scriptBtn.classList.add("open");
+      scriptBtn.textContent = "Hide script";
+      panel.classList.add("open");
+
+      if (body.dataset.loaded === "true") return;
+
+      const text = SCRIPTS[ep.id];
+      if (!text) {
+        body.textContent = "Script not found for this episode.";
+        return;
+      }
+
+      body.innerHTML = formatScript(text);
+      body.dataset.loaded = "true";
+    }
+
+    function refreshEpisodeLocks() {
+      episodes.forEach((ep, index) => {
+        const card = episodeCards.get(ep.id);
+        if (!card) return;
+
+        const unlocked = isEpisodeUnlocked(index);
+        const playBtn = card.querySelector(".btn-play");
+        const downloadBtn = card.querySelector(".btn-download");
+        const scriptBtn = card.querySelector(".btn-script");
+        const scriptPanel = card.querySelector(".script-panel");
+        const banner = card.querySelector(".ep-locked-banner");
+        const prev = episodes[index - 1];
+        const scriptReady = unlocked && isScriptUnlocked(ep);
+
+        card.classList.toggle("locked", !unlocked);
+        playBtn.disabled = !unlocked;
+        downloadBtn.classList.toggle("disabled", !unlocked);
+
+        if (scriptBtn) {
+          scriptBtn.disabled = !scriptReady;
+          if (!scriptReady) {
+            scriptBtn.classList.remove("open");
+            scriptBtn.textContent = unlocked ? "Read script (after quiz)" : "Read script";
+            if (scriptPanel) scriptPanel.classList.remove("open", "loading");
+          } else if (!scriptBtn.classList.contains("open")) {
+            scriptBtn.textContent = "Read script";
+          }
+        }
+
+        if (!unlocked) {
+          playBtn.textContent = "Locked";
+          banner.textContent = "Complete the recall check on " +
+            (prev.intro ? "the intro" : "Episode " + prev.num) +
+            " and press Lock in answers to unlock this episode.";
+          if (currentCard === card) {
+            stopCurrent();
+          }
+        } else if (!currentAudio || currentCard !== card) {
+          playBtn.textContent = "▶ Play";
+        }
+      });
+    }
+
+    function renderQuiz(ep, card) {
+      if (!ep.quiz || !ep.quiz.length) return;
+
+      const section = document.createElement("div");
+      section.className = "quiz-section";
+      section.innerHTML = `
+        <div class="quiz-header">
+          <div class="quiz-title">Recall check</div>
+          <button type="button" class="btn-copy" data-copy-episode="${ep.id}">Copy this section</button>
+        </div>
+        <p class="quiz-hint">Rapid fire — answer from memory after listening. No script until you lock in. Then unlock the next episode.</p>
+        <div class="quiz-footer">
+          <button type="button" class="btn-lock" data-lock-episode="${ep.id}">Answer all questions to lock in</button>
+          <div class="quiz-results"></div>
+        </div>
+      `;
+
+      const questionsWrap = document.createElement("div");
+      questionsWrap.className = "quiz-questions";
+      section.insertBefore(questionsWrap, section.querySelector(".quiz-footer"));
+
+      ep.quiz.forEach((q, index) => {
+        const block = document.createElement("div");
+        block.className = "quiz-question";
+        const typeHint = q.type === "multiple" ? "select multiple" : "pick one";
+        const inputType = q.type === "multiple" ? "checkbox" : "radio";
+        const saved = getAnswer(q);
+
+        block.innerHTML = `
+          <div class="quiz-q-text">
+            ${index + 1}. ${q.text}
+            <span class="quiz-q-type">(${typeHint})</span>
+          </div>
+          <div class="quiz-options" data-question="${q.id}"></div>
+        `;
+
+        const optionsWrap = block.querySelector(".quiz-options");
+
+        q.options.forEach((option) => {
+          const label = document.createElement("label");
+          label.className = "quiz-option";
+          const input = document.createElement("input");
+          input.type = inputType;
+          input.name = q.id;
+          input.value = option;
+
+          if (q.type === "multiple") {
+            input.checked = saved.includes(option);
+          } else {
+            input.checked = saved === option;
+          }
+
+          input.addEventListener("change", () => {
+            if (lockedState[ep.id]) return;
+            if (q.type === "multiple") {
+              const checked = [...optionsWrap.querySelectorAll("input:checked")].map((el) => el.value);
+              setAnswer(q, checked);
+            } else {
+              setAnswer(q, option);
+            }
+            updateLockButton(section, ep);
+          });
+
+          label.appendChild(input);
+          label.appendChild(document.createTextNode(option));
+          optionsWrap.appendChild(label);
+        });
+
+        questionsWrap.appendChild(block);
+      });
+
+      section.querySelector("[data-copy-episode]").addEventListener("click", (e) => {
+        copyText(formatCopyText(ep.id), e.currentTarget);
+      });
+
+      section.querySelector("[data-lock-episode]").addEventListener("click", () => {
+        lockInQuiz(ep, section);
+      });
+
+      if (lockedState[ep.id]) {
+        section.querySelectorAll(".quiz-question").forEach((block, index) => {
+          applyQuestionFeedback(block, ep.quiz[index]);
+          block.querySelectorAll("input").forEach((input) => {
+            input.disabled = true;
+          });
+        });
+      }
+
+      updateLockButton(section, ep);
+      card.appendChild(section);
+    }
+
+    function encodeProgress() {
+      const payload = { v: 1, answers: quizAnswers, locked: lockedState };
+      return PROGRESS_PREFIX + btoa(encodeURIComponent(JSON.stringify(payload)));
+    }
+
+    function decodeProgress(code) {
+      const trimmed = code.trim();
+      if (!trimmed.startsWith(PROGRESS_PREFIX)) {
+        throw new Error("That does not look like a physics benchmark progress code.");
+      }
+      const payload = JSON.parse(decodeURIComponent(atob(trimmed.slice(PROGRESS_PREFIX.length))));
+      if (!payload || payload.v !== 1 || typeof payload.answers !== "object" || typeof payload.locked !== "object") {
+        throw new Error("This progress code is invalid or from an older version.");
+      }
+      return payload;
+    }
+
+    function exportProgress(button) {
+      copyText(encodeProgress(), button);
+      showCopyToast("Progress code copied — paste it on another device");
+    }
+
+    function importProgress(code) {
+      const payload = decodeProgress(code);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload.answers));
+      localStorage.setItem(LOCKED_KEY, JSON.stringify(payload.locked));
+      location.reload();
+    }
+
+    function clearSessionData() {
+      const ok = confirm(
+        "Clear all quiz answers, scores, unlocks, and script access?\n\nThis resets the walk on this device."
+      );
+      if (!ok) return;
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(LOCKED_KEY);
+      location.reload();
+    }
+
+    document.getElementById("copy-all").addEventListener("click", (e) => {
+      copyText(formatCopyText(), e.currentTarget);
+    });
+
+    document.getElementById("export-progress").addEventListener("click", (e) => {
+      exportProgress(e.currentTarget);
+    });
+
+    document.getElementById("import-progress").addEventListener("click", () => {
+      document.getElementById("import-panel").classList.add("open");
+      document.getElementById("import-code").focus();
+    });
+
+    document.getElementById("import-cancel").addEventListener("click", () => {
+      document.getElementById("import-panel").classList.remove("open");
+      document.getElementById("import-code").value = "";
+    });
+
+    document.getElementById("import-confirm").addEventListener("click", () => {
+      const code = document.getElementById("import-code").value;
+      if (!code.trim()) {
+        alert("Paste a progress code first.");
+        return;
+      }
+      try {
+        importProgress(code);
+      } catch (err) {
+        alert(err.message || "Could not import that progress code.");
+      }
+    });
+
+    document.getElementById("clear-session").addEventListener("click", clearSessionData);
+
+    episodes.forEach((ep, index) => {
+      const card = document.createElement("article");
+      card.className = "episode";
+      card.dataset.episodeId = ep.id;
+      const numClass = ep.intro ? "ep-num intro" : "ep-num";
+      const label = ep.intro ? "★" : ep.num;
+
+      card.innerHTML = `
+        <div class="episode-top">
+          <div class="${numClass}">${label}</div>
+          <div class="ep-info">
+            <div class="ep-title">${ep.title}</div>
+            <div class="ep-desc">${ep.desc}</div>
+          </div>
+        </div>
+        <audio preload="metadata" src="${audioUrl(ep.file)}"></audio>
+        <div class="ep-actions">
+          <button type="button" class="btn-play">▶ Play</button>
+          <a class="btn btn-download" href="${audioUrl(ep.file)}" download="${ep.file}">↓ Download</a>
+          <button type="button" class="btn-script">Read script</button>
+        </div>
+        <div class="script-panel"><div class="script-body"></div></div>
+        <div class="ep-locked-banner"></div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+          <div class="time"><span class="cur">0:00</span> / <span class="dur">0:00</span></div>
+        </div>
+      `;
+
+      const audio = card.querySelector("audio");
+      const playBtn = card.querySelector(".btn-play");
+      const downloadBtn = card.querySelector(".btn-download");
+      const scriptBtn = card.querySelector(".btn-script");
+      const fill = card.querySelector(".progress-fill");
+      const bar = card.querySelector(".progress-bar");
+      const cur = card.querySelector(".cur");
+      const dur = card.querySelector(".dur");
+
+      audio.addEventListener("loadedmetadata", () => {
+        dur.textContent = formatTime(audio.duration);
+      });
+
+      audio.addEventListener("timeupdate", () => {
+        const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+        fill.style.width = pct + "%";
+        cur.textContent = formatTime(audio.currentTime);
+      });
+
+      audio.addEventListener("ended", () => {
+        playBtn.textContent = "▶ Play";
+        playBtn.classList.remove("playing");
+        card.classList.remove("playing");
+        if (currentAudio === audio) {
+          currentAudio = null;
+          currentCard = null;
+        }
+      });
+
+      playBtn.addEventListener("click", () => {
+        if (!isEpisodeUnlocked(index)) return;
+
+        if (currentAudio === audio && !audio.paused) {
+          audio.pause();
+          playBtn.textContent = "▶ Play";
+          playBtn.classList.remove("playing");
+          card.classList.remove("playing");
+          return;
+        }
+        stopCurrent();
+        currentAudio = audio;
+        currentCard = card;
+        audio.play();
+        playBtn.textContent = "⏸ Pause";
+        playBtn.classList.add("playing");
+        card.classList.add("playing");
+      });
+
+      downloadBtn.addEventListener("click", (e) => {
+        if (!isEpisodeUnlocked(index)) e.preventDefault();
+      });
+
+      scriptBtn.addEventListener("click", () => {
+        if (!isEpisodeUnlocked(index) || !isScriptUnlocked(ep)) return;
+        toggleScript(card, ep, scriptBtn);
+      });
+
+      bar.addEventListener("click", (e) => {
+        if (!isEpisodeUnlocked(index) || !audio.duration) return;
+        const rect = bar.getBoundingClientRect();
+        const ratio = (e.clientX - rect.left) / rect.width;
+        audio.currentTime = ratio * audio.duration;
+      });
+
+      renderQuiz(ep, card);
+      episodeCards.set(ep.id, card);
+      list.appendChild(card);
+    });
+
+    refreshEpisodeLocks();
+  </script>
+</body>
+</html>

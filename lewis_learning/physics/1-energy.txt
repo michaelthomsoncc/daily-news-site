@@ -1,0 +1,17 @@
+Physics benchmark, episode one: energy. Rapid fire.
+
+Energy is stored in different ways: kinetic, gravitational, elastic, thermal, chemical, magnetic, electrostatic, and nuclear. Name the store before the transfer happens.
+
+Energy is conserved. It is never created or destroyed — only shifted between stores or dissipated to the surroundings, often as wasted thermal energy.
+
+Efficiency equals useful energy output divided by total energy input. Multiply by a hundred for a percentage. Higher efficiency means less wasted energy.
+
+Power is the rate of energy transfer. Power equals energy divided by time. In electricity, power also equals current times potential difference: P equals I V.
+
+When you heat a substance, the energy needed depends on mass, specific heat capacity, and temperature change: E equals m c delta theta.
+
+Renewable resources replenish quickly: solar, wind, hydro, waves, tides, geothermal, and bio-fuel. Non-renewable resources run out: coal, oil, natural gas, and nuclear fuel rods.
+
+Sankey diagrams show energy flow. The input bar is one hundred percent. Useful output and wasted energy must add up to the full input.
+
+For your recall check: think efficiency formula, power equations, and one renewable versus one non-renewable source. Lock in when ready.

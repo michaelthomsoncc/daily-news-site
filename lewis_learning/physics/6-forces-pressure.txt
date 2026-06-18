@@ -1,0 +1,19 @@
+Episode six: weight, pressure, and moments. Rapid fire.
+
+Mass is kilograms — amount of matter. Weight is the force of gravity. W equals m g. Weight is newtons. On Earth, g is about nine point eight metres per second squared.
+
+A free-body diagram shows all forces on one object as arrows from a point.
+
+Pressure equals force divided by area: p equals F over A. Unit pascal. Same force, smaller area, greater pressure.
+
+Moments turn objects. Moment equals force times perpendicular distance from pivot. Unit newton-metre.
+
+Principle of moments: clockwise moments equal anticlockwise moments when balanced.
+
+Hooke's law: force proportional to extension up to the limit of proportionality. F equals k e. Beyond elastic limit, spring may not return.
+
+Centre of mass: point where entire weight appears to act. Stable objects: low centre of mass, wide base.
+
+Hydraulics: pressure transmitted through liquid. Same pressure throughout — large force possible with bigger piston area.
+
+For your recall check: W equals m g, moment formula, and pressure formula. Lock in when ready.

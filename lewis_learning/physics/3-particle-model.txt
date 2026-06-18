@@ -1,0 +1,17 @@
+Episode three: particle model of matter. Rapid fire.
+
+Density equals mass divided by volume. Unit kilograms per cubic metre. Same material, same density.
+
+Solids: particles close, fixed positions, vibrate. Liquids: close, move past each other. Gases: far apart, random rapid motion.
+
+Heating increases internal energy — the total kinetic and potential energy of all particles. Temperature measures average kinetic energy.
+
+Specific heat capacity: the energy needed to raise one kilogram by one degree Celsius. E equals m c delta theta.
+
+Changing state at constant temperature uses latent heat, not temperature change. Energy breaks or makes bonds between particles.
+
+Gas pressure is caused by particle collisions with walls. Increasing temperature at fixed volume increases pressure. Increasing volume at fixed temperature decreases pressure.
+
+When you compress a gas quickly, work is done on it — temperature can rise. When a gas expands, it does work — temperature can fall.
+
+For your recall check: density formula, states of matter, and what internal energy means. Lock in when ready.

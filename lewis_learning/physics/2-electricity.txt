@@ -1,0 +1,19 @@
+Episode two: electricity. Rapid fire.
+
+Electric current is the rate of flow of charge. Charge is measured in coulombs. Current is measured in amperes. Convention: current flows from positive to negative.
+
+Potential difference, or voltage, is the energy transferred per coulomb of charge. Unit: the volt. V equals E divided by Q.
+
+Resistance opposes current. Ohm's law: V equals I R. Resistance is measured in ohms.
+
+In a series circuit: current is the same everywhere; potential differences add up; resistance adds up. One break stops the whole circuit.
+
+In a parallel circuit: potential difference is the same across each branch; current splits; total current is the sum of branch currents. Resistance of parallel branches gives a smaller total resistance.
+
+Electrical power: P equals I V. Also P equals I squared R, and P equals V squared over R.
+
+UK mains supply is about two hundred thirty volts alternating current. Frequency fifty hertz. Live wire brown, neutral blue, earth green and yellow.
+
+Static electricity: like charges repel, unlike attract. Electrons transfer to create charge imbalance.
+
+For your recall check: series rules, parallel rules, and P equals I V. Lock in when ready.

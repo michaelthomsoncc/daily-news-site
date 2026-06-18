@@ -1,0 +1,21 @@
+Episode eight: light and sound. Rapid fire.
+
+Specular reflection: smooth surface, clear image. Diffuse reflection: rough surface, scatters light.
+
+Converging lens thicker in middle — can form real or virtual images depending on object distance. Diverging lens always gives virtual, upright, diminished image.
+
+Ray diagrams: parallel ray through principal focus after lens; ray through centre undeviated.
+
+Critical angle: light from denser to less dense medium — total internal reflection when angle exceeds critical angle. Used in optical fibres.
+
+Sound needs a medium — cannot travel in vacuum. Pitch linked to frequency. Loudness linked to amplitude.
+
+Human hearing roughly twenty hertz to twenty kilohertz. Ultrasound above twenty kilohertz — sonar, foetal scanning, cleaning.
+
+Echo: reflected sound. Distance equals speed times time divided by two.
+
+Colour: objects absorb some wavelengths, reflect others. White reflects all; black absorbs most.
+
+Red shift: light from distant galaxies shifted to longer wavelengths — suggests universe expansion.
+
+For your recall check: lens image types, ultrasound uses, and why sound needs a medium. Lock in when ready.

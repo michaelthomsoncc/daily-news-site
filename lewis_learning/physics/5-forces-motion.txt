@@ -1,0 +1,19 @@
+Episode five: forces and motion. Rapid fire.
+
+Speed equals distance divided by time. Velocity is speed with direction. Acceleration is change of velocity per unit time. a equals delta v over t.
+
+Distance-time graphs: gradient equals speed. Velocity-time graphs: gradient equals acceleration; area under equals distance travelled.
+
+Newton's first law: balanced forces mean constant velocity, including zero — stay at rest or steady speed.
+
+Newton's second law: resultant force F equals m a. Unbalanced force changes velocity.
+
+Newton's third law: equal and opposite forces on different objects — they do not cancel on one object.
+
+Friction and air resistance oppose motion. Terminal velocity: accelerating object reaches speed where drag equals weight — no further acceleration.
+
+Thinking distance plus braking distance equals stopping distance. Speed increases thinking distance. Poor conditions increase braking distance.
+
+Resultant force on two forces at right angles: use Pythagoras. Vector quantities have magnitude and direction; scalars have magnitude only.
+
+For your recall check: F equals m a, stopping distance parts, and what gradient on a velocity-time graph shows. Lock in when ready.

@@ -1,0 +1,19 @@
+Episode nine: magnetism and electromagnetism. Rapid fire.
+
+Magnetic field lines go from north to south outside a magnet. Closer lines mean stronger field. Like poles repel; unlike attract.
+
+Current in a wire produces a magnetic field. Electromagnet: coil with iron core, current switched on and off — used in motors, relays, scrap yard cranes.
+
+Motor effect: force on current in magnetic field. Fleming's left-hand rule: thumb force, first finger field, second finger current.
+
+Electromagnetic induction: changing magnetic field through coil induces potential difference. Basis of generators and microphones.
+
+Generator: coil rotates in field — induces alternating p.d. Dynamos and power stations use this.
+
+Transformer: two coils on shared core. Primary and secondary. Step-up increases voltage, decreases current; step-down the reverse.
+
+Ideal transformer: Vp over Vs equals Np over Ns. Power in equals power out for one hundred percent efficiency: Vp Ip equals Vs Is.
+
+National grid: step up voltage for transmission to reduce current and reduce energy wasted as heat in cables; step down for homes.
+
+For your recall check: motor effect, transformer equation, and why high voltage helps the grid. Lock in when ready.

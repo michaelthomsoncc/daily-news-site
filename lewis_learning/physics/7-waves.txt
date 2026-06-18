@@ -1,0 +1,17 @@
+Episode seven: waves. Rapid fire.
+
+Waves transfer energy without transferring matter. Transverse: oscillations perpendicular to direction — light, EM waves, water ripples on surface. Longitudinal: oscillations parallel — sound, seismic P-waves.
+
+Wave speed equation: v equals f lambda. Frequency in hertz, wavelength in metres, speed in metres per second.
+
+Amplitude: maximum displacement — relates to loudness or brightness. Period T is time for one wave. f equals one over T.
+
+Electromagnetic spectrum order: radio, microwave, infrared, visible, ultraviolet, X-ray, gamma. All travel at same speed in vacuum: three times ten to the eight metres per second.
+
+Uses and hazards: microwaves heat food; infrared thermal imaging; UV sterilisation but skin damage; X-rays and gamma for medical imaging and cancer treatment but ionising hazard.
+
+Reflection: angle of incidence equals angle of reflection. Refraction: wave speed change at boundary — ray bends.
+
+Seismic waves: P-waves longitudinal, faster, through solids and liquids. S-waves transverse, slower, solids only. Helps infer Earth structure.
+
+For your recall check: v equals f lambda, transverse versus longitudinal, and EM spectrum order. Lock in when ready.
