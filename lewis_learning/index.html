@@ -307,7 +307,8 @@
     .script-body p { margin-bottom: 0.85rem; }
     .script-body p:last-child { margin-bottom: 0; }
 
-    .episode.locked .script-panel { display: none !important; }
+    .episode.locked .script-panel,
+    .episode .script-panel:not(.open) { display: none; }
 
     audio {
       display: none;
@@ -952,6 +953,10 @@
       return !!lockedState[episodes[index - 1].id];
     }
 
+    function isScriptUnlocked(ep) {
+      return !!lockedState[ep.id];
+    }
+
     function nextEpisodeLabel(index) {
       if (index >= episodes.length - 1) return null;
       const next = episodes[index + 1];
@@ -1098,7 +1103,8 @@
       if (locked) {
         lockBtn.style.display = "none";
         results.innerHTML = "<strong class=\"score-pass\">" + locked.score + " / " + locked.total + " correct</strong>" +
-          (nextEpisodeLabel(episodes.indexOf(ep)) ? " — next episode unlocked." : " — walk complete.");
+          " — script unlocked." +
+          (nextEpisodeLabel(episodes.indexOf(ep)) ? " Next episode unlocked." : " Walk complete.");
         return;
       }
 
@@ -1107,8 +1113,8 @@
       lockBtn.disabled = !complete;
       lockBtn.textContent = complete ? "Lock in answers" : "Answer all questions to lock in";
       results.textContent = complete
-        ? "Ready to lock in and see your score."
-        : "Answer every question, then lock in to unlock the next episode.";
+        ? "Ready to lock in. Script unlocks after you lock in."
+        : "Answer every question, then lock in to unlock the script and next episode.";
     }
 
     function lockInQuiz(ep, section) {
@@ -1153,6 +1159,8 @@
     }
 
     async function toggleScript(card, ep, scriptBtn) {
+      if (!isScriptUnlocked(ep)) return;
+
       const panel = card.querySelector(".script-panel");
       const body = card.querySelector(".script-body");
       const isOpen = panel.classList.contains("open");
@@ -1198,24 +1206,28 @@
         const scriptPanel = card.querySelector(".script-panel");
         const banner = card.querySelector(".ep-locked-banner");
         const prev = episodes[index - 1];
+        const scriptReady = unlocked && isScriptUnlocked(ep);
 
         card.classList.toggle("locked", !unlocked);
         playBtn.disabled = !unlocked;
         downloadBtn.classList.toggle("disabled", !unlocked);
-        if (scriptBtn) scriptBtn.disabled = !unlocked;
+
+        if (scriptBtn) {
+          scriptBtn.disabled = !scriptReady;
+          if (!scriptReady) {
+            scriptBtn.classList.remove("open");
+            scriptBtn.textContent = unlocked ? "Read script (after quiz)" : "Read script";
+            if (scriptPanel) scriptPanel.classList.remove("open", "loading");
+          } else if (!scriptBtn.classList.contains("open")) {
+            scriptBtn.textContent = "Read script";
+          }
+        }
 
         if (!unlocked) {
           playBtn.textContent = "Locked";
           banner.textContent = "Complete the recall check on " +
             (prev.intro ? "the intro" : "Episode " + prev.num) +
             " and press Lock in answers to unlock this episode.";
-          if (scriptPanel) {
-            scriptPanel.classList.remove("open", "loading");
-          }
-          if (scriptBtn) {
-            scriptBtn.classList.remove("open");
-            scriptBtn.textContent = "Read script";
-          }
           if (currentCard === card) {
             stopCurrent();
           }
@@ -1235,7 +1247,7 @@
           <div class="quiz-title">Recall check</div>
           <button type="button" class="btn-copy" data-copy-episode="${ep.id}">Copy this section</button>
         </div>
-        <p class="quiz-hint">Answer from memory after listening. When you are ready, lock in to see your score and unlock the next episode.</p>
+        <p class="quiz-hint">Answer from memory after listening — no script until you lock in. Then you can read it and move to the next episode.</p>
         <div class="quiz-footer">
           <button type="button" class="btn-lock" data-lock-episode="${ep.id}">Answer all questions to lock in</button>
           <div class="quiz-results"></div>
@@ -1403,7 +1415,7 @@
       });
 
       scriptBtn.addEventListener("click", () => {
-        if (!isEpisodeUnlocked(index)) return;
+        if (!isEpisodeUnlocked(index) || !isScriptUnlocked(ep)) return;
         toggleScript(card, ep, scriptBtn);
       });
 
