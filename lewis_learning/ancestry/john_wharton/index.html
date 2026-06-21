@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wharton Story — Lewis</title>
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --surface: #141b24;
+      --surface-2: #1a2430;
+      --border: #2a3644;
+      --text: #e8edf2;
+      --muted: #8fa3b8;
+      --accent: #c9a227;
+      --accent-soft: rgba(201, 162, 39, 0.14);
+      --accent-glow: rgba(201, 162, 39, 0.35);
+      --success: #34d399;
+      --danger: #f87171;
+      --warn: #fbbf24;
+      --radius: 14px;
+      --shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(201, 162, 39, 0.14), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(52, 211, 153, 0.06), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 3rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid rgba(61, 158, 255, 0.25);
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: clamp(1.9rem, 5vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.6rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 32rem;
+      margin: 0 auto 1.25rem;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .meta span {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+    }
+
+    .instructions {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .instructions strong { color: var(--text); }
+
+    .episode-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .episode {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.35rem;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .episode:hover {
+      border-color: rgba(61, 158, 255, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .episode.playing {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-glow), var(--shadow);
+    }
+
+    .episode.locked {
+      opacity: 0.72;
+    }
+
+    .episode.locked:hover {
+      transform: none;
+      border-color: var(--border);
+    }
+
+    .ep-locked-banner {
+      display: none;
+      margin-top: 0.85rem;
+      padding: 0.7rem 0.85rem;
+      border-radius: 9px;
+      background: rgba(251, 191, 36, 0.08);
+      border: 1px solid rgba(251, 191, 36, 0.25);
+      color: var(--warn);
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .episode.locked .ep-locked-banner { display: block; }
+
+    .episode.locked .quiz-section { display: none; }
+
+    button:disabled, .btn.disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .btn-play:disabled {
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .episode-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .ep-num {
+      flex-shrink: 0;
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 10px;
+      border: 1px solid rgba(61, 158, 255, 0.2);
+    }
+
+    .ep-num.intro { background: rgba(52, 211, 153, 0.12); color: var(--success); border-color: rgba(52, 211, 153, 0.25); }
+
+    .ep-info { flex: 1; min-width: 0; }
+
+    .ep-title {
+      font-size: 1.1rem;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .ep-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .ep-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-top: 1rem;
+    }
+
+    button, .btn {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      border-radius: 9px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    button:active, .btn:active { transform: scale(0.97); }
+
+    .btn-play {
+      background: var(--accent);
+      color: #061018;
+    }
+
+    .btn-play:hover { background: #5aafff; }
+
+    .btn-play.playing {
+      background: var(--surface-2);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    .btn-download {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-download:hover {
+      background: #223040;
+      border-color: rgba(61, 158, 255, 0.3);
+    }
+
+    .btn-script {
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-script:hover:not(:disabled) {
+      background: #223040;
+      color: var(--text);
+      border-color: rgba(61, 158, 255, 0.3);
+    }
+
+    .btn-script.open {
+      color: var(--accent);
+      border-color: rgba(61, 158, 255, 0.35);
+      background: var(--accent-soft);
+    }
+
+    .script-panel {
+      display: none;
+      margin-top: 0.85rem;
+      padding: 1rem 1.1rem;
+      border-radius: 10px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      max-height: 22rem;
+      overflow-y: auto;
+    }
+
+    .script-panel.open { display: block; }
+
+    .script-panel.loading {
+      display: block;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .script-body {
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .script-body p { margin-bottom: 0.85rem; }
+    .script-body p:last-child { margin-bottom: 0; }
+
+    .episode.locked .script-panel,
+    .episode .script-panel:not(.open) { display: none; }
+
+    audio {
+      display: none;
+    }
+
+    .progress-wrap {
+      margin-top: 0.75rem;
+      display: none;
+    }
+
+    .episode.playing .progress-wrap { display: block; }
+
+    .progress-bar {
+      height: 4px;
+      background: var(--surface-2);
+      border-radius: 2px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      border-radius: 2px;
+      transition: width 0.1s linear;
+    }
+
+    .time {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.35rem;
+    }
+
+    .quiz-section {
+      margin-top: 1.25rem;
+      padding-top: 1.15rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .quiz-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .quiz-title {
+      font-size: 0.82rem;
+      font-weight: 650;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .quiz-hint {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+
+    .quiz-question {
+      margin-bottom: 1rem;
+    }
+
+    .quiz-question:last-child { margin-bottom: 0; }
+
+    .quiz-q-text {
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 0.45rem;
+      line-height: 1.4;
+    }
+
+    .quiz-q-type {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-left: 0.35rem;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .quiz-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 0.88rem;
+      color: var(--muted);
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+
+    .quiz-option:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .quiz-option:has(input:checked) {
+      background: var(--accent-soft);
+      border-color: rgba(61, 158, 255, 0.3);
+      color: var(--text);
+    }
+
+    .quiz-option input {
+      margin-top: 0.15rem;
+      flex-shrink: 0;
+      accent-color: var(--accent);
+    }
+
+    .quiz-option.correct-pick {
+      background: rgba(52, 211, 153, 0.1);
+      border-color: rgba(52, 211, 153, 0.35);
+      color: var(--text);
+    }
+
+    .quiz-option.wrong-pick {
+      background: rgba(248, 113, 113, 0.1);
+      border-color: rgba(248, 113, 113, 0.35);
+      color: var(--text);
+    }
+
+    .quiz-option.missed-pick {
+      border-color: rgba(52, 211, 153, 0.25);
+      border-style: dashed;
+    }
+
+    .quiz-question.locked .quiz-option {
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .quiz-question.locked .quiz-option:hover {
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .quiz-question.locked .quiz-option.correct-pick:hover,
+    .quiz-question.locked .quiz-option.wrong-pick:hover,
+    .quiz-question.locked .quiz-option.missed-pick:hover {
+      color: var(--text);
+    }
+
+    .quiz-feedback {
+      margin-top: 0.4rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .quiz-feedback.correct { color: var(--success); }
+    .quiz-feedback.incorrect { color: var(--danger); }
+
+    .quiz-footer {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-lock {
+      background: var(--success);
+      color: #042f1e;
+    }
+
+    .btn-lock:hover:not(:disabled) { background: #4ade80; }
+
+    .btn-lock:disabled {
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      opacity: 1;
+    }
+
+    .quiz-results {
+      flex: 1;
+      min-width: 12rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .quiz-results strong { color: var(--text); }
+
+    .quiz-results .score-pass { color: var(--success); }
+    .quiz-results .score-miss { color: var(--warn); }
+
+    .btn-copy {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      padding: 0.45rem 0.8rem;
+    }
+
+    .btn-copy:hover {
+      background: #223040;
+      border-color: rgba(61, 158, 255, 0.3);
+    }
+
+    .btn-copy.copied {
+      border-color: rgba(52, 211, 153, 0.4);
+      color: var(--success);
+    }
+
+    .quiz-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .quiz-toolbar p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      max-width: 26rem;
+    }
+
+    .quiz-toolbar strong { color: var(--text); }
+
+    .quiz-toolbar-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .btn-reset {
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      padding: 0.45rem 0.8rem;
+    }
+
+    .btn-reset:hover {
+      background: #223040;
+      border-color: rgba(248, 113, 113, 0.35);
+      color: var(--danger);
+    }
+
+    .progress-transfer {
+      display: none;
+      margin-bottom: 1.5rem;
+      padding: 1rem 1.1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .progress-transfer.open { display: block; }
+
+    .progress-transfer label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-transfer textarea {
+      width: 100%;
+      min-height: 5.5rem;
+      resize: vertical;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      padding: 0.65rem 0.75rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .progress-transfer-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .copy-toast {
+      position: fixed;
+      bottom: 1.25rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: var(--surface-2);
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      color: var(--success);
+      padding: 0.65rem 1.1rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      z-index: 100;
+      transition: transform 0.25s ease;
+      pointer-events: none;
+    }
+
+    .copy-toast.show { transform: translateX(-50%) translateY(0); }
+
+    footer {
+      text-align: center;
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    footer strong { color: var(--text); }
+
+    @media (max-width: 480px) {
+      .wrap { padding: 1.5rem 1rem 2.5rem; }
+      .episode { padding: 1.1rem; }
+      .ep-actions { flex-direction: column; }
+      .ep-actions button, .ep-actions .btn { justify-content: center; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="badge">Wharton line</div>
+      <h1>Dukes to Pitmen</h1>
+      <p class="subtitle">Three parts with Dad's voice — from border lords and a reckless duke to shepherds, the workhouse, and the last Durham miners.</p>
+      <div class="meta">
+        <span>~15 minutes total</span>
+        <span>3 parts</span>
+        <span>18 recall questions</span>
+      </div>
+    </header>
+
+    <div class="instructions">
+      <strong>How to use this:</strong> Listen with the family tree open or just a quiet moment. Play each part, answer the recall check, and press <strong>Lock in answers</strong>. The next part unlocks when you lock in. Script unlocks after lock-in. Tell Dad what landed — names, dates, the bits that surprised you.
+    </div>
+
+    <div class="quiz-toolbar">
+      <p><strong>Recall check:</strong> Answer each quiz, lock in to see results, then the next episode unlocks. Progress saves on this device. To continue on another phone or computer, use <strong>Export</strong> here and <strong>Import</strong> there.</p>
+      <div class="quiz-toolbar-actions">
+        <button type="button" class="btn-copy" id="copy-all">Copy all Q&amp;A</button>
+        <button type="button" class="btn-copy" id="export-progress">Export progress</button>
+        <button type="button" class="btn-copy" id="import-progress">Import progress</button>
+        <button type="button" class="btn-reset" id="clear-session">Reset progress</button>
+      </div>
+    </div>
+
+    <div class="progress-transfer" id="import-panel">
+      <label for="import-code">Paste your progress code</label>
+      <textarea id="import-code" placeholder="Paste the code from Export progress…"></textarea>
+      <div class="progress-transfer-actions">
+        <button type="button" class="btn-lock" id="import-confirm">Restore progress</button>
+        <button type="button" class="btn-reset" id="import-cancel">Cancel</button>
+      </div>
+    </div>
+
+    <div class="episode-list" id="episodes"></div>
+
+    <footer>
+      Wharton story for <strong>Lewis</strong> — dukes, workhouse, pitmen.<br>
+      Lock in, copy your answers, tell Dad what stuck.
+    </footer>
+  </div>
+
+  <div class="copy-toast" id="copy-toast" aria-live="polite">Copied to clipboard</div>
+
+  <script>
+    // Upload MP3s to a public host, then paste the URL prefix here (no trailing slash).
+    // Leave "" to use the local audio/ folder while testing on your machine.
+    //
+    // Internet Archive:  https://archive.org/download/YOUR-ITEM-ID
+    // GitHub Release:    https://github.com/YOUR_USER/brain-os-audio/releases/download/v1
+    // Cloudflare R2:     https://pub-xxxxxxxx.r2.dev/brain-os
+    const AUDIO_BASE_URL = "";
+
+    function pageBaseUrl() {
+      const { origin, pathname } = window.location;
+      if (pathname.endsWith("/")) return origin + pathname;
+      const last = pathname.split("/").pop() || "";
+      if (/\.[a-z0-9]+$/i.test(last)) return origin + pathname.replace(/[^/]+$/, "");
+      return origin + pathname + "/";
+    }
+
+    function pageAssetUrl(relativePath) {
+      return new URL(relativePath.replace(/^\//, ""), pageBaseUrl()).href;
+    }
+
+    function audioUrl(filename) {
+      const base = AUDIO_BASE_URL.trim().replace(/\/$/, "");
+      return base ? base + "/" + filename : pageAssetUrl("audio/" + filename);
+    }
+
+    const STORAGE_KEY = "lewis-john-wharton-answers";
+    const LOCKED_KEY = "lewis-john-wharton-locked";
+    const PROGRESS_PREFIX = "lewiswhar1:";
+
+    const SCRIPTS = {
+      "ep1": "Part 1 – The Dukes, the Fall, and John Wharton the Shepherd\r\nHey son… settle in, put your earbuds in, and listen while you look at the family tree or just sit with a cup of tea. You’re about to hear the full, dramatic story of the Wharton side — how we went from powerful nobles and a duke who partied with kings… to shepherds, workhouse families, and tough Durham coal miners. And how that long, resilient journey is the greatest inheritance we have.\r\nIt begins in the wild hills of Westmorland in the late 1200s with Gilbert de Querton. In 1292 he stands in a royal courtroom and looks King Edward I — “Longshanks” himself — square in the eye. The king wants the family manor back for the crown. Gilbert fights back with old charters and fierce determination. He wins. That single legal victory plants the Wharton name firmly on the northern map and gives the family their first real power as landowners. From that moment, the Whartons are no longer just another border family — they are rising.\r\nFast-forward to the 1500s and the name is shining. Thomas Wharton, born in 1495, becomes one of the great border warriors of his age. In 1542, at the Battle of Solway Moss, he leads English forces and crushes a much larger Scottish army in one of the most decisive victories ever fought on the border. King Henry VIII is delighted. He rewards Thomas with the title 1st Baron Wharton in 1544. The family is now proper aristocracy, lords of the North, with lands, influence, and a seat at the table of power.\r\nBut every great story has its wild, tragic chapter. That chapter belongs to Philip Wharton, born in 1698 — the 1st and only Duke of Wharton. At just twenty years old, King George I makes him a duke — one of the youngest men in British history to hold that exalted title. Imagine the wealth, the balls, the carriages, the influence. Philip is brilliant, handsome, and fearless… but he is also reckless.\r\nAlmost immediately he joins the infamous Hellfire Club — those notorious nights of drinking, gambling, mocking religion, and pushing every boundary. He throws extravagant parties that cost fortunes. He gambles away huge sums. He switches political sides on a whim, then shocks the entire country by becoming a Jacobite — sailing to Rome to kneel before the exiled Stuart king and even accepting a fake Jacobite title. By his early thirties he is bankrupt, stripped of his English titles, declared an outlaw, and living in exile across Europe. In 1731, aged only 33, he dies penniless in Spain while serving as a colonel in the Spanish army — far from the palaces and power he once commanded. The Dukedom of Wharton dies with him. The great estates are sold off to pay creditors. Centuries of careful building… gone in a single dazzling, self-destructive lifetime.\r\nThat fall echoes down the generations like a long, slow landslide. By the early 1800s the once-mighty Wharton name has become that of ordinary working folk in the same Westmorland hills their ancestors once ruled. And that brings us to your direct ancestor — John Wharton, born in 1794.\r\nJohn is a shepherd and farm labourer. He works the same rugged fells his noble ancestors once owned, but now as a hired hand. He tends sheep in driving rain and biting wind, mends dry-stone walls, lives in a simple cottage with a thatched roof and an earth floor. Life is hard and uncertain. The Enclosure Acts have taken away the common grazing land that once helped poor families survive. Wages are falling. The Industrial Revolution is pulling young men toward factories and mines. Yet John keeps going. He marries Margaret Thompson and together they raise their children with whatever they can scrape together.\r\nIn the 1830s the family hits rock bottom. They find themselves inside the East Ward Union Workhouse in Kirkby Stephen. John and Margaret don’t sit idle — they work inside the workhouse as servants, scrubbing, cooking, caring for the sick and elderly, all while trying to keep their own little ones close. It is a humbling, tough place, but John never breaks. He keeps the family together. And in 1833, right inside those workhouse walls, his son George is born — the boy who will one day walk out of poverty and into the coal mines of Durham.\r\nJohn Wharton is the bridge. From the glittering but ruined world of dukes and border battles to the honest, calloused hands of a shepherd and workhouse labourer. He never gave up. He kept the name alive. And because he did, the line reaches all the way to you.\r\nThat, son, is where our direct Wharton story really begins — not in a palace, but in the quiet courage of a man who refused to let the family disappear.",
+      "ep2": "Part 2 – George Wharton: Workhouse Boy to Durham Miner\r\nAnd now the story steps forward with real heart, son.\r\nGeorge Wharton — your great-great-grandfather — is born in 1833 right inside the East Ward Union Workhouse in Kirkby Stephen. Imagine that moment: a tiny baby crying in a stone building built for the poor, while his parents, John and Margaret, work every waking hour as servants inside the same walls just to keep their family from being split apart. The workhouse is cold, strict, and unforgiving — families separated by rules, long hours of monotonous labour, thin gruel for dinner, and the constant reminder that you are “the deserving poor.” Yet even there, love survives. George grows up watching his parents scrub floors, haul water, and care for the sick and elderly, all while shielding their own children as best they can.\r\nThose early years teach him something unbreakable: resilience. By the time he’s a teenager, George has had enough of charity and walls. In 1851, still only seventeen or eighteen, he walks out of the workhouse with his brother and heads east toward the promise of work in County Durham. They travel on foot or by carrier’s cart across the Pennines, leaving the quiet fells of Westmorland behind and stepping into the smoky, clanging world of the Industrial Revolution.\r\nDarlington first, then deeper into the coalfield. The air changes — it smells of coal smoke and steam engines. The sky is smudged with the fires of pithead engines. This is the boom time for Durham coal. The mines need strong young men, and George grabs the chance with both hands. In 1853, at twenty, he marries Elizabeth Thirkle in Teesdale. She becomes his rock. Together they build something beautiful out of hardship — at least twelve children over the years. John, George Henry, James, and many more arrive one after another.\r\nGeorge doesn’t stay in one place. He follows the work from pit to pit — Usworth, Wylam, Hetton-le-Hole — learning every seam, every danger, every trick of the trade. Finally the family puts down roots in Easington Lane, a proper mining village where the pit dominates everything. The rows of terraced houses are small but full of life. Neighbours look out for each other because they all share the same fear and the same pride: the fear of the cage going down each morning, the pride of bringing a wage home at the end of the shift.\r\nUnderground, George becomes a coal miner. He works the pick and shovel in narrow, dusty tunnels lit only by the flickering flame of his safety lamp. He loads tubs by hand, crawls on his belly through low seams, listens for the roof creaking above him, and still comes home to play with his children and hold Elizabeth’s hand. He lives through the loss of little ones, through wage cuts, through the constant threat of explosion or flood — yet he never quits. He keeps the family fed, keeps them together, and turns the name “Wharton” from a workhouse label into the name of a respected mining family in one of the toughest coalfields in Britain.\r\nBy the time George dies in 1893 he has done something quietly heroic. He walked out of the workhouse as a boy and made sure his children would never have to know that shame. He carried the blood of dukes and barons into the coal seams and proved that real nobility isn’t in titles — it’s in the refusal to be broken.\r\nThat same stubborn strength is in you, son. Every time life feels hard, remember George — the boy who left the workhouse and built a life anyway.",
+      "ep3": "Part 3 – George Henry, Robert “Cappy”, and Robert – The Last of the Pitmen\r\nAnd now the story comes home to the men you can feel closest to, son.\r\nGeorge Henry Wharton, born in 1855 in Cockfield, follows his father straight down the pit. By the time he’s a grown man he’s a “hewer” — the elite, back-breaking job of lying on your side in a seam so low you can barely turn your head, swinging a pickaxe hour after hour to cut the coal face. He marries Hannah Hope in 1875 and together they raise thirteen children in the little terraced houses of Easington Lane. Thirteen mouths to feed on a hewer’s wage. He breathes coal dust every single day, comes home black from head to toe, yet still finds the strength to play with his kids and hold the family together through every hardship the mines threw at them.\r\nNext comes his son — your great-great-grandfather Robert “Cappy” Wharton, born in 1886 right there in Easington Lane. He works as a “filler” — loading the cut coal into tubs deep underground, muscles burning, back bent, in heat and darkness you and I can barely imagine. He marries Margaret Ann Carr in 1909 and they have nine children. Life tests him hard: he loses a daughter Doris at just twelve, then his beloved wife Margaret Ann, then his eldest daughter also named Margaret Ann at only twenty-three. Yet Cappy keeps going. He works through the Great Depression when wages are slashed and men stand at street corners hoping for a shift. He works through the 1926 General Strike, standing shoulder to shoulder with his mates. He works through the Second World War when coal is needed more than ever and older men like him keep the pits running while the young ones fight overseas.\r\nThrough all of it — the tragedies, the strikes, the danger — he remains the steady heart of the family. The mining community in Easington Lane holds him up the same way he holds them up. That unbreakable solidarity is part of our blood too.\r\nAnd then, son… we reach the last man in our direct mining line — your great-grandfather Robert Wharton, born on 7 January 1916 in Easington Lane. He grows up knowing the dangers intimately. He loses his own mother and sisters young. He sees his dad come home covered in dust every night. Yet when his time comes, he follows the family down the pit just like the men before him. In 1953 he marries Ellen Boyle and together they have four daughters — including your grandma. He works the mines right through the post-war years, through nationalisation, through the beginning of the long, slow decline of King Coal. He watches the industry that defined his father, grandfather, and great-grandfather start to fade, yet he stays proud, stays strong, and makes sure his girls grow up knowing they don’t have to go underground — they can choose a different path.\r\nRobert lives to see the 21st century. He passes in 2006 at the grand age of ninety, having outlived the era of the deep pits. With him, the direct Wharton line of coal miners comes to an end — not with a whimper, but with quiet dignity and the knowledge that every generation did what was needed to keep the family alive and moving forward.\r\nFrom Gilbert de Querton standing up to a king in 1292… to Thomas winning at Solway Moss… to Philip the Duke burning bright and falling hard… to John the shepherd in the workhouse… to George the workhouse boy who became a miner… to George Henry the hewer… to Cappy the filler… to your great-grandfather Robert who saw the end of it all — every single one of them refused to be broken. They adapted. They endured. They kept the name and the blood going.\r\nAnd now here you are, carrying all of that history in your veins. The fire of the duke, the courage of the border lord, and the unbreakable grit of the men who went down the pit so their children could stand taller.\r\nThat’s our Wharton story, son. From the highest titles in the land to the deepest seams in the earth — and through it all, the same stubborn refusal to quit. Be proud of every chapter. Be proud of the dukes and be even prouder of the pitmen. They are all the reason you’re here.\r\n Whenever you feel the weight of the world, remember the Whartons — we come from people who stared down kings and stared down coal seams and never looked away.",
+    };
+
+const CORRECT = {
+      "ep1-1": "1292 — he faced King Edward I (Longshanks)",
+      "ep1-2": "Battle of Solway Moss (1542)",
+      "ep1-3": "1st Baron Wharton (1544)",
+      "ep1-4": "1731 in Spain, aged 33 — bankrupt and in exile",
+      "ep1-5": "1794 — shepherd and farm labourer",
+      "ep1-6": "East Ward Union Workhouse, Kirkby Stephen",
+      "ep2-1": "1833 in the East Ward Union Workhouse, Kirkby Stephen",
+      "ep2-2": "1851 — he left for County Durham",
+      "ep2-3": "1853 in Teesdale",
+      "ep2-4": "Easington Lane",
+      "ep2-5": "Coal miner",
+      "ep2-6": "1893",
+      "ep3-1": "1855 in Cockfield — a hewer underground",
+      "ep3-2": "1886 in Easington Lane — a filler loading coal tubs",
+      "ep3-3": "7 January 1916 in Easington Lane",
+      "ep3-4": "Ellen Boyle in 1953 — they had four daughters",
+      "ep3-5": "2006, aged 90",
+      "ep3-6": ["1926 General Strike", "Great Depression", "Second World War"]
+    };
+
+    const episodes = [
+      {
+        id: "ep1", num: 1, file: "01-dukes-and-shepherd.mp3", script: "1.txt",
+        title: "Dukes, Fall & John the Shepherd",
+        desc: "Gilbert de Querton to Philip the Duke, then John Wharton in the workhouse.",
+        quiz: [
+          { id: "ep1-1", type: "single", text: "In 1292 Gilbert de Querton stood up to…", options: ["1292 — he faced King Edward I (Longshanks)", "King Henry VIII in 1542", "Philip the Duke in 1731", "George I when Philip was made duke"] },
+          { id: "ep1-2", type: "single", text: "Thomas Wharton won a decisive victory at…", options: ["Battle of Solway Moss (1542)", "Battle of Hastings", "The workhouse in Kirkby Stephen", "Easington Lane colliery"] },
+          { id: "ep1-3", type: "single", text: "King Henry VIII rewarded Thomas with the title…", options: ["1st Baron Wharton (1544)", "1st Duke of Wharton", "Shepherd of Westmorland", "Colonel in the Spanish army"] },
+          { id: "ep1-4", type: "single", text: "Philip, the 1st Duke of Wharton, died…", options: ["1731 in Spain, aged 33 — bankrupt and in exile", "1794 as a shepherd in Westmorland", "1893 in a Durham mine", "2006 aged ninety in Easington Lane"] },
+          { id: "ep1-5", type: "single", text: "Your direct ancestor John Wharton was born in…", options: ["1794 — shepherd and farm labourer", "1698 — made a duke at twenty", "1833 in the workhouse", "1916 in Easington Lane"] },
+          { id: "ep1-6", type: "single", text: "George Wharton was born in 1833 inside…", options: ["East Ward Union Workhouse, Kirkby Stephen", "St Alban's church, Earsdon", "A palace in Rome", "Cockfield colliery"] }
+        ]
+      },
+      {
+        id: "ep2", num: 2, file: "02-george-miner.mp3", script: "2.txt",
+        title: "George: Workhouse to Miner",
+        desc: "George leaves the workhouse, marries Elizabeth, and roots the family in Durham coal.",
+        quiz: [
+          { id: "ep2-1", type: "single", text: "George Wharton (great-great-grandfather) was born…", options: ["1833 in the East Ward Union Workhouse, Kirkby Stephen", "1794 in Westmorland as a shepherd", "1855 in Cockfield as a hewer", "1886 in Easington Lane as a filler"] },
+          { id: "ep2-2", type: "single", text: "George left the workhouse and headed east in…", options: ["1851 — he left for County Durham", "1292 to face the king", "1953 when he married Ellen", "2006 at the end of deep mining"] },
+          { id: "ep2-3", type: "single", text: "George married Elizabeth Thirkle in…", options: ["1853 in Teesdale", "1818 at St Alban's", "1909 to Margaret Ann Carr", "1875 to Hannah Hope"] },
+          { id: "ep2-4", type: "single", text: "The family finally put down roots in…", options: ["Easington Lane", "Kirkby Stephen workhouse", "Westmorland fells only", "Rome in exile"] },
+          { id: "ep2-5", type: "single", text: "Underground, George worked as a…", options: ["Coal miner", "Bottle finisher", "Jacobite duke", "Rocket engineer"] },
+          { id: "ep2-6", type: "single", text: "George Wharton died in…", options: ["1893", "1731", "1916", "1292"] }
+        ]
+      },
+      {
+        id: "ep3", num: 3, file: "03-last-pitmen.mp3", script: "3.txt",
+        title: "Hewers, Cappy & the Last Pitman",
+        desc: "George Henry, Robert \"Cappy\", and great-grandfather Robert — end of the mining line.",
+        quiz: [
+          { id: "ep3-1", type: "single", text: "George Henry Wharton was born…", options: ["1855 in Cockfield — a hewer underground", "1886 in Easington Lane — a filler", "1916 — the last pitman in the line", "1833 in the workhouse"] },
+          { id: "ep3-2", type: "single", text: "Robert \"Cappy\" Wharton (great-great-grandfather) was…", options: ["1886 in Easington Lane — a filler loading coal tubs", "1855 in Cockfield — a hewer", "1698 — the only Duke of Wharton", "1794 — a shepherd"] },
+          { id: "ep3-3", type: "single", text: "Your great-grandfather Robert Wharton was born…", options: ["7 January 1916 in Easington Lane", "7 January 1886 as Cappy", "1855 in Cockfield", "1937 in Sunderland"] },
+          { id: "ep3-4", type: "single", text: "Robert married…", options: ["Ellen Boyle in 1953 — they had four daughters", "Hannah Hope in 1875", "Margaret Ann Carr in 1909", "Elizabeth Thirkle in 1853"] },
+          { id: "ep3-5", type: "single", text: "Robert Wharton died in…", options: ["2006, aged 90", "1893 after decades mining", "1731 in Spain", "1926 during the General Strike"] },
+          { id: "ep3-6", type: "multiple", text: "Cappy worked through which hard times? (Select all that apply)", options: ["1926 General Strike", "Great Depression", "Second World War", "Battle of Solway Moss", "Philip's Hellfire Club nights", "Napoleonic wars only"] }
+        ]
+      }
+    ];
+
+    const list = document.getElementById("episodes");
+    const copyToast = document.getElementById("copy-toast");
+    const episodeCards = new Map();
+    let currentAudio = null;
+    let currentCard = null;
+    let quizAnswers = loadAnswers();
+    let lockedState = loadLocked();
+
+    function formatTime(s) {
+      if (!s || isNaN(s)) return "0:00";
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60).toString().padStart(2, "0");
+      return `${m}:${sec}`;
+    }
+
+    function stopCurrent() {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+      if (currentCard) {
+        currentCard.classList.remove("playing");
+        const btn = currentCard.querySelector(".btn-play");
+        btn.textContent = "▶ Play";
+        btn.classList.remove("playing");
+      }
+      currentAudio = null;
+      currentCard = null;
+    }
+
+    function loadAnswers() {
+      try {
+        let raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          raw = sessionStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            localStorage.setItem(STORAGE_KEY, raw);
+            sessionStorage.removeItem(STORAGE_KEY);
+          }
+        }
+        return raw ? JSON.parse(raw) : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveAnswers() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(quizAnswers));
+    }
+
+    function loadLocked() {
+      try {
+        let raw = localStorage.getItem(LOCKED_KEY);
+        if (!raw) {
+          raw = sessionStorage.getItem(LOCKED_KEY);
+          if (raw) {
+            localStorage.setItem(LOCKED_KEY, raw);
+            sessionStorage.removeItem(LOCKED_KEY);
+          }
+        }
+        return raw ? JSON.parse(raw) : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveLocked() {
+      localStorage.setItem(LOCKED_KEY, JSON.stringify(lockedState));
+    }
+
+    function sorted(values) {
+      return [...values].sort();
+    }
+
+    function arraysEqual(a, b) {
+      const left = sorted(a);
+      const right = sorted(b);
+      return left.length === right.length && left.every((value, i) => value === right[i]);
+    }
+
+    function getCorrect(q) {
+      return CORRECT[q.id];
+    }
+
+    function isQuestionAnswered(q) {
+      const answer = getAnswer(q);
+      if (q.type === "multiple") return answer.length > 0;
+      return answer !== "";
+    }
+
+    function isQuestionCorrect(q) {
+      const answer = getAnswer(q);
+      const correct = getCorrect(q);
+      if (q.type === "multiple") {
+        return arraysEqual(answer, correct);
+      }
+      return answer === correct;
+    }
+
+    function isQuizComplete(ep) {
+      return ep.quiz.every(isQuestionAnswered);
+    }
+
+    function isEpisodeUnlocked(index) {
+      if (index === 0) return true;
+      return !!lockedState[episodes[index - 1].id];
+    }
+
+    function isScriptUnlocked(ep) {
+      return !!lockedState[ep.id];
+    }
+
+    function nextEpisodeLabel(index) {
+      if (index >= episodes.length - 1) return null;
+      const next = episodes[index + 1];
+      return next.intro ? "Intro" : "Episode " + next.num;
+    }
+
+    function getAnswer(q) {
+      const value = quizAnswers[q.id];
+      if (q.type === "multiple") {
+        return Array.isArray(value) ? value : [];
+      }
+      return typeof value === "string" ? value : "";
+    }
+
+    function setAnswer(q, value) {
+      quizAnswers[q.id] = value;
+      saveAnswers();
+    }
+
+    function episodeLabel(ep) {
+      return ep.intro ? "Intro — " + ep.title : "Episode " + ep.num + " — " + ep.title;
+    }
+
+    function formatCopyText(episodeFilter) {
+      const lines = ["Wharton Story — Dukes to Pitmen — Lewis — Quiz Answers", ""];
+
+      episodes.forEach((ep) => {
+        if (episodeFilter && ep.id !== episodeFilter) return;
+        if (!ep.quiz || !ep.quiz.length) return;
+
+        lines.push(episodeLabel(ep));
+        lines.push("");
+
+        const locked = lockedState[ep.id];
+
+        ep.quiz.forEach((q, i) => {
+          const answer = getAnswer(q);
+          const typeLabel = q.type === "multiple" ? "select multiple" : "pick one";
+          lines.push((i + 1) + ". " + q.text + " (" + typeLabel + ")");
+
+          if (q.type === "multiple") {
+            lines.push("   Answer: " + (answer.length ? answer.join("; ") : "(not answered)"));
+          } else {
+            lines.push("   Answer: " + (answer || "(not answered)"));
+          }
+
+          if (locked) {
+            const mark = isQuestionCorrect(q) ? "Correct" : "Incorrect";
+            const correct = getCorrect(q);
+            lines.push("   Result: " + mark);
+            lines.push("   Correct answer: " + (Array.isArray(correct) ? correct.join("; ") : correct));
+          }
+
+          lines.push("");
+        });
+
+        if (locked) {
+          lines.push("Score: " + locked.score + " / " + locked.total);
+          lines.push("");
+        }
+      });
+
+      return lines.join("\n").trim();
+    }
+
+    function showCopyToast(message) {
+      copyToast.textContent = message;
+      copyToast.classList.add("show");
+      clearTimeout(showCopyToast._timer);
+      showCopyToast._timer = setTimeout(() => copyToast.classList.remove("show"), 2200);
+    }
+
+    async function copyText(text, button) {
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const area = document.createElement("textarea");
+        area.value = text;
+        area.style.position = "fixed";
+        area.style.left = "-9999px";
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        area.remove();
+      }
+
+      if (button) {
+        const original = button.textContent;
+        button.textContent = "Copied!";
+        button.classList.add("copied");
+        setTimeout(() => {
+          button.textContent = original;
+          button.classList.remove("copied");
+        }, 1800);
+      }
+
+      showCopyToast("Copied to clipboard");
+    }
+
+    function applyQuestionFeedback(block, q) {
+      const correct = getCorrect(q);
+      const correctSet = new Set(Array.isArray(correct) ? correct : [correct]);
+      const answer = getAnswer(q);
+      const answerSet = new Set(q.type === "multiple" ? answer : answer ? [answer] : []);
+      const ok = isQuestionCorrect(q);
+
+      block.classList.add("locked");
+
+      block.querySelectorAll(".quiz-option").forEach((label) => {
+        const value = label.querySelector("input").value;
+        label.classList.remove("correct-pick", "wrong-pick", "missed-pick");
+
+        if (correctSet.has(value) && answerSet.has(value)) {
+          label.classList.add("correct-pick");
+        } else if (answerSet.has(value) && !correctSet.has(value)) {
+          label.classList.add("wrong-pick");
+        } else if (correctSet.has(value) && !answerSet.has(value)) {
+          label.classList.add("missed-pick");
+        }
+      });
+
+      let feedback = block.querySelector(".quiz-feedback");
+      if (!feedback) {
+        feedback = document.createElement("div");
+        feedback.className = "quiz-feedback";
+        block.appendChild(feedback);
+      }
+
+      if (ok) {
+        feedback.className = "quiz-feedback correct";
+        feedback.textContent = "Correct";
+      } else {
+        const correctText = Array.isArray(correct) ? correct.join("; ") : correct;
+        feedback.className = "quiz-feedback incorrect";
+        feedback.textContent = "Not quite — correct answer: " + correctText;
+      }
+    }
+
+    function updateLockButton(section, ep) {
+      const lockBtn = section.querySelector("[data-lock-episode]");
+      const results = section.querySelector(".quiz-results");
+      const locked = lockedState[ep.id];
+
+      if (locked) {
+        lockBtn.style.display = "none";
+        results.innerHTML = "<strong class=\"score-pass\">" + locked.score + " / " + locked.total + " correct</strong>" +
+          " — script unlocked." +
+          (nextEpisodeLabel(episodes.indexOf(ep)) ? " Next episode unlocked." : " Walk complete.");
+        return;
+      }
+
+      lockBtn.style.display = "";
+      const complete = isQuizComplete(ep);
+      lockBtn.disabled = !complete;
+      lockBtn.textContent = complete ? "Lock in answers" : "Answer all questions to lock in";
+      results.textContent = complete
+        ? "Ready to lock in. Script unlocks after you lock in."
+        : "Answer every question, then lock in to unlock the script and next episode.";
+    }
+
+    function lockInQuiz(ep, section) {
+      if (!isQuizComplete(ep) || lockedState[ep.id]) return;
+
+      const score = ep.quiz.filter(isQuestionCorrect).length;
+      lockedState[ep.id] = {
+        score,
+        total: ep.quiz.length,
+        lockedAt: Date.now()
+      };
+      saveLocked();
+
+      section.querySelectorAll(".quiz-question").forEach((block, index) => {
+        applyQuestionFeedback(block, ep.quiz[index]);
+        block.querySelectorAll("input").forEach((input) => {
+          input.disabled = true;
+        });
+      });
+
+      updateLockButton(section, ep);
+      refreshEpisodeLocks();
+
+      const epIndex = episodes.indexOf(ep);
+      const nextLabel = nextEpisodeLabel(epIndex);
+      showCopyToast(score + " / " + ep.quiz.length + " correct" + (nextLabel ? " — " + nextLabel + " unlocked" : ""));
+
+      if (epIndex < episodes.length - 1) {
+        const nextCard = episodeCards.get(episodes[epIndex + 1].id);
+        if (nextCard) {
+          nextCard.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    }
+
+    function formatScript(text) {
+      return text
+        .trim()
+        .split(/\n\s*\n/)
+        .map((para) => "<p>" + para.replace(/\n/g, " ").trim() + "</p>")
+        .join("");
+    }
+
+    function toggleScript(card, ep, scriptBtn) {
+      if (!isScriptUnlocked(ep)) return;
+
+      const panel = card.querySelector(".script-panel");
+      const body = card.querySelector(".script-body");
+      const isOpen = panel.classList.contains("open");
+
+      if (isOpen) {
+        panel.classList.remove("open");
+        scriptBtn.classList.remove("open");
+        scriptBtn.textContent = "Read script";
+        return;
+      }
+
+      scriptBtn.classList.add("open");
+      scriptBtn.textContent = "Hide script";
+      panel.classList.add("open");
+
+      if (body.dataset.loaded === "true") return;
+
+      const text = SCRIPTS[ep.id];
+      if (!text) {
+        body.textContent = "Script not found for this episode.";
+        return;
+      }
+
+      body.innerHTML = formatScript(text);
+      body.dataset.loaded = "true";
+    }
+
+    function refreshEpisodeLocks() {
+      episodes.forEach((ep, index) => {
+        const card = episodeCards.get(ep.id);
+        if (!card) return;
+
+        const unlocked = isEpisodeUnlocked(index);
+        const playBtn = card.querySelector(".btn-play");
+        const downloadBtn = card.querySelector(".btn-download");
+        const scriptBtn = card.querySelector(".btn-script");
+        const scriptPanel = card.querySelector(".script-panel");
+        const banner = card.querySelector(".ep-locked-banner");
+        const prev = episodes[index - 1];
+        const scriptReady = unlocked && isScriptUnlocked(ep);
+
+        card.classList.toggle("locked", !unlocked);
+        playBtn.disabled = !unlocked;
+        downloadBtn.classList.toggle("disabled", !unlocked);
+
+        if (scriptBtn) {
+          scriptBtn.disabled = !scriptReady;
+          if (!scriptReady) {
+            scriptBtn.classList.remove("open");
+            scriptBtn.textContent = unlocked ? "Read script (after quiz)" : "Read script";
+            if (scriptPanel) scriptPanel.classList.remove("open", "loading");
+          } else if (!scriptBtn.classList.contains("open")) {
+            scriptBtn.textContent = "Read script";
+          }
+        }
+
+        if (!unlocked) {
+          playBtn.textContent = "Locked";
+          banner.textContent = "Complete the recall check on " +
+            (prev.intro ? "the intro" : "Episode " + prev.num) +
+            " and press Lock in answers to unlock this episode.";
+          if (currentCard === card) {
+            stopCurrent();
+          }
+        } else if (!currentAudio || currentCard !== card) {
+          playBtn.textContent = "▶ Play";
+        }
+      });
+    }
+
+    function renderQuiz(ep, card) {
+      if (!ep.quiz || !ep.quiz.length) return;
+
+      const section = document.createElement("div");
+      section.className = "quiz-section";
+      section.innerHTML = `
+        <div class="quiz-header">
+          <div class="quiz-title">Recall check</div>
+          <button type="button" class="btn-copy" data-copy-episode="${ep.id}">Copy this section</button>
+        </div>
+        <p class="quiz-hint">Rapid fire — answer from memory after listening. No script until you lock in. Then unlock the next episode.</p>
+        <div class="quiz-footer">
+          <button type="button" class="btn-lock" data-lock-episode="${ep.id}">Answer all questions to lock in</button>
+          <div class="quiz-results"></div>
+        </div>
+      `;
+
+      const questionsWrap = document.createElement("div");
+      questionsWrap.className = "quiz-questions";
+      section.insertBefore(questionsWrap, section.querySelector(".quiz-footer"));
+
+      ep.quiz.forEach((q, index) => {
+        const block = document.createElement("div");
+        block.className = "quiz-question";
+        const typeHint = q.type === "multiple" ? "select multiple" : "pick one";
+        const inputType = q.type === "multiple" ? "checkbox" : "radio";
+        const saved = getAnswer(q);
+
+        block.innerHTML = `
+          <div class="quiz-q-text">
+            ${index + 1}. ${q.text}
+            <span class="quiz-q-type">(${typeHint})</span>
+          </div>
+          <div class="quiz-options" data-question="${q.id}"></div>
+        `;
+
+        const optionsWrap = block.querySelector(".quiz-options");
+
+        q.options.forEach((option) => {
+          const label = document.createElement("label");
+          label.className = "quiz-option";
+          const input = document.createElement("input");
+          input.type = inputType;
+          input.name = q.id;
+          input.value = option;
+
+          if (q.type === "multiple") {
+            input.checked = saved.includes(option);
+          } else {
+            input.checked = saved === option;
+          }
+
+          input.addEventListener("change", () => {
+            if (lockedState[ep.id]) return;
+            if (q.type === "multiple") {
+              const checked = [...optionsWrap.querySelectorAll("input:checked")].map((el) => el.value);
+              setAnswer(q, checked);
+            } else {
+              setAnswer(q, option);
+            }
+            updateLockButton(section, ep);
+          });
+
+          label.appendChild(input);
+          label.appendChild(document.createTextNode(option));
+          optionsWrap.appendChild(label);
+        });
+
+        questionsWrap.appendChild(block);
+      });
+
+      section.querySelector("[data-copy-episode]").addEventListener("click", (e) => {
+        copyText(formatCopyText(ep.id), e.currentTarget);
+      });
+
+      section.querySelector("[data-lock-episode]").addEventListener("click", () => {
+        lockInQuiz(ep, section);
+      });
+
+      if (lockedState[ep.id]) {
+        section.querySelectorAll(".quiz-question").forEach((block, index) => {
+          applyQuestionFeedback(block, ep.quiz[index]);
+          block.querySelectorAll("input").forEach((input) => {
+            input.disabled = true;
+          });
+        });
+      }
+
+      updateLockButton(section, ep);
+      card.appendChild(section);
+    }
+
+    function encodeProgress() {
+      const payload = { v: 1, answers: quizAnswers, locked: lockedState };
+      return PROGRESS_PREFIX + btoa(encodeURIComponent(JSON.stringify(payload)));
+    }
+
+    function decodeProgress(code) {
+      const trimmed = code.trim();
+      if (!trimmed.startsWith(PROGRESS_PREFIX)) {
+        throw new Error("That does not look like a physics benchmark progress code.");
+      }
+      const payload = JSON.parse(decodeURIComponent(atob(trimmed.slice(PROGRESS_PREFIX.length))));
+      if (!payload || payload.v !== 1 || typeof payload.answers !== "object" || typeof payload.locked !== "object") {
+        throw new Error("This progress code is invalid or from an older version.");
+      }
+      return payload;
+    }
+
+    function exportProgress(button) {
+      copyText(encodeProgress(), button);
+      showCopyToast("Progress code copied — paste it on another device");
+    }
+
+    function importProgress(code) {
+      const payload = decodeProgress(code);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload.answers));
+      localStorage.setItem(LOCKED_KEY, JSON.stringify(payload.locked));
+      location.reload();
+    }
+
+    function clearSessionData() {
+      const ok = confirm(
+        "Clear all quiz answers, scores, unlocks, and script access?\n\nThis resets the walk on this device."
+      );
+      if (!ok) return;
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(LOCKED_KEY);
+      location.reload();
+    }
+
+    document.getElementById("copy-all").addEventListener("click", (e) => {
+      copyText(formatCopyText(), e.currentTarget);
+    });
+
+    document.getElementById("export-progress").addEventListener("click", (e) => {
+      exportProgress(e.currentTarget);
+    });
+
+    document.getElementById("import-progress").addEventListener("click", () => {
+      document.getElementById("import-panel").classList.add("open");
+      document.getElementById("import-code").focus();
+    });
+
+    document.getElementById("import-cancel").addEventListener("click", () => {
+      document.getElementById("import-panel").classList.remove("open");
+      document.getElementById("import-code").value = "";
+    });
+
+    document.getElementById("import-confirm").addEventListener("click", () => {
+      const code = document.getElementById("import-code").value;
+      if (!code.trim()) {
+        alert("Paste a progress code first.");
+        return;
+      }
+      try {
+        importProgress(code);
+      } catch (err) {
+        alert(err.message || "Could not import that progress code.");
+      }
+    });
+
+    document.getElementById("clear-session").addEventListener("click", clearSessionData);
+
+    episodes.forEach((ep, index) => {
+      const card = document.createElement("article");
+      card.className = "episode";
+      card.dataset.episodeId = ep.id;
+      const numClass = ep.intro ? "ep-num intro" : "ep-num";
+      const label = ep.intro ? "★" : ep.num;
+
+      card.innerHTML = `
+        <div class="episode-top">
+          <div class="${numClass}">${label}</div>
+          <div class="ep-info">
+            <div class="ep-title">${ep.title}</div>
+            <div class="ep-desc">${ep.desc}</div>
+          </div>
+        </div>
+        <audio preload="metadata" src="${audioUrl(ep.file)}"></audio>
+        <div class="ep-actions">
+          <button type="button" class="btn-play">▶ Play</button>
+          <a class="btn btn-download" href="${audioUrl(ep.file)}" download="${ep.file}">↓ Download</a>
+          <button type="button" class="btn-script">Read script</button>
+        </div>
+        <div class="script-panel"><div class="script-body"></div></div>
+        <div class="ep-locked-banner"></div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+          <div class="time"><span class="cur">0:00</span> / <span class="dur">0:00</span></div>
+        </div>
+      `;
+
+      const audio = card.querySelector("audio");
+      const playBtn = card.querySelector(".btn-play");
+      const downloadBtn = card.querySelector(".btn-download");
+      const scriptBtn = card.querySelector(".btn-script");
+      const fill = card.querySelector(".progress-fill");
+      const bar = card.querySelector(".progress-bar");
+      const cur = card.querySelector(".cur");
+      const dur = card.querySelector(".dur");
+
+      audio.addEventListener("loadedmetadata", () => {
+        dur.textContent = formatTime(audio.duration);
+      });
+
+      audio.addEventListener("timeupdate", () => {
+        const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+        fill.style.width = pct + "%";
+        cur.textContent = formatTime(audio.currentTime);
+      });
+
+      audio.addEventListener("ended", () => {
+        playBtn.textContent = "▶ Play";
+        playBtn.classList.remove("playing");
+        card.classList.remove("playing");
+        if (currentAudio === audio) {
+          currentAudio = null;
+          currentCard = null;
+        }
+      });
+
+      playBtn.addEventListener("click", () => {
+        if (!isEpisodeUnlocked(index)) return;
+
+        if (currentAudio === audio && !audio.paused) {
+          audio.pause();
+          playBtn.textContent = "▶ Play";
+          playBtn.classList.remove("playing");
+          card.classList.remove("playing");
+          return;
+        }
+        stopCurrent();
+        currentAudio = audio;
+        currentCard = card;
+        audio.play();
+        playBtn.textContent = "⏸ Pause";
+        playBtn.classList.add("playing");
+        card.classList.add("playing");
+      });
+
+      downloadBtn.addEventListener("click", (e) => {
+        if (!isEpisodeUnlocked(index)) e.preventDefault();
+      });
+
+      scriptBtn.addEventListener("click", () => {
+        if (!isEpisodeUnlocked(index) || !isScriptUnlocked(ep)) return;
+        toggleScript(card, ep, scriptBtn);
+      });
+
+      bar.addEventListener("click", (e) => {
+        if (!isEpisodeUnlocked(index) || !audio.duration) return;
+        const rect = bar.getBoundingClientRect();
+        const ratio = (e.clientX - rect.left) / rect.width;
+        audio.currentTime = ratio * audio.duration;
+      });
+
+      renderQuiz(ep, card);
+      episodeCards.set(ep.id, card);
+      list.appendChild(card);
+    });
+
+    refreshEpisodeLocks();
+  </script>
+</body>
+</html>
