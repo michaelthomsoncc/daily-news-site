@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boyle Story — Lewis</title>
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --surface: #141b24;
+      --surface-2: #1a2430;
+      --border: #2a3644;
+      --text: #e8edf2;
+      --muted: #8fa3b8;
+      --accent: #3d9b6e;
+      --accent-soft: rgba(61, 155, 110, 0.14);
+      --accent-glow: rgba(61, 155, 110, 0.35);
+      --success: #34d399;
+      --danger: #f87171;
+      --warn: #fbbf24;
+      --radius: 14px;
+      --shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(61, 155, 110, 0.14), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(52, 211, 153, 0.06), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 3rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid rgba(61, 158, 255, 0.25);
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: clamp(1.9rem, 5vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.6rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 32rem;
+      margin: 0 auto 1.25rem;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .meta span {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+    }
+
+    .instructions {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .instructions strong { color: var(--text); }
+
+    .episode-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .episode {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.35rem;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .episode:hover {
+      border-color: rgba(61, 158, 255, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .episode.playing {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-glow), var(--shadow);
+    }
+
+    .episode.locked {
+      opacity: 0.72;
+    }
+
+    .episode.locked:hover {
+      transform: none;
+      border-color: var(--border);
+    }
+
+    .ep-locked-banner {
+      display: none;
+      margin-top: 0.85rem;
+      padding: 0.7rem 0.85rem;
+      border-radius: 9px;
+      background: rgba(251, 191, 36, 0.08);
+      border: 1px solid rgba(251, 191, 36, 0.25);
+      color: var(--warn);
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .episode.locked .ep-locked-banner { display: block; }
+
+    .episode.locked .quiz-section { display: none; }
+
+    button:disabled, .btn.disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .btn-play:disabled {
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .episode-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .ep-num {
+      flex-shrink: 0;
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 10px;
+      border: 1px solid rgba(61, 158, 255, 0.2);
+    }
+
+    .ep-num.intro { background: rgba(52, 211, 153, 0.12); color: var(--success); border-color: rgba(52, 211, 153, 0.25); }
+
+    .ep-info { flex: 1; min-width: 0; }
+
+    .ep-title {
+      font-size: 1.1rem;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .ep-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .ep-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-top: 1rem;
+    }
+
+    button, .btn {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      border-radius: 9px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    button:active, .btn:active { transform: scale(0.97); }
+
+    .btn-play {
+      background: var(--accent);
+      color: #061018;
+    }
+
+    .btn-play:hover { background: #5aafff; }
+
+    .btn-play.playing {
+      background: var(--surface-2);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    .btn-download {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-download:hover {
+      background: #223040;
+      border-color: rgba(61, 158, 255, 0.3);
+    }
+
+    .btn-script {
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-script:hover:not(:disabled) {
+      background: #223040;
+      color: var(--text);
+      border-color: rgba(61, 158, 255, 0.3);
+    }
+
+    .btn-script.open {
+      color: var(--accent);
+      border-color: rgba(61, 158, 255, 0.35);
+      background: var(--accent-soft);
+    }
+
+    .script-panel {
+      display: none;
+      margin-top: 0.85rem;
+      padding: 1rem 1.1rem;
+      border-radius: 10px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      max-height: 22rem;
+      overflow-y: auto;
+    }
+
+    .script-panel.open { display: block; }
+
+    .script-panel.loading {
+      display: block;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .script-body {
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .script-body p { margin-bottom: 0.85rem; }
+    .script-body p:last-child { margin-bottom: 0; }
+
+    .episode.locked .script-panel,
+    .episode .script-panel:not(.open) { display: none; }
+
+    audio {
+      display: none;
+    }
+
+    .progress-wrap {
+      margin-top: 0.75rem;
+      display: none;
+    }
+
+    .episode.playing .progress-wrap { display: block; }
+
+    .progress-bar {
+      height: 4px;
+      background: var(--surface-2);
+      border-radius: 2px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      border-radius: 2px;
+      transition: width 0.1s linear;
+    }
+
+    .time {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.35rem;
+    }
+
+    .quiz-section {
+      margin-top: 1.25rem;
+      padding-top: 1.15rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .quiz-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .quiz-title {
+      font-size: 0.82rem;
+      font-weight: 650;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .quiz-hint {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+
+    .quiz-question {
+      margin-bottom: 1rem;
+    }
+
+    .quiz-question:last-child { margin-bottom: 0; }
+
+    .quiz-q-text {
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 0.45rem;
+      line-height: 1.4;
+    }
+
+    .quiz-q-type {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-left: 0.35rem;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .quiz-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 0.88rem;
+      color: var(--muted);
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+
+    .quiz-option:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .quiz-option:has(input:checked) {
+      background: var(--accent-soft);
+      border-color: rgba(61, 158, 255, 0.3);
+      color: var(--text);
+    }
+
+    .quiz-option input {
+      margin-top: 0.15rem;
+      flex-shrink: 0;
+      accent-color: var(--accent);
+    }
+
+    .quiz-option.correct-pick {
+      background: rgba(52, 211, 153, 0.1);
+      border-color: rgba(52, 211, 153, 0.35);
+      color: var(--text);
+    }
+
+    .quiz-option.wrong-pick {
+      background: rgba(248, 113, 113, 0.1);
+      border-color: rgba(248, 113, 113, 0.35);
+      color: var(--text);
+    }
+
+    .quiz-option.missed-pick {
+      border-color: rgba(52, 211, 153, 0.25);
+      border-style: dashed;
+    }
+
+    .quiz-question.locked .quiz-option {
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .quiz-question.locked .quiz-option:hover {
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .quiz-question.locked .quiz-option.correct-pick:hover,
+    .quiz-question.locked .quiz-option.wrong-pick:hover,
+    .quiz-question.locked .quiz-option.missed-pick:hover {
+      color: var(--text);
+    }
+
+    .quiz-feedback {
+      margin-top: 0.4rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .quiz-feedback.correct { color: var(--success); }
+    .quiz-feedback.incorrect { color: var(--danger); }
+
+    .quiz-footer {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-lock {
+      background: var(--success);
+      color: #042f1e;
+    }
+
+    .btn-lock:hover:not(:disabled) { background: #4ade80; }
+
+    .btn-lock:disabled {
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      opacity: 1;
+    }
+
+    .quiz-results {
+      flex: 1;
+      min-width: 12rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .quiz-results strong { color: var(--text); }
+
+    .quiz-results .score-pass { color: var(--success); }
+    .quiz-results .score-miss { color: var(--warn); }
+
+    .btn-copy {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      padding: 0.45rem 0.8rem;
+    }
+
+    .btn-copy:hover {
+      background: #223040;
+      border-color: rgba(61, 158, 255, 0.3);
+    }
+
+    .btn-copy.copied {
+      border-color: rgba(52, 211, 153, 0.4);
+      color: var(--success);
+    }
+
+    .quiz-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .quiz-toolbar p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      max-width: 26rem;
+    }
+
+    .quiz-toolbar strong { color: var(--text); }
+
+    .quiz-toolbar-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .btn-reset {
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      padding: 0.45rem 0.8rem;
+    }
+
+    .btn-reset:hover {
+      background: #223040;
+      border-color: rgba(248, 113, 113, 0.35);
+      color: var(--danger);
+    }
+
+    .progress-transfer {
+      display: none;
+      margin-bottom: 1.5rem;
+      padding: 1rem 1.1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .progress-transfer.open { display: block; }
+
+    .progress-transfer label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-transfer textarea {
+      width: 100%;
+      min-height: 5.5rem;
+      resize: vertical;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      padding: 0.65rem 0.75rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .progress-transfer-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .copy-toast {
+      position: fixed;
+      bottom: 1.25rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: var(--surface-2);
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      color: var(--success);
+      padding: 0.65rem 1.1rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      z-index: 100;
+      transition: transform 0.25s ease;
+      pointer-events: none;
+    }
+
+    .copy-toast.show { transform: translateX(-50%) translateY(0); }
+
+    footer {
+      text-align: center;
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    footer strong { color: var(--text); }
+
+    @media (max-width: 480px) {
+      .wrap { padding: 1.5rem 1rem 2.5rem; }
+      .episode { padding: 1.1rem; }
+      .ep-actions { flex-direction: column; }
+      .ep-actions button, .ep-actions .btn { justify-content: center; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="badge">Boyle line</div>
+      <h1>Mayo to Easington</h1>
+      <p class="subtitle">Three parts with Dad's voice — from Mayo before the Famine to Durham pits, Ellen's kitchens, and the family today.</p>
+      <div class="meta">
+        <span>~15 minutes total</span>
+        <span>3 parts</span>
+        <span>18 recall questions</span>
+      </div>
+    </header>
+
+    <div class="instructions">
+      <strong>How to use this:</strong> Listen with the family tree open or a quiet moment at home. Play each part, answer the recall check, and press <strong>Lock in answers</strong>. The next part unlocks when you lock in. Script unlocks after lock-in. Tell Dad what landed.
+    </div>
+
+    <div class="quiz-toolbar">
+      <p><strong>Recall check:</strong> Answer each quiz, lock in to see results, then the next episode unlocks. Progress saves on this device. To continue on another phone or computer, use <strong>Export</strong> here and <strong>Import</strong> there.</p>
+      <div class="quiz-toolbar-actions">
+        <button type="button" class="btn-copy" id="copy-all">Copy all Q&amp;A</button>
+        <button type="button" class="btn-copy" id="export-progress">Export progress</button>
+        <button type="button" class="btn-copy" id="import-progress">Import progress</button>
+        <button type="button" class="btn-reset" id="clear-session">Reset progress</button>
+      </div>
+    </div>
+
+    <div class="progress-transfer" id="import-panel">
+      <label for="import-code">Paste your progress code</label>
+      <textarea id="import-code" placeholder="Paste the code from Export progress…"></textarea>
+      <div class="progress-transfer-actions">
+        <button type="button" class="btn-lock" id="import-confirm">Restore progress</button>
+        <button type="button" class="btn-reset" id="import-cancel">Cancel</button>
+      </div>
+    </div>
+
+    <div class="episode-list" id="episodes"></div>
+
+    <footer>
+      Boyle story for <strong>Lewis</strong> — Mayo, pits, Ellen.<br>
+      Lock in, copy your answers, tell Dad what stuck.
+    </footer>
+  </div>
+
+  <div class="copy-toast" id="copy-toast" aria-live="polite">Copied to clipboard</div>
+
+  <script>
+    // Upload MP3s to a public host, then paste the URL prefix here (no trailing slash).
+    // Leave "" to use the local audio/ folder while testing on your machine.
+    //
+    // Internet Archive:  https://archive.org/download/YOUR-ITEM-ID
+    // GitHub Release:    https://github.com/YOUR_USER/brain-os-audio/releases/download/v1
+    // Cloudflare R2:     https://pub-xxxxxxxx.r2.dev/brain-os
+    const AUDIO_BASE_URL = "";
+
+    function pageBaseUrl() {
+      const { origin, pathname } = window.location;
+      if (pathname.endsWith("/")) return origin + pathname;
+      const last = pathname.split("/").pop() || "";
+      if (/\.[a-z0-9]+$/i.test(last)) return origin + pathname.replace(/[^/]+$/, "");
+      return origin + pathname + "/";
+    }
+
+    function pageAssetUrl(relativePath) {
+      return new URL(relativePath.replace(/^\//, ""), pageBaseUrl()).href;
+    }
+
+    function audioUrl(filename) {
+      const base = AUDIO_BASE_URL.trim().replace(/\/$/, "");
+      return base ? base + "/" + filename : pageAssetUrl("audio/" + filename);
+    }
+
+    const STORAGE_KEY = "lewis-thady-boyle-answers";
+    const LOCKED_KEY = "lewis-thady-boyle-locked";
+    const PROGRESS_PREFIX = "lewtboy1:";
+
+    const SCRIPTS = {
+      "ep1": "Hey son… get comfortable, put your earbuds in, and let’s go on a journey together. Close your eyes for a second while you listen and picture the wild west coast of Ireland in 1798. This is where our Boyle story begins — not with kings or castles, but with ordinary people who had the courage to keep going when everything was stacked against them. Their blood, their grit, and their hope flow straight to you.\r\nTimothy “Thady” Boyle is born in 1798 in County Mayo, the exact same year as the failed Irish Rebellion. While he’s a tiny baby in his mother’s arms, French ships are landing in Killala Bay to help the United Irishmen rise up against British rule. The rebellion is crushed at Ballinamuck, but the fear, the heartbreak, and the hardship stay behind in the west. Thady grows up in a land still bruised by the Penal Laws — laws that told Catholic families like his they could not own land, could not vote, could not go to proper school, and must pay rent to landlords who lived in England and never even visited the estates.\r\nMayo is breathtaking — jagged coastline, green hills rolling down to the sea, peat bogs, and small whitewashed cottages. But beauty doesn’t fill bellies. The Boyles are tenant farmers on tiny scattered plots. They grow potatoes because the potato is forgiving — it grows in poor soil and gives a huge harvest. They grow oats too, but most of that goes to pay the rent. Thady learns young how to dig lazy beds with a spade, how to plant “praties” in the spring, how to harvest in the autumn, and how to stretch every single meal when the winter is long and the landlord’s agent is coming for the rent.\r\nLife is ruled by the seasons and the landlord. One bad year — too much rain, too little sun — and the family is in trouble. Yet the community is rich in other ways. They speak Irish at home, tell stories by the fire, sing songs that remember the old kings, and walk miles to secret Masses held in hidden glens or barns because open Catholic worship is still risky. Neighbours help each other with the harvest, with a sick child, with a broken plough. That unbreakable sense of “us against the world” is baked into Thady from the day he is born.\r\nBy the 1830s the pressure becomes crushing. Ireland’s population has doubled in sixty years. Land is subdivided again and again so every son can have a scrap to feed his own family. Rents keep rising even when harvests fail. Thady, now in his forties with a wife Catharine Riley and several young children, watches the same story play out in every cottage around him. He knows if they stay, hunger and eviction are coming. So in the late 1830s — just before the Great Famine explodes across the west — Thady makes the bravest decision of his life.\r\nThe family packs what little they own and walks or takes a carrier’s cart to the port. They board a crowded ship, cross the wild Irish Sea to Liverpool (a journey that could take days in terrible conditions), then travel north by canal boat or the new early railways until they reach the smoky coalfields of County Durham. In 1841 they step off in Easington Lane — a raw, new mining village where the pithead engine is already turning and the rows of company cottages are going up fast.\r\nThady, a man in his forties who has never been underground in his life, goes down the mine as a hewer. From open sky and the smell of peat and sea air to total darkness, coal dust, and the constant fear of the roof coming in. The contrast is shocking. Yet that first shift puts food on the table and a roof — however small — over his children’s heads. The family plants a garden, keeps a pig that becomes famous for helping them through the lean times, joins the growing Irish community in the village, and slowly, stubbornly, begins to put down new roots in English soil.\r\nThady never saw the worst of the Great Famine that would soon kill over a million in Ireland and drive another million across the sea — because he got his family out just in time. That single act of courage, taken when everything was uncertain, is why you and I are here today.",
+      "ep2": "The Boyles don’t just survive in Easington Lane — they put down deep, stubborn roots and help shape the place into a real community.\r\nThady, now in his forties, steps into the rattling cage for the first time and drops down the shaft into a different world. From the open sky, salt wind, and green fields of Mayo to total darkness, the heavy smell of damp rock and coal dust, the creak of timber props, and the distant drip of water. He works as a hewer — lying on his side in seams so low he can barely turn his head, swinging a pickaxe hour after hour, filling tubs with the black gold that powers Britain’s factories, ships, and railways. The work is back-breaking, the air thick with dust, the danger constant — roof falls, explosions from firedamp, flooding, and the slow poison of coal dust in the lungs. Yet every shift puts food on the table and a roof over his children’s heads.\r\nThe family settles into one of the new company cottages in Easington Lane — two small rooms, a tiny garden plot where they grow potatoes and cabbage, and space out the back for the famous pig that becomes a family legend for helping them through the lean times. Catharine Riley Boyle becomes the heart of the home. She rises before dawn to light the fire, bakes bread, washes the black dust out of Thady’s clothes every single night, tends the garden, looks after the children, and still finds the energy to offer a cup of tea and a listening ear to neighbours when times are hard. Life revolves around the pit whistle: the men leave in the dark, the women keep the home fires burning, and the whole village breathes in rhythm with the shift changes.\r\nThey are part of a huge wave of Irish families flooding into the Durham coalfields. The locals sometimes look sideways at them, muttering about “Paddies” taking jobs and keeping wages down. Anti-Irish feeling runs high — fuelled by religion, accent, and fear of competition. But the Irish stick together like glue. They build small Catholic chapels, organise help for new arrivals who step off the boat with nothing, share food when a family is struggling after an accident, and hold ceilidhs and storytelling nights that keep the old language and the old songs alive in a foreign land. In the mining rows of Easington Lane, a new kind of solidarity is born: if you go down the pit, you’re one of us — Irish or English.\r\nThady and Catharine raise a large, lively family in those terraces. The children grow up knowing the sound of the pit wheel and the sight of their father coming home black from head to toe. The older sons, including young Thomas, start going down the mine as soon as they are old enough — first as trappers (opening and closing ventilation doors in the dark) or putters (pushing heavy tubs along the rails), then learning to hew coal beside their father. It’s a hard apprenticeship, but it keeps the family together and the rent paid. There is laughter too — christenings in the little chapel, neighbours crowding into kitchens for a sing-song, summer walks on the few days off, and the warmth of a crowded fireside after a shift when the men come home exhausted but alive.\r\nOf course there is sorrow. Mining takes its toll. Roof falls, explosions, the slow creep of dust in the lungs — every family in the village has stories of men who didn’t come home. The Boyles know loss, but they keep going the way Irish families have always kept going — leaning on each other, on their faith, and on the quiet determination that brought them across the sea in the first place.\r\nBy 1868, after nearly thirty years underground, Thady Boyle dies at the age of seventy in Houghton-le-Spring. He never went back to Mayo, but he carried it with him every single day he went down the pit — the memory of the green fields, the taste of the potatoes they grew with their own hands, and the courage that made him leave when staying would have meant starvation. He took his family from the edge of hunger in Ireland to a solid, if tough, life in the Durham coalfields. He taught his children how to work hard, how to stick together, and how to build something lasting even when the world tries to knock you down.\r\nHis son Thomas picks up the torch and keeps the line strong. In 1887 Thomas and his wife have a son — John Boyle, your great-great-grandfather. John grows up in Hetton-le-Hole and Murton surrounded by the same pit whistles, the same black dust on every windowsill, and the same unbreakable community spirit that his grandfather Thady helped create.\r\nThe Boyles have become true Durham mining stock — Irish hearts, English soil, and a fierce pride in the work that keeps the lights on and the ships sailing. From the potato fields of Mayo to the coal seams of Easington Lane, they have made a new home and a new future.\r\nAnd that, son, is the bridge your ancestors built with their bare hands and their unbreakable spirit.",
+      "ep3": "The story moves forward into the twentieth century, son, and the heart of the family stays right here in the mining villages of County Durham.\r\nJohn Boyle, born in 1887 in Murton, grows up fast. He loses brothers and sisters young, loses his father Thomas in 1914, and finds himself one of the main providers while still in his twenties. Like the men before him, he goes down the pit — first as a boy putter pushing heavy tubs, then as a hewer cutting coal in the same dark seams his grandfather Thady once worked. He lives through the Great War (staying to keep the coal flowing for the war effort) and carries the same quiet determination that brought Thady across the Irish Sea decades earlier.\r\nThen comes Ellen Boyle, born on 12 August 1931 in Easington Lane — your great-grandmother and the woman whose strength still echoes in the family today. She is born into a village still defined by the pit whistle and the black dust on every windowsill. Her early years are shaped by the Second World War — rationing, blackout curtains, the worry when men are called up, and the pride when the coal keeps powering the nation. She grows up knowing the fear every wife and mother feels when the men go down, but also the fierce pride of the mining community that looks after its own.\r\nShe marries Robert Wharton in January 1953 and they build a life together in the same village her ancestors helped create. They have four daughters — Susan, Christine, Karen, and Shelagh — and fill their home with love and laughter even when times are tight. When Robert’s health begins to fail from years of dust and hard labour and he is forced to retire early, Ellen doesn’t hesitate. She goes to work in the kitchens at St Hilda’s (University College, Durham), cooking for hundreds of students every day. It’s hard, hot, physical work, but she does it with the same quiet pride her great-grandfather Thady showed when he first went down the pit. She keeps the family afloat, makes sure her girls have opportunities she never had, and still finds time to be the steady heart of the home.\r\nThose four daughters carry the family forward in beautiful new ways. Christine and Shelagh both trained and worked as nurses at Sunderland Eye Infirmary, caring for patients with skill and compassion. Susan and Karen went into administrative roles at Sunderland General Hospital, helping keep the whole system running smoothly. Ellen’s hard work and determination gave her girls the chance to step into respected caring and professional roles in the very hospitals that served the mining communities their ancestors had powered for generations. It was the perfect full-circle moment — from the men who dug the coal that built the hospitals to the women who helped run them.\r\nEllen stays in Easington Lane her whole life. She watches the mines slowly close one by one, the industry that defined her family for generations gradually fade, yet she remains rooted in the place her ancestors fought so hard to make home. She carries the stories — of Mayo fields and Irish Sea crossings, of workhouse walls and coal seams, of loss and laughter — and passes them on to her daughters and grandchildren with love and pride.\r\nWhen Ellen passes in 2011 at the age of eighty, she leaves behind a legacy of incredible resilience. From Thady Boyle leaving Mayo just before the Famine, to the men who went down the pits, to the women who kept the homes and the hearts together, to Ellen working in the university kitchens so her children could have choices and build meaningful careers in healthcare — every single one of them chose to keep going when life was hardest.\r\nSon, that is our Boyle story in full. From a tenant farmer watching French ships land in Killala Bay in 1798, to a man risking everything to cross the sea for his family, to generations of miners who powered Britain, to Ellen standing in those university kitchens making sure the next generation could stand taller and serve their community. Every single one of them refused to be broken. They adapted. They endured. They loved fiercely and kept the name and the blood going.\r\nYou carry all of that inside you — Irish fire, Durham grit, the courage of a man who left everything behind, and the quiet strength of a woman who worked in the kitchens so her family could thrive. Be proud of every chapter. Be proud of the green fields, the black coal, the hard shifts, and the love that held it all together.\r\nFull circle, son. From the hills of Mayo to the streets of Easington Lane to you.",
+    };
+
+const CORRECT = {
+      "ep1-1": "County Mayo",
+      "ep1-2": "The 1798 Irish Rebellion (French landing at Killala)",
+      "ep1-3": "Catharine Riley",
+      "ep1-4": "Easington Lane",
+      "ep1-5": "Hewer",
+      "ep1-6": "The Great Famine",
+      "ep2-1": "1868",
+      "ep2-2": "Houghton-le-Spring",
+      "ep2-3": "1887",
+      "ep2-4": "Putters",
+      "ep2-5": "Catholic chapels",
+      "ep2-6": "Hetton-le-Hole and Murton",
+      "ep3-1": "Murton",
+      "ep3-2": "12 August 1931",
+      "ep3-3": "Robert Wharton",
+      "ep3-4": "St Hilda's (University College, Durham) — kitchens",
+      "ep3-5": "Four",
+      "ep3-6": ["Christine", "Shelagh"]
+    };
+
+    const episodes = [
+      {
+        id: "ep1", num: 1, file: "01-mayo-to-durham.mp3", script: "1.txt",
+        title: "Mayo to Durham",
+        desc: "Thady Boyle, the Penal Laws, emigration, and the first shift underground.",
+        quiz: [
+          { id: "ep1-1", type: "single", text: "In which Irish county was Timothy \"Thady\" Boyle born?", options: ["County Mayo", "County Durham", "Westmorland", "County Cork"] },
+          { id: "ep1-2", type: "single", text: "Which event was unfolding in Ireland the year Thady was born?", options: ["The 1798 Irish Rebellion (French landing at Killala)", "The Great Famine", "The 1926 General Strike", "Philip Wharton's Hellfire Club"] },
+          { id: "ep1-3", type: "single", text: "Who was Thady's wife?", options: ["Catharine Riley", "Ellen Boyle", "Charlotte Bailey", "Elizabeth Thirkle"] },
+          { id: "ep1-4", type: "single", text: "Where did the Boyle family settle in County Durham?", options: ["Easington Lane", "Kirkby Stephen workhouse", "Murton shipyards", "Killala Bay"] },
+          { id: "ep1-5", type: "single", text: "What was Thady's job underground?", options: ["Hewer", "Filler", "Bottle finisher", "Shepherd only — never underground"] },
+          { id: "ep1-6", type: "single", text: "They left Ireland in the late 1830s, just before which catastrophe?", options: ["The Great Famine", "The Battle of Solway Moss", "Blue Streak rocket tests", "St Alban's wedding in 1818"] }
+        ]
+      },
+      {
+        id: "ep2", num: 2, file: "02-easington-roots.mp3", script: "2.txt",
+        title: "Easington Roots",
+        desc: "Mining life, Irish community, Catharine at home, and Thady's legacy.",
+        quiz: [
+          { id: "ep2-1", type: "single", text: "In which year did Thady Boyle die?", options: ["1868", "1841", "1887", "2011"] },
+          { id: "ep2-2", type: "single", text: "Where did Thady die?", options: ["Houghton-le-Spring", "County Mayo", "Murton", "Rome"] },
+          { id: "ep2-3", type: "single", text: "Thady's grandson John Boyle was born in which year?", options: ["1887", "1798", "1931", "1953"] },
+          { id: "ep2-4", type: "single", text: "Young Boyle sons often started underground as trappers or…", options: ["Putters", "Dukes", "Rocket engineers", "Glass finishers"] },
+          { id: "ep2-5", type: "single", text: "The Irish mining community helped build small…", options: ["Catholic chapels", "Glass furnaces in Jarrow", "Geostationary satellites", "Workhouses in Westmorland"] },
+          { id: "ep2-6", type: "single", text: "John Boyle grew up mainly around…", options: ["Hetton-le-Hole and Murton", "County Mayo potato fields", "St Alban's, Earsdon", "Blue Streak test stands"] }
+        ]
+      },
+      {
+        id: "ep3", num: 3, file: "03-ellen-and-on.mp3", script: "3.txt",
+        title: "John, Ellen & On",
+        desc: "Pitmen into the twentieth century, Ellen's kitchens, and the daughters' careers.",
+        quiz: [
+          { id: "ep3-1", type: "single", text: "Where was John Boyle born?", options: ["Murton", "Mayo", "Monkwearmouth shipyards", "Teesdale"] },
+          { id: "ep3-2", type: "single", text: "When was Ellen Boyle born?", options: ["12 August 1931", "7 January 1916", "January 1953", "1798"] },
+          { id: "ep3-3", type: "single", text: "Who did Ellen marry in January 1953?", options: ["Robert Wharton", "John Boyle", "Thady Boyle", "David Barclay"] },
+          { id: "ep3-4", type: "single", text: "When Robert had to retire early, Ellen went to work at…", options: ["St Hilda's (University College, Durham) — kitchens", "Sunderland shipyards as a plater", "Killala Bay fishing boats", "The Hellfire Club"] },
+          { id: "ep3-5", type: "single", text: "How many daughters did Ellen and Robert have?", options: ["Four", "Six", "Thirteen", "None"] },
+          { id: "ep3-6", type: "multiple", text: "Which daughters trained as nurses at Sunderland Eye Infirmary? (Select all that apply)", options: ["Christine", "Shelagh", "Susan", "Karen", "Ellen", "Catharine Riley"] }
+        ]
+      }
+    ];
+
+    const list = document.getElementById("episodes");
+    const copyToast = document.getElementById("copy-toast");
+    const episodeCards = new Map();
+    let currentAudio = null;
+    let currentCard = null;
+    let quizAnswers = loadAnswers();
+    let lockedState = loadLocked();
+
+    function formatTime(s) {
+      if (!s || isNaN(s)) return "0:00";
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60).toString().padStart(2, "0");
+      return `${m}:${sec}`;
+    }
+
+    function stopCurrent() {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+      if (currentCard) {
+        currentCard.classList.remove("playing");
+        const btn = currentCard.querySelector(".btn-play");
+        btn.textContent = "▶ Play";
+        btn.classList.remove("playing");
+      }
+      currentAudio = null;
+      currentCard = null;
+    }
+
+    function loadAnswers() {
+      try {
+        let raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          raw = sessionStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            localStorage.setItem(STORAGE_KEY, raw);
+            sessionStorage.removeItem(STORAGE_KEY);
+          }
+        }
+        return raw ? JSON.parse(raw) : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveAnswers() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(quizAnswers));
+    }
+
+    function loadLocked() {
+      try {
+        let raw = localStorage.getItem(LOCKED_KEY);
+        if (!raw) {
+          raw = sessionStorage.getItem(LOCKED_KEY);
+          if (raw) {
+            localStorage.setItem(LOCKED_KEY, raw);
+            sessionStorage.removeItem(LOCKED_KEY);
+          }
+        }
+        return raw ? JSON.parse(raw) : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveLocked() {
+      localStorage.setItem(LOCKED_KEY, JSON.stringify(lockedState));
+    }
+
+    function sorted(values) {
+      return [...values].sort();
+    }
+
+    function arraysEqual(a, b) {
+      const left = sorted(a);
+      const right = sorted(b);
+      return left.length === right.length && left.every((value, i) => value === right[i]);
+    }
+
+    function getCorrect(q) {
+      return CORRECT[q.id];
+    }
+
+    function isQuestionAnswered(q) {
+      const answer = getAnswer(q);
+      if (q.type === "multiple") return answer.length > 0;
+      return answer !== "";
+    }
+
+    function isQuestionCorrect(q) {
+      const answer = getAnswer(q);
+      const correct = getCorrect(q);
+      if (q.type === "multiple") {
+        return arraysEqual(answer, correct);
+      }
+      return answer === correct;
+    }
+
+    function isQuizComplete(ep) {
+      return ep.quiz.every(isQuestionAnswered);
+    }
+
+    function isEpisodeUnlocked(index) {
+      if (index === 0) return true;
+      return !!lockedState[episodes[index - 1].id];
+    }
+
+    function isScriptUnlocked(ep) {
+      return !!lockedState[ep.id];
+    }
+
+    function nextEpisodeLabel(index) {
+      if (index >= episodes.length - 1) return null;
+      const next = episodes[index + 1];
+      return next.intro ? "Intro" : "Episode " + next.num;
+    }
+
+    function getAnswer(q) {
+      const value = quizAnswers[q.id];
+      if (q.type === "multiple") {
+        return Array.isArray(value) ? value : [];
+      }
+      return typeof value === "string" ? value : "";
+    }
+
+    function setAnswer(q, value) {
+      quizAnswers[q.id] = value;
+      saveAnswers();
+    }
+
+    function episodeLabel(ep) {
+      return ep.intro ? "Intro — " + ep.title : "Episode " + ep.num + " — " + ep.title;
+    }
+
+    function formatCopyText(episodeFilter) {
+      const lines = ["Boyle Story — Mayo to Easington — Lewis — Quiz Answers", ""];
+
+      episodes.forEach((ep) => {
+        if (episodeFilter && ep.id !== episodeFilter) return;
+        if (!ep.quiz || !ep.quiz.length) return;
+
+        lines.push(episodeLabel(ep));
+        lines.push("");
+
+        const locked = lockedState[ep.id];
+
+        ep.quiz.forEach((q, i) => {
+          const answer = getAnswer(q);
+          const typeLabel = q.type === "multiple" ? "select multiple" : "pick one";
+          lines.push((i + 1) + ". " + q.text + " (" + typeLabel + ")");
+
+          if (q.type === "multiple") {
+            lines.push("   Answer: " + (answer.length ? answer.join("; ") : "(not answered)"));
+          } else {
+            lines.push("   Answer: " + (answer || "(not answered)"));
+          }
+
+          if (locked) {
+            const mark = isQuestionCorrect(q) ? "Correct" : "Incorrect";
+            const correct = getCorrect(q);
+            lines.push("   Result: " + mark);
+            lines.push("   Correct answer: " + (Array.isArray(correct) ? correct.join("; ") : correct));
+          }
+
+          lines.push("");
+        });
+
+        if (locked) {
+          lines.push("Score: " + locked.score + " / " + locked.total);
+          lines.push("");
+        }
+      });
+
+      return lines.join("\n").trim();
+    }
+
+    function showCopyToast(message) {
+      copyToast.textContent = message;
+      copyToast.classList.add("show");
+      clearTimeout(showCopyToast._timer);
+      showCopyToast._timer = setTimeout(() => copyToast.classList.remove("show"), 2200);
+    }
+
+    async function copyText(text, button) {
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const area = document.createElement("textarea");
+        area.value = text;
+        area.style.position = "fixed";
+        area.style.left = "-9999px";
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        area.remove();
+      }
+
+      if (button) {
+        const original = button.textContent;
+        button.textContent = "Copied!";
+        button.classList.add("copied");
+        setTimeout(() => {
+          button.textContent = original;
+          button.classList.remove("copied");
+        }, 1800);
+      }
+
+      showCopyToast("Copied to clipboard");
+    }
+
+    function applyQuestionFeedback(block, q) {
+      const correct = getCorrect(q);
+      const correctSet = new Set(Array.isArray(correct) ? correct : [correct]);
+      const answer = getAnswer(q);
+      const answerSet = new Set(q.type === "multiple" ? answer : answer ? [answer] : []);
+      const ok = isQuestionCorrect(q);
+
+      block.classList.add("locked");
+
+      block.querySelectorAll(".quiz-option").forEach((label) => {
+        const value = label.querySelector("input").value;
+        label.classList.remove("correct-pick", "wrong-pick", "missed-pick");
+
+        if (correctSet.has(value) && answerSet.has(value)) {
+          label.classList.add("correct-pick");
+        } else if (answerSet.has(value) && !correctSet.has(value)) {
+          label.classList.add("wrong-pick");
+        } else if (correctSet.has(value) && !answerSet.has(value)) {
+          label.classList.add("missed-pick");
+        }
+      });
+
+      let feedback = block.querySelector(".quiz-feedback");
+      if (!feedback) {
+        feedback = document.createElement("div");
+        feedback.className = "quiz-feedback";
+        block.appendChild(feedback);
+      }
+
+      if (ok) {
+        feedback.className = "quiz-feedback correct";
+        feedback.textContent = "Correct";
+      } else {
+        const correctText = Array.isArray(correct) ? correct.join("; ") : correct;
+        feedback.className = "quiz-feedback incorrect";
+        feedback.textContent = "Not quite — correct answer: " + correctText;
+      }
+    }
+
+    function updateLockButton(section, ep) {
+      const lockBtn = section.querySelector("[data-lock-episode]");
+      const results = section.querySelector(".quiz-results");
+      const locked = lockedState[ep.id];
+
+      if (locked) {
+        lockBtn.style.display = "none";
+        results.innerHTML = "<strong class=\"score-pass\">" + locked.score + " / " + locked.total + " correct</strong>" +
+          " — script unlocked." +
+          (nextEpisodeLabel(episodes.indexOf(ep)) ? " Next episode unlocked." : " Walk complete.");
+        return;
+      }
+
+      lockBtn.style.display = "";
+      const complete = isQuizComplete(ep);
+      lockBtn.disabled = !complete;
+      lockBtn.textContent = complete ? "Lock in answers" : "Answer all questions to lock in";
+      results.textContent = complete
+        ? "Ready to lock in. Script unlocks after you lock in."
+        : "Answer every question, then lock in to unlock the script and next episode.";
+    }
+
+    function lockInQuiz(ep, section) {
+      if (!isQuizComplete(ep) || lockedState[ep.id]) return;
+
+      const score = ep.quiz.filter(isQuestionCorrect).length;
+      lockedState[ep.id] = {
+        score,
+        total: ep.quiz.length,
+        lockedAt: Date.now()
+      };
+      saveLocked();
+
+      section.querySelectorAll(".quiz-question").forEach((block, index) => {
+        applyQuestionFeedback(block, ep.quiz[index]);
+        block.querySelectorAll("input").forEach((input) => {
+          input.disabled = true;
+        });
+      });
+
+      updateLockButton(section, ep);
+      refreshEpisodeLocks();
+
+      const epIndex = episodes.indexOf(ep);
+      const nextLabel = nextEpisodeLabel(epIndex);
+      showCopyToast(score + " / " + ep.quiz.length + " correct" + (nextLabel ? " — " + nextLabel + " unlocked" : ""));
+
+      if (epIndex < episodes.length - 1) {
+        const nextCard = episodeCards.get(episodes[epIndex + 1].id);
+        if (nextCard) {
+          nextCard.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    }
+
+    function formatScript(text) {
+      return text
+        .trim()
+        .split(/\n\s*\n/)
+        .map((para) => "<p>" + para.replace(/\n/g, " ").trim() + "</p>")
+        .join("");
+    }
+
+    function toggleScript(card, ep, scriptBtn) {
+      if (!isScriptUnlocked(ep)) return;
+
+      const panel = card.querySelector(".script-panel");
+      const body = card.querySelector(".script-body");
+      const isOpen = panel.classList.contains("open");
+
+      if (isOpen) {
+        panel.classList.remove("open");
+        scriptBtn.classList.remove("open");
+        scriptBtn.textContent = "Read script";
+        return;
+      }
+
+      scriptBtn.classList.add("open");
+      scriptBtn.textContent = "Hide script";
+      panel.classList.add("open");
+
+      if (body.dataset.loaded === "true") return;
+
+      const text = SCRIPTS[ep.id];
+      if (!text) {
+        body.textContent = "Script not found for this episode.";
+        return;
+      }
+
+      body.innerHTML = formatScript(text);
+      body.dataset.loaded = "true";
+    }
+
+    function refreshEpisodeLocks() {
+      episodes.forEach((ep, index) => {
+        const card = episodeCards.get(ep.id);
+        if (!card) return;
+
+        const unlocked = isEpisodeUnlocked(index);
+        const playBtn = card.querySelector(".btn-play");
+        const downloadBtn = card.querySelector(".btn-download");
+        const scriptBtn = card.querySelector(".btn-script");
+        const scriptPanel = card.querySelector(".script-panel");
+        const banner = card.querySelector(".ep-locked-banner");
+        const prev = episodes[index - 1];
+        const scriptReady = unlocked && isScriptUnlocked(ep);
+
+        card.classList.toggle("locked", !unlocked);
+        playBtn.disabled = !unlocked;
+        downloadBtn.classList.toggle("disabled", !unlocked);
+
+        if (scriptBtn) {
+          scriptBtn.disabled = !scriptReady;
+          if (!scriptReady) {
+            scriptBtn.classList.remove("open");
+            scriptBtn.textContent = unlocked ? "Read script (after quiz)" : "Read script";
+            if (scriptPanel) scriptPanel.classList.remove("open", "loading");
+          } else if (!scriptBtn.classList.contains("open")) {
+            scriptBtn.textContent = "Read script";
+          }
+        }
+
+        if (!unlocked) {
+          playBtn.textContent = "Locked";
+          banner.textContent = "Complete the recall check on " +
+            (prev.intro ? "the intro" : "Episode " + prev.num) +
+            " and press Lock in answers to unlock this episode.";
+          if (currentCard === card) {
+            stopCurrent();
+          }
+        } else if (!currentAudio || currentCard !== card) {
+          playBtn.textContent = "▶ Play";
+        }
+      });
+    }
+
+    function renderQuiz(ep, card) {
+      if (!ep.quiz || !ep.quiz.length) return;
+
+      const section = document.createElement("div");
+      section.className = "quiz-section";
+      section.innerHTML = `
+        <div class="quiz-header">
+          <div class="quiz-title">Recall check</div>
+          <button type="button" class="btn-copy" data-copy-episode="${ep.id}">Copy this section</button>
+        </div>
+        <p class="quiz-hint">Rapid fire — answer from memory after listening. No script until you lock in. Then unlock the next episode.</p>
+        <div class="quiz-footer">
+          <button type="button" class="btn-lock" data-lock-episode="${ep.id}">Answer all questions to lock in</button>
+          <div class="quiz-results"></div>
+        </div>
+      `;
+
+      const questionsWrap = document.createElement("div");
+      questionsWrap.className = "quiz-questions";
+      section.insertBefore(questionsWrap, section.querySelector(".quiz-footer"));
+
+      ep.quiz.forEach((q, index) => {
+        const block = document.createElement("div");
+        block.className = "quiz-question";
+        const typeHint = q.type === "multiple" ? "select multiple" : "pick one";
+        const inputType = q.type === "multiple" ? "checkbox" : "radio";
+        const saved = getAnswer(q);
+
+        block.innerHTML = `
+          <div class="quiz-q-text">
+            ${index + 1}. ${q.text}
+            <span class="quiz-q-type">(${typeHint})</span>
+          </div>
+          <div class="quiz-options" data-question="${q.id}"></div>
+        `;
+
+        const optionsWrap = block.querySelector(".quiz-options");
+
+        q.options.forEach((option) => {
+          const label = document.createElement("label");
+          label.className = "quiz-option";
+          const input = document.createElement("input");
+          input.type = inputType;
+          input.name = q.id;
+          input.value = option;
+
+          if (q.type === "multiple") {
+            input.checked = saved.includes(option);
+          } else {
+            input.checked = saved === option;
+          }
+
+          input.addEventListener("change", () => {
+            if (lockedState[ep.id]) return;
+            if (q.type === "multiple") {
+              const checked = [...optionsWrap.querySelectorAll("input:checked")].map((el) => el.value);
+              setAnswer(q, checked);
+            } else {
+              setAnswer(q, option);
+            }
+            updateLockButton(section, ep);
+          });
+
+          label.appendChild(input);
+          label.appendChild(document.createTextNode(option));
+          optionsWrap.appendChild(label);
+        });
+
+        questionsWrap.appendChild(block);
+      });
+
+      section.querySelector("[data-copy-episode]").addEventListener("click", (e) => {
+        copyText(formatCopyText(ep.id), e.currentTarget);
+      });
+
+      section.querySelector("[data-lock-episode]").addEventListener("click", () => {
+        lockInQuiz(ep, section);
+      });
+
+      if (lockedState[ep.id]) {
+        section.querySelectorAll(".quiz-question").forEach((block, index) => {
+          applyQuestionFeedback(block, ep.quiz[index]);
+          block.querySelectorAll("input").forEach((input) => {
+            input.disabled = true;
+          });
+        });
+      }
+
+      updateLockButton(section, ep);
+      card.appendChild(section);
+    }
+
+    function encodeProgress() {
+      const payload = { v: 1, answers: quizAnswers, locked: lockedState };
+      return PROGRESS_PREFIX + btoa(encodeURIComponent(JSON.stringify(payload)));
+    }
+
+    function decodeProgress(code) {
+      const trimmed = code.trim();
+      if (!trimmed.startsWith(PROGRESS_PREFIX)) {
+        throw new Error("That does not look like a physics benchmark progress code.");
+      }
+      const payload = JSON.parse(decodeURIComponent(atob(trimmed.slice(PROGRESS_PREFIX.length))));
+      if (!payload || payload.v !== 1 || typeof payload.answers !== "object" || typeof payload.locked !== "object") {
+        throw new Error("This progress code is invalid or from an older version.");
+      }
+      return payload;
+    }
+
+    function exportProgress(button) {
+      copyText(encodeProgress(), button);
+      showCopyToast("Progress code copied — paste it on another device");
+    }
+
+    function importProgress(code) {
+      const payload = decodeProgress(code);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload.answers));
+      localStorage.setItem(LOCKED_KEY, JSON.stringify(payload.locked));
+      location.reload();
+    }
+
+    function clearSessionData() {
+      const ok = confirm(
+        "Clear all quiz answers, scores, unlocks, and script access?\n\nThis resets the walk on this device."
+      );
+      if (!ok) return;
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(LOCKED_KEY);
+      location.reload();
+    }
+
+    document.getElementById("copy-all").addEventListener("click", (e) => {
+      copyText(formatCopyText(), e.currentTarget);
+    });
+
+    document.getElementById("export-progress").addEventListener("click", (e) => {
+      exportProgress(e.currentTarget);
+    });
+
+    document.getElementById("import-progress").addEventListener("click", () => {
+      document.getElementById("import-panel").classList.add("open");
+      document.getElementById("import-code").focus();
+    });
+
+    document.getElementById("import-cancel").addEventListener("click", () => {
+      document.getElementById("import-panel").classList.remove("open");
+      document.getElementById("import-code").value = "";
+    });
+
+    document.getElementById("import-confirm").addEventListener("click", () => {
+      const code = document.getElementById("import-code").value;
+      if (!code.trim()) {
+        alert("Paste a progress code first.");
+        return;
+      }
+      try {
+        importProgress(code);
+      } catch (err) {
+        alert(err.message || "Could not import that progress code.");
+      }
+    });
+
+    document.getElementById("clear-session").addEventListener("click", clearSessionData);
+
+    episodes.forEach((ep, index) => {
+      const card = document.createElement("article");
+      card.className = "episode";
+      card.dataset.episodeId = ep.id;
+      const numClass = ep.intro ? "ep-num intro" : "ep-num";
+      const label = ep.intro ? "★" : ep.num;
+
+      card.innerHTML = `
+        <div class="episode-top">
+          <div class="${numClass}">${label}</div>
+          <div class="ep-info">
+            <div class="ep-title">${ep.title}</div>
+            <div class="ep-desc">${ep.desc}</div>
+          </div>
+        </div>
+        <audio preload="metadata" src="${audioUrl(ep.file)}"></audio>
+        <div class="ep-actions">
+          <button type="button" class="btn-play">▶ Play</button>
+          <a class="btn btn-download" href="${audioUrl(ep.file)}" download="${ep.file}">↓ Download</a>
+          <button type="button" class="btn-script">Read script</button>
+        </div>
+        <div class="script-panel"><div class="script-body"></div></div>
+        <div class="ep-locked-banner"></div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+          <div class="time"><span class="cur">0:00</span> / <span class="dur">0:00</span></div>
+        </div>
+      `;
+
+      const audio = card.querySelector("audio");
+      const playBtn = card.querySelector(".btn-play");
+      const downloadBtn = card.querySelector(".btn-download");
+      const scriptBtn = card.querySelector(".btn-script");
+      const fill = card.querySelector(".progress-fill");
+      const bar = card.querySelector(".progress-bar");
+      const cur = card.querySelector(".cur");
+      const dur = card.querySelector(".dur");
+
+      audio.addEventListener("loadedmetadata", () => {
+        dur.textContent = formatTime(audio.duration);
+      });
+
+      audio.addEventListener("timeupdate", () => {
+        const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+        fill.style.width = pct + "%";
+        cur.textContent = formatTime(audio.currentTime);
+      });
+
+      audio.addEventListener("ended", () => {
+        playBtn.textContent = "▶ Play";
+        playBtn.classList.remove("playing");
+        card.classList.remove("playing");
+        if (currentAudio === audio) {
+          currentAudio = null;
+          currentCard = null;
+        }
+      });
+
+      playBtn.addEventListener("click", () => {
+        if (!isEpisodeUnlocked(index)) return;
+
+        if (currentAudio === audio && !audio.paused) {
+          audio.pause();
+          playBtn.textContent = "▶ Play";
+          playBtn.classList.remove("playing");
+          card.classList.remove("playing");
+          return;
+        }
+        stopCurrent();
+        currentAudio = audio;
+        currentCard = card;
+        audio.play();
+        playBtn.textContent = "⏸ Pause";
+        playBtn.classList.add("playing");
+        card.classList.add("playing");
+      });
+
+      downloadBtn.addEventListener("click", (e) => {
+        if (!isEpisodeUnlocked(index)) e.preventDefault();
+      });
+
+      scriptBtn.addEventListener("click", () => {
+        if (!isEpisodeUnlocked(index) || !isScriptUnlocked(ep)) return;
+        toggleScript(card, ep, scriptBtn);
+      });
+
+      bar.addEventListener("click", (e) => {
+        if (!isEpisodeUnlocked(index) || !audio.duration) return;
+        const rect = bar.getBoundingClientRect();
+        const ratio = (e.clientX - rect.left) / rect.width;
+        audio.currentTime = ratio * audio.duration;
+      });
+
+      renderQuiz(ep, card);
+      episodeCards.set(ep.id, card);
+      list.appendChild(card);
+    });
+
+    refreshEpisodeLocks();
+  </script>
+</body>
+</html>
