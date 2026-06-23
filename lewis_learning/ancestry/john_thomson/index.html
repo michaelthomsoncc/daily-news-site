@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thomson Story — Lewis</title>
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --surface: #141b24;
+      --surface-2: #1a2430;
+      --border: #2a3644;
+      --text: #e8edf2;
+      --muted: #8fa3b8;
+      --accent: #5b8fc7;
+      --accent-soft: rgba(91, 143, 199, 0.14);
+      --accent-glow: rgba(91, 143, 199, 0.35);
+      --success: #34d399;
+      --danger: #f87171;
+      --warn: #fbbf24;
+      --radius: 14px;
+      --shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(91, 143, 199, 0.14), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(52, 211, 153, 0.06), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 3rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid rgba(61, 158, 255, 0.25);
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: clamp(1.9rem, 5vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.6rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 32rem;
+      margin: 0 auto 1.25rem;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .meta span {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+    }
+
+    .instructions {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .instructions strong { color: var(--text); }
+
+    .episode-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .episode {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.35rem;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .episode:hover {
+      border-color: rgba(61, 158, 255, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .episode.playing {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-glow), var(--shadow);
+    }
+
+    .episode.locked {
+      opacity: 0.72;
+    }
+
+    .episode.locked:hover {
+      transform: none;
+      border-color: var(--border);
+    }
+
+    .ep-locked-banner {
+      display: none;
+      margin-top: 0.85rem;
+      padding: 0.7rem 0.85rem;
+      border-radius: 9px;
+      background: rgba(251, 191, 36, 0.08);
+      border: 1px solid rgba(251, 191, 36, 0.25);
+      color: var(--warn);
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .episode.locked .ep-locked-banner { display: block; }
+
+    .episode.locked .quiz-section { display: none; }
+
+    button:disabled, .btn.disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .btn-play:disabled {
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .episode-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .ep-num {
+      flex-shrink: 0;
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 10px;
+      border: 1px solid rgba(61, 158, 255, 0.2);
+    }
+
+    .ep-num.intro { background: rgba(52, 211, 153, 0.12); color: var(--success); border-color: rgba(52, 211, 153, 0.25); }
+
+    .ep-info { flex: 1; min-width: 0; }
+
+    .ep-title {
+      font-size: 1.1rem;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .ep-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .ep-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-top: 1rem;
+    }
+
+    button, .btn {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      border-radius: 9px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    button:active, .btn:active { transform: scale(0.97); }
+
+    .btn-play {
+      background: var(--accent);
+      color: #061018;
+    }
+
+    .btn-play:hover { background: #5aafff; }
+
+    .btn-play.playing {
+      background: var(--surface-2);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    .btn-download {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-download:hover {
+      background: #223040;
+      border-color: rgba(61, 158, 255, 0.3);
+    }
+
+    .btn-script {
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-script:hover:not(:disabled) {
+      background: #223040;
+      color: var(--text);
+      border-color: rgba(61, 158, 255, 0.3);
+    }
+
+    .btn-script.open {
+      color: var(--accent);
+      border-color: rgba(61, 158, 255, 0.35);
+      background: var(--accent-soft);
+    }
+
+    .script-panel {
+      display: none;
+      margin-top: 0.85rem;
+      padding: 1rem 1.1rem;
+      border-radius: 10px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      max-height: 22rem;
+      overflow-y: auto;
+    }
+
+    .script-panel.open { display: block; }
+
+    .script-panel.loading {
+      display: block;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .script-body {
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .script-body p { margin-bottom: 0.85rem; }
+    .script-body p:last-child { margin-bottom: 0; }
+
+    .episode.locked .script-panel,
+    .episode .script-panel:not(.open) { display: none; }
+
+    audio {
+      display: none;
+    }
+
+    .progress-wrap {
+      margin-top: 0.75rem;
+      display: none;
+    }
+
+    .episode.playing .progress-wrap { display: block; }
+
+    .progress-bar {
+      height: 4px;
+      background: var(--surface-2);
+      border-radius: 2px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      border-radius: 2px;
+      transition: width 0.1s linear;
+    }
+
+    .time {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.35rem;
+    }
+
+    .quiz-section {
+      margin-top: 1.25rem;
+      padding-top: 1.15rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .quiz-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .quiz-title {
+      font-size: 0.82rem;
+      font-weight: 650;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .quiz-hint {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+
+    .quiz-question {
+      margin-bottom: 1rem;
+    }
+
+    .quiz-question:last-child { margin-bottom: 0; }
+
+    .quiz-q-text {
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 0.45rem;
+      line-height: 1.4;
+    }
+
+    .quiz-q-type {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-left: 0.35rem;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .quiz-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 0.88rem;
+      color: var(--muted);
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+
+    .quiz-option:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .quiz-option:has(input:checked) {
+      background: var(--accent-soft);
+      border-color: rgba(61, 158, 255, 0.3);
+      color: var(--text);
+    }
+
+    .quiz-option input {
+      margin-top: 0.15rem;
+      flex-shrink: 0;
+      accent-color: var(--accent);
+    }
+
+    .quiz-option.correct-pick {
+      background: rgba(52, 211, 153, 0.1);
+      border-color: rgba(52, 211, 153, 0.35);
+      color: var(--text);
+    }
+
+    .quiz-option.wrong-pick {
+      background: rgba(248, 113, 113, 0.1);
+      border-color: rgba(248, 113, 113, 0.35);
+      color: var(--text);
+    }
+
+    .quiz-option.missed-pick {
+      border-color: rgba(52, 211, 153, 0.25);
+      border-style: dashed;
+    }
+
+    .quiz-question.locked .quiz-option {
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .quiz-question.locked .quiz-option:hover {
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .quiz-question.locked .quiz-option.correct-pick:hover,
+    .quiz-question.locked .quiz-option.wrong-pick:hover,
+    .quiz-question.locked .quiz-option.missed-pick:hover {
+      color: var(--text);
+    }
+
+    .quiz-feedback {
+      margin-top: 0.4rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .quiz-feedback.correct { color: var(--success); }
+    .quiz-feedback.incorrect { color: var(--danger); }
+
+    .quiz-footer {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-lock {
+      background: var(--success);
+      color: #042f1e;
+    }
+
+    .btn-lock:hover:not(:disabled) { background: #4ade80; }
+
+    .btn-lock:disabled {
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      opacity: 1;
+    }
+
+    .quiz-results {
+      flex: 1;
+      min-width: 12rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .quiz-results strong { color: var(--text); }
+
+    .quiz-results .score-pass { color: var(--success); }
+    .quiz-results .score-miss { color: var(--warn); }
+
+    .btn-copy {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      padding: 0.45rem 0.8rem;
+    }
+
+    .btn-copy:hover {
+      background: #223040;
+      border-color: rgba(61, 158, 255, 0.3);
+    }
+
+    .btn-copy.copied {
+      border-color: rgba(52, 211, 153, 0.4);
+      color: var(--success);
+    }
+
+    .quiz-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .quiz-toolbar p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      max-width: 26rem;
+    }
+
+    .quiz-toolbar strong { color: var(--text); }
+
+    .quiz-toolbar-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .btn-reset {
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      padding: 0.45rem 0.8rem;
+    }
+
+    .btn-reset:hover {
+      background: #223040;
+      border-color: rgba(248, 113, 113, 0.35);
+      color: var(--danger);
+    }
+
+    .progress-transfer {
+      display: none;
+      margin-bottom: 1.5rem;
+      padding: 1rem 1.1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .progress-transfer.open { display: block; }
+
+    .progress-transfer label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-transfer textarea {
+      width: 100%;
+      min-height: 5.5rem;
+      resize: vertical;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      padding: 0.65rem 0.75rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .progress-transfer-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .copy-toast {
+      position: fixed;
+      bottom: 1.25rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: var(--surface-2);
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      color: var(--success);
+      padding: 0.65rem 1.1rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      z-index: 100;
+      transition: transform 0.25s ease;
+      pointer-events: none;
+    }
+
+    .copy-toast.show { transform: translateX(-50%) translateY(0); }
+
+    footer {
+      text-align: center;
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    footer strong { color: var(--text); }
+
+    @media (max-width: 480px) {
+      .wrap { padding: 1.5rem 1rem 2.5rem; }
+      .episode { padding: 1.1rem; }
+      .ep-actions { flex-direction: column; }
+      .ep-actions button, .ep-actions .btn { justify-content: center; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="badge">Thomson line</div>
+      <h1>Steppe to Sunderland</h1>
+      <p class="subtitle">Four parts with Dad's voice — from Bronze Age R-M467 and Border reivers to Midlothian tile works, engine drivers, and Charlotte.</p>
+      <div class="meta">
+        <span>~20 minutes total</span>
+        <span>4 parts</span>
+        <span>24 recall questions</span>
+      </div>
+    </header>
+
+    <div class="instructions">
+      <strong>How to use this:</strong> Listen with the family tree open or just a quiet moment. Play each part, answer the recall check, and press <strong>Lock in answers</strong>. The next part unlocks when you lock in. Script unlocks after lock-in. Tell Dad what landed — names, dates, the bits that surprised you.
+    </div>
+
+    <div class="quiz-toolbar">
+      <p><strong>Recall check:</strong> Answer each quiz, lock in to see results, then the next episode unlocks. Progress saves on this device. To continue on another phone or computer, use <strong>Export</strong> here and <strong>Import</strong> there.</p>
+      <div class="quiz-toolbar-actions">
+        <button type="button" class="btn-copy" id="copy-all">Copy all Q&amp;A</button>
+        <button type="button" class="btn-copy" id="export-progress">Export progress</button>
+        <button type="button" class="btn-copy" id="import-progress">Import progress</button>
+        <button type="button" class="btn-reset" id="clear-session">Reset progress</button>
+      </div>
+    </div>
+
+    <div class="progress-transfer" id="import-panel">
+      <label for="import-code">Paste your progress code</label>
+      <textarea id="import-code" placeholder="Paste the code from Export progress…"></textarea>
+      <div class="progress-transfer-actions">
+        <button type="button" class="btn-lock" id="import-confirm">Restore progress</button>
+        <button type="button" class="btn-reset" id="import-cancel">Cancel</button>
+      </div>
+    </div>
+
+    <div class="episode-list" id="episodes"></div>
+
+    <footer>
+      Thomson story for <strong>Lewis</strong> — steppe blood, reivers, Sunderland.<br>
+      Lock in, copy your answers, tell Dad what stuck.
+    </footer>
+  </div>
+
+  <div class="copy-toast" id="copy-toast" aria-live="polite">Copied to clipboard</div>
+
+  <script>
+    // Upload MP3s to a public host, then paste the URL prefix here (no trailing slash).
+    // Leave "" to use the local audio/ folder while testing on your machine.
+    //
+    // Internet Archive:  https://archive.org/download/YOUR-ITEM-ID
+    // GitHub Release:    https://github.com/YOUR_USER/brain-os-audio/releases/download/v1
+    // Cloudflare R2:     https://pub-xxxxxxxx.r2.dev/brain-os
+    const AUDIO_BASE_URL = "";
+
+    function pageBaseUrl() {
+      const { origin, pathname } = window.location;
+      if (pathname.endsWith("/")) return origin + pathname;
+      const last = pathname.split("/").pop() || "";
+      if (/\.[a-z0-9]+$/i.test(last)) return origin + pathname.replace(/[^/]+$/, "");
+      return origin + pathname + "/";
+    }
+
+    function pageAssetUrl(relativePath) {
+      return new URL(relativePath.replace(/^\//, ""), pageBaseUrl()).href;
+    }
+
+    function audioUrl(filename) {
+      const base = AUDIO_BASE_URL.trim().replace(/\/$/, "");
+      return base ? base + "/" + filename : pageAssetUrl("audio/" + filename);
+    }
+
+    const STORAGE_KEY = "lewis-john-thomson-answers";
+    const LOCKED_KEY = "lewis-john-thomson-locked";
+    const PROGRESS_PREFIX = "lewtjoh1:";
+
+    const SCRIPTS = {
+      "ep1": "Hey son… before we step into the story of the men who carried one particular family name, let’s go much further back — to the deep genetic current that shaped so many of the families who would later call the southwest of Scotland home.\r\nYour paternal haplogroup is R-M467. To understand what that really means, we have to talk about how genetic ancestry works. Haplogroups are basically clusters of specific mutations (called SNPs) on our DNA that act like markers on a family tree. The most useful one for tracing fathers is on the Y-chromosome — the piece of DNA that is passed almost unchanged from father to son, generation after generation.\r\nUnlike the rest of our DNA, which gets mixed and reshuffled every time a child is conceived, the Y-chromosome travels in a nearly straight male line. The only changes are rare new mutations that happen over long periods of time. Those tiny mutations become the branches we use to define haplogroups. Because of this, a haplogroup like R-M467 lets us follow one direct paternal line across thousands of years with remarkable clarity. It’s like a genetic surname that never gets mixed with the mother’s side. Scientists can test living men, compare the pattern of mutations, and build a massive family tree that stretches back to the Bronze Age and beyond.\r\nR-M467 belongs to the great R1b family — one of the most successful male lineages in Western European history. Its distant ancestors were steppe herders from the Pontic-Caspian grasslands (what is now Ukraine and southern Russia) around 3000 BC or earlier. These people had domesticated horses, used wagons, and developed a mobile, warrior-pastoralist culture. They began moving westward, bringing new technology, Indo-European languages, and their genetic signature.\r\nBy around 2500 BC, descendants of these steppe groups — part of what archaeologists call the Bell Beaker culture — had crossed into Britain. They arrived with distinctive bell-shaped pottery, the ability to work copper and gold, and a powerful genetic signature that would eventually dominate the islands. Over the following centuries that signature spread north through Scotland. It mixed with earlier populations but became especially strong in the Lowlands and the southwest — the very region that includes Carrick and the future Border country.\r\nBy the Iron Age and the arrival of Gaelic-speaking peoples, R-M467 and its close relatives were well established among the warrior societies of the west coast and the Marches. These were communities of cattle lords, hill forts, seafaring fighters, and proud independent families who valued courage, kinship, and the ability to hold their own in a tough land. The rugged coastline, fertile glens, and strategic position of Carrick made it exactly the kind of place where this ancient paternal line would thrive and be passed down faithfully through countless generations of farmers, raiders, and leaders.\r\nThat deep, resilient current is what eventually flowed into the families who would call this corner of Scotland home. It’s the same unbreakable thread that connects a Bronze Age herder on the distant steppe to the men who would later ride with lances under the Border moon and, centuries after that, build lives in the industrial heartlands and beyond.\r\nNow, with that ancient foundation in place, let’s step into the story itself…\r\n",
+      "ep2": "…And that ancient foundation came alive in 1318 on the battlefields of Ireland.\r\nBy this point the paternal line we still carry today had already been living, fighting, and raising families on these same lands of southwest Scotland for more than three thousand years.\r\nScotland was fighting for its very existence. Robert the Bruce’s younger brother Edward had launched a daring invasion to open a second front against England. Among his captains was a man who would etch his name into the earliest records — John Thomson. He wasn’t nobility. The chronicles simply call him “a man of low birth, but approved valour.” Yet he commanded the men of Carrick, the rugged, proud district in Ayrshire that was the ancestral heartland of the Bruces themselves.\r\nWhen the campaign collapsed at the Battle of Faughart and Edward Bruce was killed, the Scottish force was shattered. In the chaos and slaughter that followed, John Thomson became the anchor. He rallied the broken remnants of the Carrick men, fought a desperate rearguard action, and led a fighting retreat through enemy territory all the way back to the safety of Carrickfergus castle on the coast. From there the survivors embarked for home, bloodied but alive.\r\nThat single act of leadership under fire is one of the earliest clear written records of the Thomson surname in Scotland. But the story of the paternal line that carried it was already three thousand years old. The same resilient male line that had walked these southwest Scottish hills and shores since the Bronze Age was now proving its worth once more — in the heat of battle, in the fog of retreat, in the stubborn refusal to break when everything around it did.\r\nCarrick itself, with its wild coastline, fertile glens, and fiercely independent families, was the perfect cradle. Over the next century and a half the Thomson name spread as a common patronymic — “son of Thom” — carried by craftsmen, farmers, and fighters across Ayrshire, Lanarkshire, and especially the wild western border valleys.\r\nBy the mid-1400s a distinct group — the Thomsons of Eskdale in Dumfriesshire — had settled deep in what would become the West March. They weren’t the largest clan, but they were perfectly suited to the frontier. They allied closely with families like the Beattisons, Nixons, and Littles. They learned the reiver way early: ride fast on sturdy hobbler ponies bred for the hills and bogs, strike at night or dawn when the mist hid their approach, lift cattle and goods, take hostages for blackmail or ransom, burn what you can’t carry, and vanish into the heather before any pursuit could catch you. Kin before king. Surname before nation.\r\nThis is the world your Scottish ancestors helped shape — a frontier culture born from centuries of war, poverty, and weak central control. The same spirit that had sustained that male line for three thousand years now let their descendants survive and thrive in one of the most dangerous places in Britain. The reiver life wasn’t crime in their eyes — it was survival, honour, and the only way to protect their own in a land where law was whatever you could enforce with your own hands and your own name.\r\nFrom that courageous retreat on an Irish battlefield in 1318, the blood that would become the reiver Thomsons was already proving it could endure, lead, and ride when everything else fell apart. The stage was set. The riding clans were rising. And the story was only just beginning.\r\n\r\n",
+      "ep3": "By the 1500s the Thomsons of Eskdale were fully part of the riding clans that made the Borders legendary and lawless. They operated in the Debatable Lands and the West March — a rugged strip of hill and valley where neither England nor Scotland truly ruled. The land itself shaped them: steep-sided dales with fast rivers, endless bogs that could swallow a horse, and high ridges where a lookout could see for miles. Families lived in bastle houses and peel towers — thick-walled stone strongholds where people and livestock could shelter during a raid. At night the sound of hooves on the track could mean either your own kinsmen returning with a herd or an enemy coming to burn you out.\r\nLife in Eskdale was harsh and beautiful. Children grew up learning every hidden path, every ford, every place where the mist could hide a rider. Women managed the farms and the towers while the men rode. Honour meant remembering every wrong and repaying it in kind. Feuds could last generations. A stolen cow or an insult at a Truce Day was enough to spark burning and killing on both sides of the border.\r\nThe tactics were refined over centuries. Raids were planned like military operations: small bands or hundreds strong, using hidden fords and hill tracks, striking at night or dawn when the mist hid their approach. The goal was never to hold ground — it was to lift as many cattle as possible, take goods or hostages for blackmail, burn what couldn’t be carried, and vanish before any pursuit could catch you. The “hot trod” — the legal right to chase raiders for six days with a blazing turf signal — was feared, but the reivers knew the land better than anyone. They could split a herd, hide in a bog, or double back through the hills and be home before the pursuers even crossed the border.\r\nAlliances shifted fast. A surname might raid English neighbours one season and ride with Scottish ones the next. Loyalty was to kin and profit above nationality. The Thomsons were respected for their mobility and courage. They weren’t outlaws in their own eyes — they were survivors in a frontier that had been fought over for centuries. They lived by March law, attended Days of Truce for arbitration, and rode with the same skill that had saved their ancestors in Ireland. Steel bonnets on their heads, jacks of plate for armour, long lances that could fight or herd stolen beasts, and ponies that could cover impossible ground in darkness.\r\nAnd here your story gains its most dramatic twist. In the 1540s your Thomson reiver ancestors rode straight into the records of your Wharton ancestors. English Lord Thomas Wharton — 1st Baron, Warden of the West Marches — sat down to write urgent reports to his superiors. He named the “Batysons, Thomsons, and Lytles of Esskdayle” as the men behind fresh raids into English territory. Wharton, as warden, was the man tasked with stopping exactly the kind of reiving your Thomson line was famous for.\r\nImagine the tension on those wild ridges. One side of your blood enforcing the king’s peace from peel towers and warden halls, the other side riding out from Eskdale valleys with lances and burning torches. They were two sides of the same Border world — the warden and the rider — both shaped by the same harsh land, the same endless raids, the same need to be hard and quick. That 1540s clash is where your Thomson and Wharton lines met in history, face to face across the same burning grange.\r\nThe reiver days roared on, full of fire and freedom, but the end was coming. The Borders had become too lawless for the new age of unified kingdoms.\r\n",
+      "ep4": "\r\nThe fire that defined the Thomsons couldn’t burn forever. In 1603, when James VI of Scotland became James I of England, the old Border world was doomed. The Union of Crowns brought peace to the island, but it was peace enforced with steel and gallows. The reiver system that had sustained families like yours for generations was deliberately crushed.\r\nWardens — including lines connected to your own Wharton ancestors — helped round up the riding clans. Names that had struck fear across the Marches were now listed as “thieves and spoil-takers.” Executions became common. Men were hanged in public, transported in chains to the Ulster plantations, or pressed into distant armies. For a smaller clan like the Eskdale Thomsons, the blow was devastating. Records show long, painful gaps — decades with almost no Thomson births in some parishes. Towers that once rang with laughter and the lowing of stolen cattle now stood silent. Women married into other surnames to survive. The old life of moonlight raids, steel bonnets, and unbreakable kin loyalty was systematically broken.\r\nYet the blood endured. Some Thomsons stayed low in the Borders, taking quieter trades. Others scattered to the Ulster plantations or drifted toward the growing Lowland towns where new opportunities were opening. Your direct line stayed rooted in the Midlothian heartland — the same southwest Scottish soil that had produced the 1318 John Thomson centuries earlier.\r\nAround 1713 an Alexander Thompson appears in Midlothian records. His son, another Alexander (born about 1750), married Anne Crombie in 1770 at Saltoun in East Lothian. They raised a family that included John Thompson, born in 1774 in Edinburgh. In 1817 John married Margaret Dickson at St Cuthberts in Edinburgh. The couple settled in the Glencorse and Penicuik area of Midlothian — a rural district of farms, tile works, and quiet hills just south of Edinburgh.\r\nIt was here, on 8 February 1832, that their son William Thomson was born — your 4th great-grandfather. Tragedy struck early: his father John died in 1838 in Penicuik when William was only six. In the 1851 Scotland Census we meet young William at 21, living with his mother Margaret and brother John in Kirkhill, Penicuik. He was already working as a Tile Maker — hard, dusty manual labour in the local brick and tile industry that supplied the growing Lowlands. The work was back-breaking, the dust got into everything, but it was honest and it kept the family fed.\r\nIn 1853 life changed again. On 6 August William married Janet Borthwick in Penicuik. That same year their first son — another John Thomson — was born in Penicuik, Midlothian. More children followed quickly, but the pull of opportunity was growing stronger. The family made the decisive move across the border to Sunderland in County Durham, England, drawn by the booming coal, rail, and industrial work of the north.\r\nBy the 1861 England Census William was settled in Bishopwearmouth, Sunderland, working as an Engine Driver — likely in the mines or railways that fed the coal boom. He and Janet already had four young children and would go on to raise a large family: Janet (1855), Isabella (1858), Margaret (1860), Elizabeth (1864), Ann (about 1866), Alice (1868), Jane (about 1871), and later Percy (who sadly died young in 1891). William continued as an Engine Driver and Engine Man through the 1871 and 1881 censuses, living at addresses like 5 Jobling Street in Bishopwearmouth. His daughters often stayed home helping the household as the family navigated the challenges of industrial life — the smoke, the long hours, the constant grind, the fear of accidents in the pits or on the tracks.\r\nWilliam’s son John Thomson (born 1853 in Penicuik) grew up in this world. He moved to Sunderland as a boy with the family and, by the time he was a young man, had begun his own working life. In the 1881 census John appears as a Cartman in Bishopwearmouth — hauling heavy loads through the busy docks and streets of the growing port town. He married Charlotte Thompson — the connection that joins our story to the Earsdon and Charlotte Bailey line.\r\nJohn’s occupations evolved with the times: cartman hauling heavy loads, then gas stoker at the Hendon Gasworks (hot, dangerous work keeping the town lit, with the constant risk of fire or explosion), and later a “holder up” in one of Sunderland’s great shipyards — physically demanding labour holding massive steel plates in place while riveters hammered them into the hulls of the ships that made the Wear famous worldwide. The noise, the heat, the danger of falling plates or swinging hammers — it was the kind of hard, honest work that the reiver blood was made for.\r\nThis marriage — John Thomson (born 1853 in Penicuik) to Charlotte Thompson — is where the purely Scottish Thomson chapter ends and flows into the North East story you already know so well from the Charlotte Bailey side. The rider’s blood from Eskdale had travelled through centuries of fire and survival, through Midlothian tile works and engine drivers, all the way to this union in Sunderland.\r\nFrom the 1318 hero who led men home from Ireland, through the moonlit reiver clans of Eskdale who once stared down the very Wharton wardens who are also your ancestors, through the crushing of the Borders and the quiet endurance in Midlothian, all the way to John Thomson marrying Charlotte Thompson — the Thomson chapter closes, and the shared family story continues.\r\nThe same blood that once rode with lances under the Border moon now powered the engines and forges of the Industrial North — and would one day reach for the stars.\r\n\r\n",
+    };
+
+const CORRECT = {
+      "ep1-1": "R-M467",
+      "ep1-2": "Y-chromosome",
+      "ep1-3": "R1b",
+      "ep1-4": "Pontic-Caspian steppe (Ukraine and southern Russia)",
+      "ep1-5": "Bell Beaker culture",
+      "ep1-6": "Southwest Lowlands and Marches — including Carrick",
+      "ep2-1": "1318",
+      "ep2-2": "Battle of Faughart",
+      "ep2-3": "A man of low birth, but approved valour",
+      "ep2-4": "Carrick",
+      "ep2-5": "Carrickfergus castle",
+      "ep2-6": "Thomsons of Eskdale",
+      "ep3-1": "Debatable Lands and the West March",
+      "ep3-2": "Bastle houses and peel towers",
+      "ep3-3": "Hot trod",
+      "ep3-4": "Kin and profit above nationality",
+      "ep3-5": "Lord Thomas Wharton — 1st Baron, Warden of the West Marches",
+      "ep3-6": "Batysons, Thomsons, and Lytles of Esskdayle",
+      "ep4-1": "1603",
+      "ep4-2": "1713",
+      "ep4-3": "8 February 1832 in Penicuik",
+      "ep4-4": "Tile Maker",
+      "ep4-5": "Engine Driver",
+      "ep4-6": "Charlotte Thompson"
+    };
+
+    const episodes = [
+      {
+        id: "ep1", num: 1, file: "01-steppe-to-carrick.mp3", script: "1.txt",
+        title: "Steppe to Carrick",
+        desc: "R-M467, the Y-chromosome line, and the Bronze Age current that reached southwest Scotland.",
+        quiz: [
+          { id: "ep1-1", type: "single", text: "What is your paternal haplogroup?", options: ["R-M467", "R1a", "I-M253", "J-M172"] },
+          { id: "ep1-2", type: "single", text: "Which piece of DNA traces the direct father-to-son line almost unchanged?", options: ["Y-chromosome", "Mitochondrial DNA", "X-chromosome", "Autosomal chromosomes only"] },
+          { id: "ep1-3", type: "single", text: "R-M467 belongs to which major Western European male lineage family?", options: ["R1b", "R1a", "G2a", "E-M35"] },
+          { id: "ep1-4", type: "single", text: "The distant ancestors of this line were mobile herders from…", options: ["Pontic-Caspian steppe (Ukraine and southern Russia)", "The Sahara desert", "Scandinavian fjords only", "The Amazon rainforest"] },
+          { id: "ep1-5", type: "single", text: "Which culture brought this lineage into Britain around 2500 BC?", options: ["Bell Beaker culture", "Roman legions", "Viking longships", "Norman conquest"] },
+          { id: "ep1-6", type: "single", text: "By the Iron Age this paternal line was especially strong in…", options: ["Southwest Lowlands and Marches — including Carrick", "The Outer Hebrides only", "Southeast England", "The Welsh mountains"] }
+        ]
+      },
+      {
+        id: "ep2", num: 2, file: "02-faughart-to-eskdale.mp3", script: "2.txt",
+        title: "Faughart to Eskdale",
+        desc: "John Thomson at Faughart, the retreat to Carrickfergus, and the Thomsons of Eskdale.",
+        quiz: [
+          { id: "ep2-1", type: "single", text: "The earliest named John Thomson story on the battlefields begins in which year?", options: ["1318", "1603", "1542", "1853"] },
+          { id: "ep2-2", type: "single", text: "Edward Bruce's Irish campaign collapsed at which battle?", options: ["Battle of Faughart", "Battle of Solway Moss", "Battle of Bannockburn", "Battle of Hastings"] },
+          { id: "ep2-3", type: "single", text: "How did the chronicles describe John Thomson?", options: ["A man of low birth, but approved valour", "A duke of Carrick", "A shepherd of Westmorland", "A tile maker of Penicuik"] },
+          { id: "ep2-4", type: "single", text: "John Thomson commanded men from which Ayrshire district?", options: ["Carrick", "Eskdale", "Midlothian", "Bishopwearmouth"] },
+          { id: "ep2-5", type: "single", text: "After the fighting retreat, survivors embarked for home from…", options: ["Carrickfergus castle", "Edinburgh Castle", "Peel towers in Eskdale", "Sunderland docks"] },
+          { id: "ep2-6", type: "single", text: "By the mid-1400s which distinct Thomson group settled deep in the West March?", options: ["Thomsons of Eskdale", "Thomsons of Mayo", "Thomsons of Easington Lane", "Thomsons of Rome"] }
+        ]
+      },
+      {
+        id: "ep3", num: 3, file: "03-reivers-and-wharton.mp3", script: "3.txt",
+        title: "Reivers & the Wharton Clash",
+        desc: "Eskdale riding tactics, March law — and your Thomson and Wharton lines meeting in the 1540s.",
+        quiz: [
+          { id: "ep3-1", type: "single", text: "In the 1500s the Eskdale Thomsons operated chiefly in…", options: ["Debatable Lands and the West March", "The East Ward Union Workhouse", "Sunderland shipyards", "Ulster plantations only"] },
+          { id: "ep3-2", type: "single", text: "Families sheltered in which fortified homes during raids?", options: ["Bastle houses and peel towers", "Terraced mining rows", "Palaces in Rome", "Workhouse dormitories"] },
+          { id: "ep3-3", type: "single", text: "The legal six-day pursuit of raiders with a blazing turf signal was called…", options: ["Hot trod", "Days of Truce", "Union of Crowns", "General Strike"] },
+          { id: "ep3-4", type: "single", text: "On the frontier, reiver loyalty was primarily to…", options: ["Kin and profit above nationality", "The English crown only", "The Scottish crown only", "Church law above all kin"] },
+          { id: "ep3-5", type: "single", text: "In the 1540s which English border lord named the Eskdale Thomsons in urgent reports?", options: ["Lord Thomas Wharton — 1st Baron, Warden of the West Marches", "Gilbert de Querton", "Philip, Duke of Wharton", "Robert the Bruce"] },
+          { id: "ep3-6", type: "single", text: "Wharton blamed which families for fresh raids into English territory?", options: ["Batysons, Thomsons, and Lytles of Esskdayle", "Beattisons, Nixons, and Littles only", "Boyle and Bailey families", "Bruces and Stuarts of Carrick"] }
+        ]
+      },
+      {
+        id: "ep4", num: 4, file: "04-penicuik-to-sunderland.mp3", script: "4.txt",
+        title: "Penicuik to Sunderland",
+        desc: "The reivers crushed, Midlothian endurance, tile works and engine drivers — John marries Charlotte.",
+        quiz: [
+          { id: "ep4-1", type: "single", text: "When did the Union of Crowns doom the old Border reiver world?", options: ["1603", "1318", "1713", "1953"] },
+          { id: "ep4-2", type: "single", text: "Around which year does Alexander Thompson first appear in Midlothian records?", options: ["1713", "1774", "1832", "1853"] },
+          { id: "ep4-3", type: "single", text: "Your 4th great-grandfather William Thomson was born on…", options: ["8 February 1832 in Penicuik", "6 August 1853 in Penicuik", "7 January 1916 in Easington Lane", "8 February 1713 in Midlothian"] },
+          { id: "ep4-4", type: "single", text: "In the 1851 census young William worked as a…", options: ["Tile Maker", "Engine Driver", "Cartman", "Gas stoker"] },
+          { id: "ep4-5", type: "single", text: "By the 1861 census in Bishopwearmouth, William worked as an…", options: ["Engine Driver", "Tile Maker", "Holder up in a shipyard", "Border warden"] },
+          { id: "ep4-6", type: "single", text: "John Thomson (born 1853 in Penicuik) married whom — linking to the Charlotte Bailey line?", options: ["Charlotte Thompson", "Charlotte Bailey", "Janet Borthwick", "Margaret Dickson"] }
+        ]
+      }
+    ];
+
+    const list = document.getElementById("episodes");
+    const copyToast = document.getElementById("copy-toast");
+    const episodeCards = new Map();
+    let currentAudio = null;
+    let currentCard = null;
+    let quizAnswers = loadAnswers();
+    let lockedState = loadLocked();
+
+    function formatTime(s) {
+      if (!s || isNaN(s)) return "0:00";
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60).toString().padStart(2, "0");
+      return `${m}:${sec}`;
+    }
+
+    function stopCurrent() {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+      if (currentCard) {
+        currentCard.classList.remove("playing");
+        const btn = currentCard.querySelector(".btn-play");
+        btn.textContent = "▶ Play";
+        btn.classList.remove("playing");
+      }
+      currentAudio = null;
+      currentCard = null;
+    }
+
+    function loadAnswers() {
+      try {
+        let raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          raw = sessionStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            localStorage.setItem(STORAGE_KEY, raw);
+            sessionStorage.removeItem(STORAGE_KEY);
+          }
+        }
+        return raw ? JSON.parse(raw) : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveAnswers() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(quizAnswers));
+    }
+
+    function loadLocked() {
+      try {
+        let raw = localStorage.getItem(LOCKED_KEY);
+        if (!raw) {
+          raw = sessionStorage.getItem(LOCKED_KEY);
+          if (raw) {
+            localStorage.setItem(LOCKED_KEY, raw);
+            sessionStorage.removeItem(LOCKED_KEY);
+          }
+        }
+        return raw ? JSON.parse(raw) : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveLocked() {
+      localStorage.setItem(LOCKED_KEY, JSON.stringify(lockedState));
+    }
+
+    function sorted(values) {
+      return [...values].sort();
+    }
+
+    function arraysEqual(a, b) {
+      const left = sorted(a);
+      const right = sorted(b);
+      return left.length === right.length && left.every((value, i) => value === right[i]);
+    }
+
+    function getCorrect(q) {
+      return CORRECT[q.id];
+    }
+
+    function isQuestionAnswered(q) {
+      const answer = getAnswer(q);
+      if (q.type === "multiple") return answer.length > 0;
+      return answer !== "";
+    }
+
+    function isQuestionCorrect(q) {
+      const answer = getAnswer(q);
+      const correct = getCorrect(q);
+      if (q.type === "multiple") {
+        return arraysEqual(answer, correct);
+      }
+      return answer === correct;
+    }
+
+    function isQuizComplete(ep) {
+      return ep.quiz.every(isQuestionAnswered);
+    }
+
+    function isEpisodeUnlocked(index) {
+      if (index === 0) return true;
+      return !!lockedState[episodes[index - 1].id];
+    }
+
+    function isScriptUnlocked(ep) {
+      return !!lockedState[ep.id];
+    }
+
+    function nextEpisodeLabel(index) {
+      if (index >= episodes.length - 1) return null;
+      const next = episodes[index + 1];
+      return next.intro ? "Intro" : "Episode " + next.num;
+    }
+
+    function getAnswer(q) {
+      const value = quizAnswers[q.id];
+      if (q.type === "multiple") {
+        return Array.isArray(value) ? value : [];
+      }
+      return typeof value === "string" ? value : "";
+    }
+
+    function setAnswer(q, value) {
+      quizAnswers[q.id] = value;
+      saveAnswers();
+    }
+
+    function episodeLabel(ep) {
+      return ep.intro ? "Intro — " + ep.title : "Episode " + ep.num + " — " + ep.title;
+    }
+
+    function formatCopyText(episodeFilter) {
+      const lines = ["Thomson Story — Steppe to Sunderland — Lewis — Quiz Answers", ""];
+
+      episodes.forEach((ep) => {
+        if (episodeFilter && ep.id !== episodeFilter) return;
+        if (!ep.quiz || !ep.quiz.length) return;
+
+        lines.push(episodeLabel(ep));
+        lines.push("");
+
+        const locked = lockedState[ep.id];
+
+        ep.quiz.forEach((q, i) => {
+          const answer = getAnswer(q);
+          const typeLabel = q.type === "multiple" ? "select multiple" : "pick one";
+          lines.push((i + 1) + ". " + q.text + " (" + typeLabel + ")");
+
+          if (q.type === "multiple") {
+            lines.push("   Answer: " + (answer.length ? answer.join("; ") : "(not answered)"));
+          } else {
+            lines.push("   Answer: " + (answer || "(not answered)"));
+          }
+
+          if (locked) {
+            const mark = isQuestionCorrect(q) ? "Correct" : "Incorrect";
+            const correct = getCorrect(q);
+            lines.push("   Result: " + mark);
+            lines.push("   Correct answer: " + (Array.isArray(correct) ? correct.join("; ") : correct));
+          }
+
+          lines.push("");
+        });
+
+        if (locked) {
+          lines.push("Score: " + locked.score + " / " + locked.total);
+          lines.push("");
+        }
+      });
+
+      return lines.join("\n").trim();
+    }
+
+    function showCopyToast(message) {
+      copyToast.textContent = message;
+      copyToast.classList.add("show");
+      clearTimeout(showCopyToast._timer);
+      showCopyToast._timer = setTimeout(() => copyToast.classList.remove("show"), 2200);
+    }
+
+    async function copyText(text, button) {
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const area = document.createElement("textarea");
+        area.value = text;
+        area.style.position = "fixed";
+        area.style.left = "-9999px";
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        area.remove();
+      }
+
+      if (button) {
+        const original = button.textContent;
+        button.textContent = "Copied!";
+        button.classList.add("copied");
+        setTimeout(() => {
+          button.textContent = original;
+          button.classList.remove("copied");
+        }, 1800);
+      }
+
+      showCopyToast("Copied to clipboard");
+    }
+
+    function applyQuestionFeedback(block, q) {
+      const correct = getCorrect(q);
+      const correctSet = new Set(Array.isArray(correct) ? correct : [correct]);
+      const answer = getAnswer(q);
+      const answerSet = new Set(q.type === "multiple" ? answer : answer ? [answer] : []);
+      const ok = isQuestionCorrect(q);
+
+      block.classList.add("locked");
+
+      block.querySelectorAll(".quiz-option").forEach((label) => {
+        const value = label.querySelector("input").value;
+        label.classList.remove("correct-pick", "wrong-pick", "missed-pick");
+
+        if (correctSet.has(value) && answerSet.has(value)) {
+          label.classList.add("correct-pick");
+        } else if (answerSet.has(value) && !correctSet.has(value)) {
+          label.classList.add("wrong-pick");
+        } else if (correctSet.has(value) && !answerSet.has(value)) {
+          label.classList.add("missed-pick");
+        }
+      });
+
+      let feedback = block.querySelector(".quiz-feedback");
+      if (!feedback) {
+        feedback = document.createElement("div");
+        feedback.className = "quiz-feedback";
+        block.appendChild(feedback);
+      }
+
+      if (ok) {
+        feedback.className = "quiz-feedback correct";
+        feedback.textContent = "Correct";
+      } else {
+        const correctText = Array.isArray(correct) ? correct.join("; ") : correct;
+        feedback.className = "quiz-feedback incorrect";
+        feedback.textContent = "Not quite — correct answer: " + correctText;
+      }
+    }
+
+    function updateLockButton(section, ep) {
+      const lockBtn = section.querySelector("[data-lock-episode]");
+      const results = section.querySelector(".quiz-results");
+      const locked = lockedState[ep.id];
+
+      if (locked) {
+        lockBtn.style.display = "none";
+        results.innerHTML = "<strong class=\"score-pass\">" + locked.score + " / " + locked.total + " correct</strong>" +
+          " — script unlocked." +
+          (nextEpisodeLabel(episodes.indexOf(ep)) ? " Next episode unlocked." : " Walk complete.");
+        return;
+      }
+
+      lockBtn.style.display = "";
+      const complete = isQuizComplete(ep);
+      lockBtn.disabled = !complete;
+      lockBtn.textContent = complete ? "Lock in answers" : "Answer all questions to lock in";
+      results.textContent = complete
+        ? "Ready to lock in. Script unlocks after you lock in."
+        : "Answer every question, then lock in to unlock the script and next episode.";
+    }
+
+    function lockInQuiz(ep, section) {
+      if (!isQuizComplete(ep) || lockedState[ep.id]) return;
+
+      const score = ep.quiz.filter(isQuestionCorrect).length;
+      lockedState[ep.id] = {
+        score,
+        total: ep.quiz.length,
+        lockedAt: Date.now()
+      };
+      saveLocked();
+
+      section.querySelectorAll(".quiz-question").forEach((block, index) => {
+        applyQuestionFeedback(block, ep.quiz[index]);
+        block.querySelectorAll("input").forEach((input) => {
+          input.disabled = true;
+        });
+      });
+
+      updateLockButton(section, ep);
+      refreshEpisodeLocks();
+
+      const epIndex = episodes.indexOf(ep);
+      const nextLabel = nextEpisodeLabel(epIndex);
+      showCopyToast(score + " / " + ep.quiz.length + " correct" + (nextLabel ? " — " + nextLabel + " unlocked" : ""));
+
+      if (epIndex < episodes.length - 1) {
+        const nextCard = episodeCards.get(episodes[epIndex + 1].id);
+        if (nextCard) {
+          nextCard.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    }
+
+    function formatScript(text) {
+      return text
+        .trim()
+        .split(/\n\s*\n/)
+        .map((para) => "<p>" + para.replace(/\n/g, " ").trim() + "</p>")
+        .join("");
+    }
+
+    function toggleScript(card, ep, scriptBtn) {
+      if (!isScriptUnlocked(ep)) return;
+
+      const panel = card.querySelector(".script-panel");
+      const body = card.querySelector(".script-body");
+      const isOpen = panel.classList.contains("open");
+
+      if (isOpen) {
+        panel.classList.remove("open");
+        scriptBtn.classList.remove("open");
+        scriptBtn.textContent = "Read script";
+        return;
+      }
+
+      scriptBtn.classList.add("open");
+      scriptBtn.textContent = "Hide script";
+      panel.classList.add("open");
+
+      if (body.dataset.loaded === "true") return;
+
+      const text = SCRIPTS[ep.id];
+      if (!text) {
+        body.textContent = "Script not found for this episode.";
+        return;
+      }
+
+      body.innerHTML = formatScript(text);
+      body.dataset.loaded = "true";
+    }
+
+    function refreshEpisodeLocks() {
+      episodes.forEach((ep, index) => {
+        const card = episodeCards.get(ep.id);
+        if (!card) return;
+
+        const unlocked = isEpisodeUnlocked(index);
+        const playBtn = card.querySelector(".btn-play");
+        const downloadBtn = card.querySelector(".btn-download");
+        const scriptBtn = card.querySelector(".btn-script");
+        const scriptPanel = card.querySelector(".script-panel");
+        const banner = card.querySelector(".ep-locked-banner");
+        const prev = episodes[index - 1];
+        const scriptReady = unlocked && isScriptUnlocked(ep);
+
+        card.classList.toggle("locked", !unlocked);
+        playBtn.disabled = !unlocked;
+        downloadBtn.classList.toggle("disabled", !unlocked);
+
+        if (scriptBtn) {
+          scriptBtn.disabled = !scriptReady;
+          if (!scriptReady) {
+            scriptBtn.classList.remove("open");
+            scriptBtn.textContent = unlocked ? "Read script (after quiz)" : "Read script";
+            if (scriptPanel) scriptPanel.classList.remove("open", "loading");
+          } else if (!scriptBtn.classList.contains("open")) {
+            scriptBtn.textContent = "Read script";
+          }
+        }
+
+        if (!unlocked) {
+          playBtn.textContent = "Locked";
+          banner.textContent = "Complete the recall check on " +
+            (prev.intro ? "the intro" : "Episode " + prev.num) +
+            " and press Lock in answers to unlock this episode.";
+          if (currentCard === card) {
+            stopCurrent();
+          }
+        } else if (!currentAudio || currentCard !== card) {
+          playBtn.textContent = "▶ Play";
+        }
+      });
+    }
+
+    function renderQuiz(ep, card) {
+      if (!ep.quiz || !ep.quiz.length) return;
+
+      const section = document.createElement("div");
+      section.className = "quiz-section";
+      section.innerHTML = `
+        <div class="quiz-header">
+          <div class="quiz-title">Recall check</div>
+          <button type="button" class="btn-copy" data-copy-episode="${ep.id}">Copy this section</button>
+        </div>
+        <p class="quiz-hint">Rapid fire — answer from memory after listening. No script until you lock in. Then unlock the next episode.</p>
+        <div class="quiz-footer">
+          <button type="button" class="btn-lock" data-lock-episode="${ep.id}">Answer all questions to lock in</button>
+          <div class="quiz-results"></div>
+        </div>
+      `;
+
+      const questionsWrap = document.createElement("div");
+      questionsWrap.className = "quiz-questions";
+      section.insertBefore(questionsWrap, section.querySelector(".quiz-footer"));
+
+      ep.quiz.forEach((q, index) => {
+        const block = document.createElement("div");
+        block.className = "quiz-question";
+        const typeHint = q.type === "multiple" ? "select multiple" : "pick one";
+        const inputType = q.type === "multiple" ? "checkbox" : "radio";
+        const saved = getAnswer(q);
+
+        block.innerHTML = `
+          <div class="quiz-q-text">
+            ${index + 1}. ${q.text}
+            <span class="quiz-q-type">(${typeHint})</span>
+          </div>
+          <div class="quiz-options" data-question="${q.id}"></div>
+        `;
+
+        const optionsWrap = block.querySelector(".quiz-options");
+
+        q.options.forEach((option) => {
+          const label = document.createElement("label");
+          label.className = "quiz-option";
+          const input = document.createElement("input");
+          input.type = inputType;
+          input.name = q.id;
+          input.value = option;
+
+          if (q.type === "multiple") {
+            input.checked = saved.includes(option);
+          } else {
+            input.checked = saved === option;
+          }
+
+          input.addEventListener("change", () => {
+            if (lockedState[ep.id]) return;
+            if (q.type === "multiple") {
+              const checked = [...optionsWrap.querySelectorAll("input:checked")].map((el) => el.value);
+              setAnswer(q, checked);
+            } else {
+              setAnswer(q, option);
+            }
+            updateLockButton(section, ep);
+          });
+
+          label.appendChild(input);
+          label.appendChild(document.createTextNode(option));
+          optionsWrap.appendChild(label);
+        });
+
+        questionsWrap.appendChild(block);
+      });
+
+      section.querySelector("[data-copy-episode]").addEventListener("click", (e) => {
+        copyText(formatCopyText(ep.id), e.currentTarget);
+      });
+
+      section.querySelector("[data-lock-episode]").addEventListener("click", () => {
+        lockInQuiz(ep, section);
+      });
+
+      if (lockedState[ep.id]) {
+        section.querySelectorAll(".quiz-question").forEach((block, index) => {
+          applyQuestionFeedback(block, ep.quiz[index]);
+          block.querySelectorAll("input").forEach((input) => {
+            input.disabled = true;
+          });
+        });
+      }
+
+      updateLockButton(section, ep);
+      card.appendChild(section);
+    }
+
+    function encodeProgress() {
+      const payload = { v: 1, answers: quizAnswers, locked: lockedState };
+      return PROGRESS_PREFIX + btoa(encodeURIComponent(JSON.stringify(payload)));
+    }
+
+    function decodeProgress(code) {
+      const trimmed = code.trim();
+      if (!trimmed.startsWith(PROGRESS_PREFIX)) {
+        throw new Error("That does not look like a physics benchmark progress code.");
+      }
+      const payload = JSON.parse(decodeURIComponent(atob(trimmed.slice(PROGRESS_PREFIX.length))));
+      if (!payload || payload.v !== 1 || typeof payload.answers !== "object" || typeof payload.locked !== "object") {
+        throw new Error("This progress code is invalid or from an older version.");
+      }
+      return payload;
+    }
+
+    function exportProgress(button) {
+      copyText(encodeProgress(), button);
+      showCopyToast("Progress code copied — paste it on another device");
+    }
+
+    function importProgress(code) {
+      const payload = decodeProgress(code);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload.answers));
+      localStorage.setItem(LOCKED_KEY, JSON.stringify(payload.locked));
+      location.reload();
+    }
+
+    function clearSessionData() {
+      const ok = confirm(
+        "Clear all quiz answers, scores, unlocks, and script access?\n\nThis resets the walk on this device."
+      );
+      if (!ok) return;
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(LOCKED_KEY);
+      location.reload();
+    }
+
+    document.getElementById("copy-all").addEventListener("click", (e) => {
+      copyText(formatCopyText(), e.currentTarget);
+    });
+
+    document.getElementById("export-progress").addEventListener("click", (e) => {
+      exportProgress(e.currentTarget);
+    });
+
+    document.getElementById("import-progress").addEventListener("click", () => {
+      document.getElementById("import-panel").classList.add("open");
+      document.getElementById("import-code").focus();
+    });
+
+    document.getElementById("import-cancel").addEventListener("click", () => {
+      document.getElementById("import-panel").classList.remove("open");
+      document.getElementById("import-code").value = "";
+    });
+
+    document.getElementById("import-confirm").addEventListener("click", () => {
+      const code = document.getElementById("import-code").value;
+      if (!code.trim()) {
+        alert("Paste a progress code first.");
+        return;
+      }
+      try {
+        importProgress(code);
+      } catch (err) {
+        alert(err.message || "Could not import that progress code.");
+      }
+    });
+
+    document.getElementById("clear-session").addEventListener("click", clearSessionData);
+
+    episodes.forEach((ep, index) => {
+      const card = document.createElement("article");
+      card.className = "episode";
+      card.dataset.episodeId = ep.id;
+      const numClass = ep.intro ? "ep-num intro" : "ep-num";
+      const label = ep.intro ? "★" : ep.num;
+
+      card.innerHTML = `
+        <div class="episode-top">
+          <div class="${numClass}">${label}</div>
+          <div class="ep-info">
+            <div class="ep-title">${ep.title}</div>
+            <div class="ep-desc">${ep.desc}</div>
+          </div>
+        </div>
+        <audio preload="metadata" src="${audioUrl(ep.file)}"></audio>
+        <div class="ep-actions">
+          <button type="button" class="btn-play">▶ Play</button>
+          <a class="btn btn-download" href="${audioUrl(ep.file)}" download="${ep.file}">↓ Download</a>
+          <button type="button" class="btn-script">Read script</button>
+        </div>
+        <div class="script-panel"><div class="script-body"></div></div>
+        <div class="ep-locked-banner"></div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+          <div class="time"><span class="cur">0:00</span> / <span class="dur">0:00</span></div>
+        </div>
+      `;
+
+      const audio = card.querySelector("audio");
+      const playBtn = card.querySelector(".btn-play");
+      const downloadBtn = card.querySelector(".btn-download");
+      const scriptBtn = card.querySelector(".btn-script");
+      const fill = card.querySelector(".progress-fill");
+      const bar = card.querySelector(".progress-bar");
+      const cur = card.querySelector(".cur");
+      const dur = card.querySelector(".dur");
+
+      audio.addEventListener("loadedmetadata", () => {
+        dur.textContent = formatTime(audio.duration);
+      });
+
+      audio.addEventListener("timeupdate", () => {
+        const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+        fill.style.width = pct + "%";
+        cur.textContent = formatTime(audio.currentTime);
+      });
+
+      audio.addEventListener("ended", () => {
+        playBtn.textContent = "▶ Play";
+        playBtn.classList.remove("playing");
+        card.classList.remove("playing");
+        if (currentAudio === audio) {
+          currentAudio = null;
+          currentCard = null;
+        }
+      });
+
+      playBtn.addEventListener("click", () => {
+        if (!isEpisodeUnlocked(index)) return;
+
+        if (currentAudio === audio && !audio.paused) {
+          audio.pause();
+          playBtn.textContent = "▶ Play";
+          playBtn.classList.remove("playing");
+          card.classList.remove("playing");
+          return;
+        }
+        stopCurrent();
+        currentAudio = audio;
+        currentCard = card;
+        audio.play();
+        playBtn.textContent = "⏸ Pause";
+        playBtn.classList.add("playing");
+        card.classList.add("playing");
+      });
+
+      downloadBtn.addEventListener("click", (e) => {
+        if (!isEpisodeUnlocked(index)) e.preventDefault();
+      });
+
+      scriptBtn.addEventListener("click", () => {
+        if (!isEpisodeUnlocked(index) || !isScriptUnlocked(ep)) return;
+        toggleScript(card, ep, scriptBtn);
+      });
+
+      bar.addEventListener("click", (e) => {
+        if (!isEpisodeUnlocked(index) || !audio.duration) return;
+        const rect = bar.getBoundingClientRect();
+        const ratio = (e.clientX - rect.left) / rect.width;
+        audio.currentTime = ratio * audio.duration;
+      });
+
+      renderQuiz(ep, card);
+      episodeCards.set(ep.id, card);
+      list.appendChild(card);
+    });
+
+    refreshEpisodeLocks();
+  </script>
+</body>
+</html>
